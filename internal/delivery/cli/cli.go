@@ -26,7 +26,6 @@ import (
 )
 
 const (
-	serveAddr = "127.0.0.1:8090"
 	enrollEnv = "VULN_AGENT_ENROLL_TOKEN"
 )
 
@@ -35,7 +34,7 @@ const usage = `usage: vuln-agent <command> [-config path]
 commands:
   scan       run one scan cycle, keep the report locally, and send it to central
   report     print the newest report as JSON [-html for the HTML page]
-  serve      serve the local reports read-only over HTTP [-addr 127.0.0.1:8090]
+  serve      serve the local reports read-only over HTTP [-addr, default serve_addr or 127.0.0.1:8090]
   heartbeat  send a heartbeat
   flush      resend spooled reports
   enroll     enroll this host (token from $VULN_AGENT_ENROLL_TOKEN or stdin) [-force]
@@ -63,7 +62,7 @@ func Run(args []string, stdin io.Reader, version, trivyVersion string) int {
 	configPath := fs.String("config", config.DefaultPath, "config file")
 	force := fs.Bool("force", false, "enroll: overwrite existing host token")
 	html := fs.Bool("html", false, "report: print the HTML page instead of JSON")
-	addr := fs.String("addr", serveAddr, "serve: listen address")
+	addr := fs.String("addr", "", "serve: listen address (default: serve_addr from the config, or "+config.DefaultServeAddr+")")
 	if err := fs.Parse(args[1:]); err != nil {
 		return 2
 	}
@@ -77,7 +76,12 @@ func Run(args []string, stdin io.Reader, version, trivyVersion string) int {
 	case "report":
 		err = report(os.Stdout, *html)
 	case "serve":
-		err = serve(ctx, log, *addr)
+		if *addr == "" {
+			*addr, err = configServeAddr(log, *configPath)
+		}
+		if err == nil {
+			err = serve(ctx, log, *addr)
+		}
 	case "install":
 		err = install(ctx, log, trivyVersion)
 	default:
@@ -197,6 +201,18 @@ func report(w io.Writer, html bool) error {
 	enc := json.NewEncoder(w)
 	enc.SetIndent("", "  ")
 	return enc.Encode(r)
+}
+
+// configServeAddr reads serve_addr from the config when -addr is not given.
+func configServeAddr(log *slog.Logger, path string) (string, error) {
+	f, warnings, err := config.Load(path)
+	if err != nil {
+		return "", err
+	}
+	for _, w := range warnings {
+		log.Warn(w)
+	}
+	return f.Config.ServeAddress(), nil
 }
 
 func serve(ctx context.Context, log *slog.Logger, addr string) error {

@@ -105,3 +105,23 @@ func TestLoadExtraSkipDirs(t *testing.T) {
 		}
 	}
 }
+
+func TestServeAddress(t *testing.T) {
+	if got := (config.Config{}).ServeAddress(); got != config.DefaultServeAddr {
+		t.Errorf("empty: got %q", got)
+	}
+	if got := (config.Config{ServeAddr: "100.64.0.1:8090"}).ServeAddress(); got != "100.64.0.1:8090" {
+		t.Errorf("set: got %q", got)
+	}
+	for addr, wantErr := range map[string]bool{
+		`"8090"`:            true,
+		`"host"`:            true,
+		`":8090"`:           false,
+		`"100.64.0.1:8090"`: false,
+	} {
+		_, _, err := config.Load(writeConfig(t, "serve_addr: "+addr+"\n", 0o600))
+		if (err != nil) != wantErr {
+			t.Errorf("%s: err = %v, want error %v", addr, err, wantErr)
+		}
+	}
+}

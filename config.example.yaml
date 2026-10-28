@@ -33,3 +33,10 @@ ca_file: ""
 # Absolute paths, no commas; "*" globs allowed. Works in both modes.
 extra_skip_dirs: []
 #extra_skip_dirs: ["/data/backup", "/srv/uploads", "/home/*/projects"]
+
+# Optional. Address of the report page (vuln-agent-serve.service, enabled by
+# install). Empty = 127.0.0.1:8090; from a laptop: ssh -L 8090:127.0.0.1:8090 <host>.
+# The page has NO authentication: any other address (e.g. a Tailscale IP such
+# as 100.64.0.1:8090) lets anyone who can reach it read this host's
+# vulnerabilities. After a change: sudo systemctl restart vuln-agent-serve
+serve_addr: ""

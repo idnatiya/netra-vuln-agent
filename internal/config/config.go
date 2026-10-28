@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"net"
 	"net/url"
 	"os"
 	"strings"
@@ -35,6 +36,19 @@ type Config struct {
 	CAFile           string `yaml:"ca_file"`
 	// ExtraSkipDirs are added to the skip_dirs in effect (default or from central).
 	ExtraSkipDirs []string `yaml:"extra_skip_dirs"`
+	// ServeAddr is the report page address; empty = DefaultServeAddr.
+	ServeAddr string `yaml:"serve_addr"`
+}
+
+// DefaultServeAddr keeps the unauthenticated report page on loopback.
+const DefaultServeAddr = "127.0.0.1:8090"
+
+// ServeAddress is the address `vuln-agent serve` listens on without -addr.
+func (c Config) ServeAddress() string {
+	if c.ServeAddr != "" {
+		return c.ServeAddr
+	}
+	return DefaultServeAddr
 }
 
 // Standalone reports whether the agent runs without central (no central_url):
@@ -42,6 +56,11 @@ type Config struct {
 func (c Config) Standalone() bool { return c.CentralURL == "" }
 
 func (c Config) Validate() error {
+	if c.ServeAddr != "" {
+		if _, _, err := net.SplitHostPort(c.ServeAddr); err != nil {
+			return fmt.Errorf("serve_addr: %w", err)
+		}
+	}
 	if len(c.ExtraSkipDirs) > 0 {
 		sc := scanconfig.Default()
 		sc.SkipDirs = append(sc.SkipDirs, c.ExtraSkipDirs...)

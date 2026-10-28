@@ -24,6 +24,7 @@ const (
 	pathLink     = "/usr/bin/vuln-agent" // not /usr/local/bin: sudo's secure_path on RHEL 7/8 lacks it
 	trivyBaseURL = "https://github.com/aquasecurity/trivy/releases/download"
 	unitDir      = "/etc/systemd/system"
+	serveUnit    = "vuln-agent-serve.service"
 )
 
 const defaultConfigYAML = `# Standalone by default (empty central_url). For central mode, fill in
@@ -35,6 +36,9 @@ hostname_override: ""
 ca_file: ""
 # Folders to exclude, added to the default skip list, e.g. ["/data/backup"].
 extra_skip_dirs: []
+# Report page address (no auth). Empty = 127.0.0.1:8090, reach it with
+# ssh -L 8090:127.0.0.1:8090 <host>. After a change: systemctl restart vuln-agent-serve
+serve_addr: ""
 `
 
 const unitLimits = `CPUQuota=100%
@@ -83,12 +87,17 @@ OnUnitActiveSec=15min
 [Install]
 WantedBy=timers.target
 `,
-	// Not enabled by install: serve has no auth (see README).
-	"vuln-agent-serve.service": `[Unit]
-Description=vuln-agent read-only report server (127.0.0.1:8090)
+	// Enabled on first install only, so an operator's `systemctl disable` sticks.
+	// serve has no auth; it binds serve_addr (default loopback).
+	serveUnit: `[Unit]
+Description=vuln-agent read-only report page
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 ExecStart=/usr/bin/vuln-agent serve
+Restart=on-failure
+RestartSec=10
 ` + unitLimits + `
 [Install]
 WantedBy=multi-user.target
@@ -163,21 +172,28 @@ func install(ctx context.Context, log *slog.Logger, trivyVersion string) error {
 		log.Info("wrote standalone config", "config", config.DefaultPath)
 	}
 
+	_, err = os.Stat(filepath.Join(unitDir, serveUnit))
+	firstServe := errors.Is(err, fs.ErrNotExist)
 	for name, body := range units {
 		if err := os.WriteFile(filepath.Join(unitDir, name), []byte(body), 0o644); err != nil {
 			return err
 		}
 	}
-	for _, args := range [][]string{
+	cmds := [][]string{
 		{"daemon-reload"},
 		{"enable", "--now", "vuln-agent-scan.timer", "vuln-agent-heartbeat.timer"},
-	} {
+		{"try-restart", serveUnit}, // picks up a new binary if it is running
+	}
+	if firstServe {
+		cmds = append(cmds, []string{"enable", "--now", serveUnit})
+	}
+	for _, args := range cmds {
 		if out, err := exec.CommandContext(ctx, "systemctl", args...).CombinedOutput(); err != nil {
 			return fmt.Errorf("systemctl %s: %w: %s", strings.Join(args, " "), err, out)
 		}
 	}
 
-	log.Info("installed; for central mode set central_url and client_id in the config, then run `vuln-agent enroll`; finally run `vuln-agent check`")
+	log.Info("installed; report page on serve_addr (default 127.0.0.1:8090: ssh -L 8090:127.0.0.1:8090 <host>, then http://localhost:8090); for central mode set central_url and client_id in the config, then run `vuln-agent enroll`; finally run `vuln-agent check`")
 	return nil
 }
 

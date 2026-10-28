@@ -18,7 +18,7 @@ Runs Trivy on a Linux VM, keeps a slim report of HIGH/CRITICAL package vulnerabi
 ```sh
 sudo npm i -g netra-vuln-agent
 ```
-As root, the package's postinstall runs `vuln-agent install`: it copies the binary to `/opt/vuln-agent/bin/vuln-agent` (linked as `/usr/bin/vuln-agent`), downloads the pinned Trivy release (checksum verified), writes a standalone `/etc/vuln-agent/config.yaml` if none exists, and enables the daily scan and 15-minute heartbeat systemd timers. It is safe to rerun; an existing config is never touched. See `config.example.yaml` for all config fields.
+As root, the package's postinstall runs `vuln-agent install`: it copies the binary to `/opt/vuln-agent/bin/vuln-agent` (linked as `/usr/bin/vuln-agent`), downloads the pinned Trivy release (checksum verified), writes a standalone `/etc/vuln-agent/config.yaml` if none exists, enables the daily scan and 15-minute heartbeat systemd timers, and starts the report page on `127.0.0.1:8090` (`vuln-agent-serve.service`). It is safe to rerun; an existing config is never touched. See `config.example.yaml` for all config fields.
 
 The npm install never fails because of this step. If npm ran without root or with `--ignore-scripts`, or the step failed (e.g. GitHub unreachable), run it yourself:
 ```sh
@@ -50,11 +50,11 @@ sudo vuln-agent check
 sudo vuln-agent scan
 sudo vuln-agent report            # newest report as JSON
 sudo vuln-agent report -html > report.html
-sudo vuln-agent serve             # http://127.0.0.1:8090, from a laptop: ssh -L 8090:127.0.0.1:8090 <vm>
 ```
+The report page runs as `vuln-agent-serve.service`. From a laptop: `ssh -L 8090:127.0.0.1:8090 <vm>`, then open http://localhost:8090.
 `/var/lib/vuln-agent/reports/latest.html` is refreshed after every scan. The 30 newest reports are kept.
 
-`serve` has no authentication. Keep it on loopback; binding another address (e.g. a Tailscale IP) lets anyone who can reach it read the host's vulnerabilities.
+The page has no authentication. Keep it on loopback; setting `serve_addr` in the config to another address (e.g. a Tailscale IP, `100.64.0.1:8090`) lets anyone who can reach it read the host's vulnerabilities. After changing it, run `sudo systemctl restart vuln-agent-serve`. To turn the page off: `sudo systemctl disable --now vuln-agent-serve` (install only enables it on the first install, so this sticks across updates).
 
 ## With central
 

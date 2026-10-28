@@ -74,12 +74,13 @@ token: <per-host token>                 # must be empty when standalone
 hostname_override: ""                   # optional; defaults to the OS hostname
 ca_file: ""                             # optional, for a custom CA
 extra_skip_dirs: []                     # optional; added to the skip_dirs in effect (both modes)
+serve_addr: ""                          # optional; report page address, empty = 127.0.0.1:8090
 ```
 
 ## CLI subcommands
 - `vuln-agent scan`: run one scan cycle, keep the report in the history, refresh `latest.html`, and (central mode) send it (invoked by a systemd timer)
 - `vuln-agent report [-html]`: print the newest report as JSON, or the HTML page
-- `vuln-agent serve [-addr 127.0.0.1:8090]`: read-only HTTP over the history (`/`, `/reports/{id}`, `/reports/{id}.json`, `/healthz`). No auth, so it binds loopback by default and warns on any other address; reach it with `ssh -L`.
+- `vuln-agent serve [-addr host:port]`: read-only HTTP over the history (`/`, `/reports/{id}`, `/reports/{id}.json`, `/healthz`). Address: `-addr`, else `serve_addr` from the config, else `127.0.0.1:8090`. No auth, so it binds loopback by default and warns on any other address; reach it with `ssh -L`. Runs as `vuln-agent-serve.service`.
 - `vuln-agent heartbeat`: send a heartbeat (no-op when standalone)
 - `vuln-agent flush`: resend spooled reports (central only)
 - `vuln-agent enroll [--force]` (central only): read `central_url` + `client_id` from config, read the enroll token from env `VULN_AGENT_ENROLL_TOKEN` or stdin (NEVER via CLI args, so it does not leak in `ps`), call `POST /api/v1/enroll`, and write `host_token` into `config.yaml` atomically (mode 600). Refuse if a token is already set, unless `--force`.
@@ -123,7 +124,7 @@ The HTML page shows host facts, counts, findings by severity, and new/resolved s
 - Write systemd units to `/etc/systemd/system/` and enable both timers:
   - `vuln-agent-scan.service` + `.timer` (daily, `RandomizedDelaySec=2h`, `Persistent=true`)
   - `vuln-agent-heartbeat.service` + `.timer` (every 15 minutes)
-  - `vuln-agent-serve.service` (written, not enabled)
+  - `vuln-agent-serve.service` (`Restart=on-failure`): enabled only on the first install (unit file did not exist), so an operator's `systemctl disable` survives reruns; reruns `try-restart` it to load the new binary
   - Resource limits: `CPUQuota=100%`, `MemoryMax=1G`, `Nice=19`, `IOSchedulingClass=idle`
 - Enroll stays a separate manual step (`vuln-agent enroll`)
 
