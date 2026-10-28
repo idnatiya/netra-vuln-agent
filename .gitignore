@@ -1,0 +1,19 @@
+# Build output
+/dist/
+
+# Dev data: raw reports from fakecentral
+/dev-out/
+
+# Ansible
+*.retry
+
+# Go test artifacts
+*.test
+*.out
+coverage.*
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+*.swp

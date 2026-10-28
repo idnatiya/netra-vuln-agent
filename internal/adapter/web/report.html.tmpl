@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Report.Host.Hostname}} · vuln-agent</title>
+<style>
+:root { --bg:#fff; --fg:#1a1a1a; --muted:#666; --line:#e3e3e3; --card:#f7f7f7; --crit:#b42318; --high:#c4570a; --ok:#18794e; }
+@media (prefers-color-scheme: dark) { :root { --bg:#141414; --fg:#e8e8e8; --muted:#9a9a9a; --line:#2c2c2c; --card:#1d1d1d; --crit:#ff7a6e; --high:#ffa25c; --ok:#5fd39a; } }
+* { box-sizing:border-box; }
+body { margin:0; padding:24px 16px; background:var(--bg); color:var(--fg); font:14px/1.5 system-ui,sans-serif; }
+main { max-width:1100px; margin:0 auto; }
+h1 { font-size:22px; margin:0 0 4px; } h2 { font-size:16px; margin:28px 0 8px; }
+.muted { color:var(--muted); }
+.facts { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; margin:16px 0; }
+.fact { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:8px 10px; }
+.fact b { display:block; font-size:12px; font-weight:500; color:var(--muted); }
+.crit { color:var(--crit); font-weight:600; } .high { color:var(--high); font-weight:600; } .ok { color:var(--ok); font-weight:600; }
+.err { background:var(--card); border-left:3px solid var(--crit); padding:8px 12px; white-space:pre-wrap; word-break:break-word; }
+.table { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; } th,td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { font-size:12px; font-weight:500; color:var(--muted); } td.v { font-family:ui-monospace,monospace; font-size:12px; white-space:nowrap; }
+a { color:inherit; }
+ul.hist { padding-left:18px; }
+</style>
+</head>
+<body><main>
+{{- $r := .Report}}
+<h1>{{$r.Host.Hostname}}</h1>
+<div class="muted">Scanned {{time $r.ScannedAt}} in {{dur $r.Duration}} · Trivy {{$r.TrivyVersion}} · agent {{$r.Host.AgentVersion}}</div>
+
+<div class="facts">
+  <div class="fact"><b>Status</b>{{if eq (print $r.Status) "ok"}}<span class="ok">ok</span>{{else}}<span class="crit">{{$r.Status}}</span>{{end}}</div>
+  <div class="fact"><b>Critical</b><span class="{{if index .Counts "CRITICAL"}}crit{{end}}">{{index .Counts "CRITICAL"}}</span></div>
+  <div class="fact"><b>High</b><span class="{{if index .Counts "HIGH"}}high{{end}}">{{index .Counts "HIGH"}}</span></div>
+  <div class="fact"><b>OS</b>{{$r.Host.OSName}} {{$r.Host.OSVersion}} ({{$r.Host.Arch}})</div>
+  <div class="fact"><b>Running kernel</b>{{$r.Host.KernelRunning}}</div>
+  <div class="fact"><b>Reboot required</b>{{if $r.Host.RebootRequired}}<span class="high">yes</span>{{else}}no{{end}}</div>
+  <div class="fact"><b>Automatic updates</b>{{if $r.Host.AutoUpdateEnabled}}enabled{{else}}disabled{{end}}</div>
+</div>
+
+{{if $r.Error}}<h2>Scan error</h2><div class="err">{{$r.Error}}</div>{{end}}
+
+{{if .Compared}}
+<h2>Since the previous scan</h2>
+<p>{{len .New}} new · {{len .Resolved}} resolved</p>
+{{if .New}}<h3>New</h3>{{template "table" .New}}{{end}}
+{{if .Resolved}}<h3>Resolved</h3>{{template "table" .Resolved}}{{end}}
+{{end}}
+
+{{if eq (print $r.Status) "ok"}}
+<h2>Open findings ({{len .Findings}})</h2>
+{{if .Findings}}{{template "table" .Findings}}{{else}}<p class="ok">No findings.</p>{{end}}
+{{end}}
+
+{{if .Linked}}
+<h2>History</h2>
+<ul class="hist">
+{{- range .History}}
+  <li>{{if eq . $.ID}}<b>{{name .}}</b>{{else}}<a href="/reports/{{.}}">{{name .}}</a>{{end}} · <a href="/reports/{{.}}.json">json</a></li>
+{{- end}}
+</ul>
+{{end}}
+</main></body>
+</html>
+{{define "table"}}
+<div class="table"><table>
+<tr><th>Severity</th><th>CVE</th><th>Package</th><th>Installed</th><th>Fixed</th><th>Target</th><th>Title</th></tr>
+{{- range .}}
+<tr><td class="{{lower .Severity}}">{{.Severity}}</td><td class="v">{{.VulnerabilityID}}</td><td>{{.PkgName}}</td><td class="v">{{.InstalledVersion}}</td><td class="v">{{.FixedVersion}}</td><td>{{.Target}}{{if .PkgPath}}<br><span class="muted">{{.PkgPath}}</span>{{end}}</td><td>{{.Title}}</td></tr>
+{{- end}}
+</table></div>
+{{end}}

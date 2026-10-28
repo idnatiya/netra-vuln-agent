@@ -1,0 +1,6 @@
+# Development inventory: one sample VM, pushing to fakecentral on the laptop over Tailscale.
+all:
+  children:
+    dev:
+      hosts:
+        me: {} # resolved through the "me" alias in ~/.ssh/config
