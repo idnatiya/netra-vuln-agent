@@ -22,7 +22,8 @@ If a design decision is ambiguous, ask first.
 - Static binary (`CGO_ENABLED=0`), targets `linux/amd64` and `linux/arm64`
 - Scanner: **Trivy binary** invoked via `os/exec` (DO NOT import Trivy as a library). Trivy version is pinned by `TRIVY_VERSION` in the `Makefile` (ldflag `main.trivyVersion`).
 - Install: `vuln-agent install` (no Ansible, no .deb/.rpm, no CI release pipeline)
-- Distribution (planned): an npm wrapper shipping the linux amd64/arm64 binary; the operator then runs `sudo vuln-agent install`
+- Distribution: npm package `netra-vuln-agent` (`sudo npm i -g netra-vuln-agent`). Root `package.json` + `vuln-agent.js` (Node shim, no deps) ship both `dist/vuln-agent-linux-{amd64,arm64}` binaries. Postinstall runs `vuln-agent install` only when global and root, and always exits 0 (a failed postinstall makes npm remove the binary needed to retry).
+- Release: bump `version` in `package.json`, commit, tag `vX.Y.Z`, `make npm-pack` (binaries get the same version), `npm publish <tgz>`.
 
 ## Repo Layout
 Folder pattern follows [khannedy/golang-clean-architecture](https://github.com/khannedy/golang-clean-architecture), stdlib only (none of its libraries). Files carry a layer suffix (`scan_usecase.go`, `report_repository.go`, `central_gateway.go`).

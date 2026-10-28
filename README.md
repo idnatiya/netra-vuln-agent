@@ -16,17 +16,29 @@ Runs Trivy on a Linux VM, keeps a slim report of HIGH/CRITICAL package vulnerabi
 ## Install
 
 ```sh
+sudo npm i -g netra-vuln-agent
+```
+As root, the package's postinstall runs `vuln-agent install`: it copies the binary to `/opt/vuln-agent/bin/vuln-agent` (linked as `/usr/bin/vuln-agent`), downloads the pinned Trivy release (checksum verified), writes a standalone `/etc/vuln-agent/config.yaml` if none exists, and enables the daily scan and 15-minute heartbeat systemd timers. It is safe to rerun; an existing config is never touched. See `config.example.yaml` for all config fields.
+
+The npm install never fails because of this step. If npm ran without root or with `--ignore-scripts`, or the step failed (e.g. GitHub unreachable), run it yourself:
+```sh
+sudo "$(command -v vuln-agent)" install
+```
+`sudo npm update -g netra-vuln-agent` reruns it, so the systemd timers pick up the new binary.
+
+Without npm, build and copy the binary yourself:
+```sh
 make build-linux     # dist/vuln-agent-linux-{amd64,arm64}
 scp dist/vuln-agent-linux-amd64 <vm>:
 ssh <vm> sudo ./vuln-agent-linux-amd64 install
 ```
-`install` copies the binary to `/opt/vuln-agent/bin/vuln-agent` (linked as `/usr/bin/vuln-agent`), downloads the pinned Trivy release (checksum verified), writes a standalone `/etc/vuln-agent/config.yaml` if none exists, and enables the daily scan and 15-minute heartbeat systemd timers. It is safe to rerun; an existing config is never touched. See `config.example.yaml` for all config fields.
 
 Uninstall:
 ```sh
 sudo systemctl disable --now vuln-agent-scan.timer vuln-agent-heartbeat.timer vuln-agent-serve.service
 sudo rm -f /etc/systemd/system/vuln-agent-* /usr/bin/vuln-agent && sudo systemctl daemon-reload
 sudo rm -rf /opt/vuln-agent /etc/vuln-agent /var/lib/vuln-agent
+sudo npm rm -g netra-vuln-agent
 ```
 
 ## Standalone
