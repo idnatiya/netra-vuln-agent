@@ -8,7 +8,7 @@ A small non-AI program installed on Linux VMs (Ubuntu/Debian and the RHEL family
 - **Standalone** (`central_url` empty): reports stay on the host (`/var/lib/vuln-agent/reports/`), viewable as `latest.html`, `vuln-agent report`, or `vuln-agent serve`.
 - **With central** (`central_url` + `client_id` set): reports are also sent to central (repo `netra-vuln`: API + MySQL + admin dashboard), which manages 26 VMs across several clients.
 
-Central imports this module for the JSON contract (`wire`, `scanconfig`). Tag a release (`vX.Y.Z`) when the contract changes and bump it in central's `go.mod`.
+Central imports this module for the JSON contract (`pkg/wire`, `pkg/scanconfig`). Tag a release (`vX.Y.Z`) when the contract changes and bump it in central's `go.mod`.
 
 If a design decision is ambiguous, ask first.
 
@@ -25,28 +25,35 @@ If a design decision is ambiguous, ask first.
 - Distribution (planned): an npm wrapper shipping the linux amd64/arm64 binary; the operator then runs `sudo vuln-agent install`
 
 ## Repo Layout
+Folder pattern follows [khannedy/golang-clean-architecture](https://github.com/khannedy/golang-clean-architecture), stdlib only (none of its libraries). Files carry a layer suffix (`scan_usecase.go`, `report_repository.go`, `central_gateway.go`).
 ```
 go.mod                  # module github.com/idnatiya/netra-vuln-agent
-cmd/vuln-agent/         # composition root: parse subcommand, wire adapters -> usecases
+cmd/vuln-agent/         # main.go only: version vars (ldflags) + cli.Run
 internal/
-  domain/               # entities + pure business rules (Finding, Report, HostInfo, ScanConfig), stdlib only
+  entity/               # entities + pure business rules (Finding, Report, HostInfo, ScanConfig), stdlib only
   usecase/              # scan/heartbeat/flush/enroll/check orchestration; ports (interfaces) in ports.go
-  adapter/
-    trivy/              # Scanner: exec Trivy + streaming parser
+  repository/           # filesystem storage: reports (send spool + local history), scan config cache
+  gateway/
+    central/            # HTTP client to central
+    trivy/              # Scanner: exec Trivy + streaming parser; Trivy release installer
     hostinfo/           # Linux HostInspector
-    central/            # HTTP client to central; dto.go maps domain <-> wire
-    spool/              # filesystem report store (send spool and local history)
-    localconfig/        # config.yaml + ScanConfig cache
-    web/                # HTML report page + read-only HTTP handler
-wire/                   # public: the JSON contract with central
-scanconfig/             # public: Config, Default(), Validate() (central validates overrides with it)
-packaging/              # config.example.yaml
-docs/
+  model/converter/      # entity -> wire mapping
+  delivery/
+    cli/                # subcommands (Run), install command
+    http/               # HTML report page + read-only HTTP handler (imported as reporthttp)
+  config/               # config.yaml (Load, Validate, host token) + app.go wiring (paths, NewApp)
+pkg/
+  wire/                 # public: the JSON contract with central
+  scanconfig/           # public: Config, Default(), Validate() (central validates overrides with it)
+test/                   # all tests, black-box (package test); fixtures in test/testdata
+README.md
+config.example.yaml
 ```
-Dependency rule: `domain` <- `usecase` <- `adapter` <- `cmd`. Domain knows nothing about JSON/HTTP/exec. Interfaces are defined on the consumer side.
+Keep root folders to `cmd internal pkg test`; `pkg/` holds only what central imports.
+Dependency rule: `entity` <- `usecase` <- `repository`/`gateway`/`model` <- `config` <- `delivery` <- `cmd`. Entity knows nothing about JSON/HTTP/exec. Interfaces are defined on the consumer side (`usecase/ports.go`).
 
-### Contract (`wire`, `scanconfig`)
-Only JSON-tagged contract types. Central decodes requests leniently (ignores unknown fields, so newer agents keep working); the agent decodes responses strictly, so central must never add response fields. The agent's `domain.ScanConfig` is an alias of `scanconfig.Config`.
+### Contract (`pkg/wire`, `pkg/scanconfig`)
+Only JSON-tagged contract types. Central decodes requests leniently (ignores unknown fields, so newer agents keep working); the agent decodes responses strictly, so central must never add response fields. The agent's `entity.ScanConfig` is an alias of `scanconfig.Config`.
 
 ## File locations
 - Agent binary: `/opt/vuln-agent/bin/vuln-agent`, symlinked as `/usr/bin/vuln-agent` (so `sudo vuln-agent scan` works; run it after patching a VM to resolve fixed findings right away)
@@ -57,7 +64,7 @@ Only JSON-tagged contract types. Central decodes requests leniently (ignores unk
 - Trivy cache: `/var/lib/vuln-agent/cache/`
 
 ## Local config (`config.yaml`)
-See `packaging/config.example.yaml`.
+See `config.example.yaml`.
 ```yaml
 central_url: https://<central.domain>   # empty = standalone; http:// allowed over Tailscale, with a warning
 client_id: <client_a>                   # must be empty when standalone
@@ -105,7 +112,7 @@ The HTML page shows host facts, counts, findings by severity, and new/resolved s
 ## Heartbeat
 `POST /api/v1/heartbeat` with compact host metadata. Scheduled every 15 minutes.
 
-## Install (`vuln-agent install`, `cmd/vuln-agent/install.go`)
+## Install (`vuln-agent install`, `internal/delivery/cli/install_command.go`)
 - Create dirs (`/opt/vuln-agent/bin` 755, `/etc/vuln-agent` and `/var/lib/vuln-agent/{spool,reports,cache}` 700)
 - Copy the running binary to `/opt/vuln-agent/bin/vuln-agent`, symlink `/usr/bin/vuln-agent`
 - Download the pinned Trivy release from GitHub, verify it against the release checksums file, install `/opt/vuln-agent/bin/trivy` (skipped if that version is already installed)
@@ -122,6 +129,7 @@ Log to stdout/stderr (into journald), structured format (`log/slog`). NEVER prin
 
 ## Testing
 - `make test`
+- Tests live in `test/` (package `test`) and use only exported APIs; fixtures in `test/testdata/`
 - Unit tests for the Trivy parser with JSON fixtures (including large files and empty output)
 - Usecase tests with fakes for both modes; HTML/handler tests (escaping, diff, path safety)
 
