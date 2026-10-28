@@ -25,6 +25,7 @@ If a design decision is ambiguous, ask first.
 - Distribution: npm package `netra-vuln-agent` (`sudo npm i -g netra-vuln-agent`). Root `package.json` + `vuln-agent.js` (Node shim, no deps) ship both `dist/vuln-agent-linux-{amd64,arm64}` binaries. Postinstall runs `vuln-agent install` only when global and root, and always exits 0 (a failed postinstall makes npm remove the binary needed to retry).
 - License: GPL-3.0-only (`LICENSE`, copyright idnatiya); keep new dependencies GPL-3.0-compatible.
 - Release: bump `version` in `package.json`, commit, tag `vX.Y.Z`, `make npm-pack` (binaries get the same version), `npm publish <tgz>`.
+- Manual/dev update over SSH: `make deploy HOSTS="user@vm ..."` (build, scp to the user's home, `sudo ./vuln-agent.new install`, remove it).
 
 ## Repo Layout
 Folder pattern follows [khannedy/golang-clean-architecture](https://github.com/khannedy/golang-clean-architecture), stdlib only (none of its libraries). Files carry a layer suffix (`scan_usecase.go`, `report_repository.go`, `central_gateway.go`).

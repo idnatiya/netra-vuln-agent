@@ -26,12 +26,11 @@ sudo "$(command -v vuln-agent)" install
 ```
 `sudo npm update -g netra-vuln-agent` reruns it, so the systemd timers pick up the new binary.
 
-Without npm, build and copy the binary yourself:
+Without npm, install or update from a checkout over SSH (builds both binaries, picks the VM's arch, runs `install`; sudo may ask for a password):
 ```sh
-make build-linux     # dist/vuln-agent-linux-{amd64,arm64}
-scp dist/vuln-agent-linux-amd64 <vm>:
-ssh <vm> sudo ./vuln-agent-linux-amd64 install
+make deploy HOSTS="user@vm1 user@vm2"
 ```
+On a host installed with npm, a later `sudo npm update -g netra-vuln-agent` puts the npm version back.
 
 Uninstall:
 ```sh
