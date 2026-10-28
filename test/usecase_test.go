@@ -237,6 +237,46 @@ func TestScanConfigFallback(t *testing.T) {
 	}
 }
 
+func TestScanExtraSkipDirs(t *testing.T) {
+	central := entity.DefaultScanConfig()
+	central.SkipDirs = []string{"/x"}
+	tooMany := make([]string, 100)
+	for i := range tooMany {
+		tooMany[i] = fmt.Sprintf("/extra%d", i)
+	}
+
+	tests := []struct {
+		name   string
+		c      *fakeCentral // nil = standalone
+		extras []string
+		want   []string
+	}{
+		{"standalone adds to default", nil, []string{"/data"}, append(entity.DefaultScanConfig().SkipDirs, "/data")},
+		{"central adds and skips duplicates", &fakeCentral{cfg: central}, []string{"/data", "/x"}, []string{"/x", "/data"}},
+		{"over the limit drops extras", &fakeCentral{cfg: central}, tooMany, []string{"/x"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			sc := &fakeScanner{}
+			cache := &fakeCache{}
+			s := newScan(sc, tt.c, newFakeSpool(), cache)
+			if tt.c == nil {
+				s.Central, s.Spool, s.Flush = nil, nil, nil
+			}
+			s.ExtraSkipDirs = tt.extras
+			if err := s.Run(context.Background()); err != nil {
+				t.Fatal(err)
+			}
+			if !slices.Equal(sc.gotCfg.SkipDirs, tt.want) {
+				t.Fatalf("skip dirs = %v, want %v", sc.gotCfg.SkipDirs, tt.want)
+			}
+			if tt.c != nil && !slices.Equal(cache.cfg.SkipDirs, central.SkipDirs) {
+				t.Fatalf("cache = %v, want central config without extras", cache.cfg.SkipDirs)
+			}
+		})
+	}
+}
+
 func TestFlush(t *testing.T) {
 	sp := newFakeSpool()
 	for i := range 4 {

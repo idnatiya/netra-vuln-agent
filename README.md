@@ -67,6 +67,14 @@ sudo vuln-agent scan
 ```
 Reports are kept locally as in standalone mode and also sent to central. Failed sends are spooled and retried on the next scan or `vuln-agent flush`. To revoke a host, run `central host revoke <hostname>` on central.
 
+## Excluding folders
+
+Trivy skips `/proc`, `/sys`, `/dev`, `/run`, `/tmp`, snap/docker/containerd state, `/mnt`, `/media`, caches, and `/usr/share/doc` by default. To skip more on one host, list them in `/etc/vuln-agent/config.yaml`; they are added to the defaults (or to central's list), in both modes:
+```yaml
+extra_skip_dirs: ["/data/backup", "/home/*/projects"]
+```
+Run `sudo vuln-agent check` after editing. To change the list for every host of a client, set `skip_dirs` on central instead (`central client set-config`); that one replaces the default list, so include the defaults you still want.
+
 ## What the agent reads and sends
 
 It reads the filesystem through Trivy (`rootfs /`, skipping pseudo filesystems and caches), `/etc/os-release`, the running kernel, uptime, the reboot-required flag, and whether automatic updates are enabled. The report holds that host metadata and, per finding: target, type, CVE, package name/path, installed and fixed version, severity, and title. Nothing else is sent, and the agent never runs commands it receives from central.

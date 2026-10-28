@@ -73,6 +73,7 @@ client_id: <client_a>                   # must be empty when standalone
 token: <per-host token>                 # must be empty when standalone
 hostname_override: ""                   # optional; defaults to the OS hostname
 ca_file: ""                             # optional, for a custom CA
+extra_skip_dirs: []                     # optional; added to the skip_dirs in effect (both modes)
 ```
 
 ## CLI subcommands
@@ -100,7 +101,7 @@ ca_file: ""                             # optional, for a custom CA
    --skip-dirs /proc,/sys,/dev,/run,/tmp,/snap,/var/lib/snapd,/var/lib/docker,/var/lib/containerd,/mnt,/media,/var/cache,/root/.cache,/home/*/.cache,/home/*/.local/share/pnpm,/usr/share/doc
    --format json -q --output <temp file>
    ```
-   `severity`, `ignore_unfixed`, `skip_dirs`, and `timeout` can be overridden by config from central, but the agent ONLY accepts those fields. Reject any other field.
+   `severity`, `ignore_unfixed`, `skip_dirs`, and `timeout` can be overridden by config from central, but the agent ONLY accepts those fields. Reject any other field. Central's `skip_dirs` replaces the default list; the local `extra_skip_dirs` is then appended (duplicates skipped; dropped with a warning if the merged config is invalid, e.g. over 100 entries). The scan config cache keeps central's config without the extras.
 3. Decode the output with `json.NewDecoder` (streaming) into a slim struct containing only:
    `Target, Type, VulnerabilityID, PkgName, PkgPath, InstalledVersion, FixedVersion, Severity, Title`.
 4. Add host metadata:

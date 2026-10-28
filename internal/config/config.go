@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/idnatiya/netra-vuln-agent/internal/repository"
+	"github.com/idnatiya/netra-vuln-agent/pkg/scanconfig"
 	"gopkg.in/yaml.v3"
 )
 
@@ -32,6 +33,8 @@ type Config struct {
 	Token            Secret `yaml:"token"`
 	HostnameOverride string `yaml:"hostname_override"`
 	CAFile           string `yaml:"ca_file"`
+	// ExtraSkipDirs are added to the skip_dirs in effect (default or from central).
+	ExtraSkipDirs []string `yaml:"extra_skip_dirs"`
 }
 
 // Standalone reports whether the agent runs without central (no central_url):
@@ -39,6 +42,13 @@ type Config struct {
 func (c Config) Standalone() bool { return c.CentralURL == "" }
 
 func (c Config) Validate() error {
+	if len(c.ExtraSkipDirs) > 0 {
+		sc := scanconfig.Default()
+		sc.SkipDirs = append(sc.SkipDirs, c.ExtraSkipDirs...)
+		if err := sc.Validate(); err != nil {
+			return fmt.Errorf("extra_skip_dirs: %w", err)
+		}
+	}
 	if c.Standalone() {
 		if c.ClientID != "" || c.Token != "" {
 			return errors.New("central_url is empty (standalone) but client_id or token is set")

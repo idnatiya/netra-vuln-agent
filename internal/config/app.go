@@ -45,7 +45,7 @@ func NewApp(f *File, version string, log *slog.Logger) (*App, error) {
 	app.Scan = &usecase.Scan{
 		Scanner: app.Scanner, Host: app.Host, History: History(),
 		Cache: &repository.ScanConfigRepository{Path: filepath.Join(StateDir, "scan-config.json")},
-		Now:   time.Now, Log: log,
+		Now:   time.Now, Log: log, ExtraSkipDirs: cfg.ExtraSkipDirs,
 	}
 	if cfg.Standalone() {
 		return app, nil

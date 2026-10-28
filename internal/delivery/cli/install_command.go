@@ -33,6 +33,8 @@ client_id: ""
 token: ""
 hostname_override: ""
 ca_file: ""
+# Folders to exclude, added to the default skip list, e.g. ["/data/backup"].
+extra_skip_dirs: []
 `
 
 const unitLimits = `CPUQuota=100%

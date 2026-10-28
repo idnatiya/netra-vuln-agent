@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"slices"
 	"time"
 
 	"github.com/idnatiya/netra-vuln-agent/internal/entity"
@@ -23,9 +24,11 @@ type Scan struct {
 	Spool   Spool
 	History Spool // local report history (both modes)
 	Cache   ScanConfigCache
-	Flush   *Flush
-	Now     func() time.Time
-	Log     *slog.Logger
+	// ExtraSkipDirs come from the local config and are added to the scan config in effect.
+	ExtraSkipDirs []string
+	Flush         *Flush
+	Now           func() time.Time
+	Log           *slog.Logger
 }
 
 func (s *Scan) Run(ctx context.Context) error {
@@ -38,7 +41,7 @@ func (s *Scan) Run(ctx context.Context) error {
 		s.Log.Info("flushed spool", "sent", n)
 	}
 
-	r, scanErr := s.scan(ctx, s.scanConfig(ctx))
+	r, scanErr := s.scan(ctx, s.withExtraSkipDirs(s.scanConfig(ctx)))
 	s.saveHistory(r)
 
 	if err := s.Central.SendReport(ctx, r); err != nil {
@@ -57,7 +60,7 @@ func (s *Scan) Run(ctx context.Context) error {
 }
 
 func (s *Scan) runStandalone(ctx context.Context) error {
-	r, scanErr := s.scan(ctx, s.localScanConfig())
+	r, scanErr := s.scan(ctx, s.withExtraSkipDirs(s.localScanConfig()))
 	if err := s.History.Save(r); err != nil {
 		return errors.Join(scanErr, fmt.Errorf("save report: %w", err))
 	}
@@ -132,4 +135,24 @@ func (s *Scan) localScanConfig() entity.ScanConfig {
 	}
 	s.Log.Info("using default scan config", "cache_err", err)
 	return entity.DefaultScanConfig()
+}
+
+// withExtraSkipDirs appends the local extra skip dirs that are not listed yet.
+// If the result is invalid (e.g. over the limit), the extras are dropped.
+func (s *Scan) withExtraSkipDirs(cfg entity.ScanConfig) entity.ScanConfig {
+	if len(s.ExtraSkipDirs) == 0 {
+		return cfg
+	}
+	merged := cfg
+	merged.SkipDirs = slices.Clone(cfg.SkipDirs)
+	for _, d := range s.ExtraSkipDirs {
+		if !slices.Contains(merged.SkipDirs, d) {
+			merged.SkipDirs = append(merged.SkipDirs, d)
+		}
+	}
+	if err := merged.Validate(); err != nil {
+		s.Log.Warn("ignoring extra_skip_dirs", "err", err)
+		return cfg
+	}
+	return merged
 }

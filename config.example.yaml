@@ -27,3 +27,9 @@ hostname_override: ""
 
 # Optional. Path to a custom CA PEM file if central uses a private CA.
 ca_file: ""
+
+# Optional. Folders Trivy should skip, ADDED to the skip list in effect (the
+# defaults such as /proc, /sys, /tmp, caches, or the skip_dirs set on central).
+# Absolute paths, no commas; "*" globs allowed. Works in both modes.
+extra_skip_dirs: []
+#extra_skip_dirs: ["/data/backup", "/srv/uploads", "/home/*/projects"]

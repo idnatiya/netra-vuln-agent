@@ -86,3 +86,22 @@ func TestSecretNotLeaked(t *testing.T) {
 		t.Fatalf("token leaked: %s", out)
 	}
 }
+
+func TestLoadExtraSkipDirs(t *testing.T) {
+	for extras, wantErr := range map[string]bool{
+		``:                    false,
+		`extra_skip_dirs: []`: false,
+		`extra_skip_dirs: ["/data/*/tmp", "/srv/uploads"]`: false,
+		`extra_skip_dirs: ["data"]`:                        true,
+		`extra_skip_dirs: ["/a,/b"]`:                       true,
+		`extra_skip_dirs: ["--config=/x"]`:                 true,
+	} {
+		f, _, err := config.Load(writeConfig(t, "central_url: \"\"\n"+extras+"\n", 0o600))
+		if (err != nil) != wantErr {
+			t.Errorf("%q: err = %v, want error %v", extras, err, wantErr)
+		}
+		if err == nil && extras == `extra_skip_dirs: ["/data/*/tmp", "/srv/uploads"]` && len(f.Config.ExtraSkipDirs) != 2 {
+			t.Errorf("parsed %v", f.Config.ExtraSkipDirs)
+		}
+	}
+}
