@@ -18,7 +18,7 @@ If a design decision is ambiguous, ask first.
 3. **Simple and maintainable**: the only external dependency is `gopkg.in/yaml.v3`. Keep scope small.
 
 ## Stack
-- Language: **Go** (latest stable); stdlib `net/http` for the central client and `serve`, `html/template` for the report page
+- Language: **Go** (latest stable; build toolchain pinned by `toolchain` in `go.mod`, bump it for Go security releases; keep the `go` line low so central can build); stdlib `net/http` for the central client and `serve`, `html/template` for the report page
 - Static binary (`CGO_ENABLED=0`), targets `linux/amd64` and `linux/arm64`
 - Scanner: **Trivy binary** invoked via `os/exec` (DO NOT import Trivy as a library). Trivy version is pinned by `TRIVY_VERSION` in the `Makefile` (ldflag `main.trivyVersion`).
 - Install: `vuln-agent install` (no Ansible, no .deb/.rpm, no CI release pipeline)
