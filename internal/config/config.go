@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/url"
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/idnatiya/netra-vuln-agent/internal/repository"
@@ -38,6 +39,22 @@ type Config struct {
 	ExtraSkipDirs []string `yaml:"extra_skip_dirs"`
 	// ServeAddr is the report page address; empty = DefaultServeAddr.
 	ServeAddr string `yaml:"serve_addr"`
+	// AppDirs are scanned for app dependencies (Composer, npm, ...), plus the
+	// pm2 app dirs. Unset = DefaultAppDirs; [] = OS packages only.
+	AppDirs *[]string `yaml:"app_dirs"`
+}
+
+// DefaultAppDirs are the usual homes of web apps (Laravel, Node).
+var DefaultAppDirs = []string{"/var/www", "/srv", "/opt"}
+
+const maxAppDirs = 50
+
+// ScanAppDirs is the app_dirs setting in effect.
+func (c Config) ScanAppDirs() []string {
+	if c.AppDirs == nil {
+		return slices.Clone(DefaultAppDirs)
+	}
+	return *c.AppDirs
 }
 
 // DefaultServeAddr keeps the unauthenticated report page on loopback.
@@ -59,6 +76,16 @@ func (c Config) Validate() error {
 	if c.ServeAddr != "" {
 		if _, _, err := net.SplitHostPort(c.ServeAddr); err != nil {
 			return fmt.Errorf("serve_addr: %w", err)
+		}
+	}
+	if c.AppDirs != nil {
+		if len(*c.AppDirs) > maxAppDirs {
+			return fmt.Errorf("too many app_dirs (%d > %d)", len(*c.AppDirs), maxAppDirs)
+		}
+		for _, d := range *c.AppDirs {
+			if !strings.HasPrefix(d, "/") || strings.ContainsAny(d, "\x00\n\r") {
+				return fmt.Errorf("invalid app_dir %q: must be an absolute path", d)
+			}
 		}
 	}
 	if len(c.ExtraSkipDirs) > 0 {

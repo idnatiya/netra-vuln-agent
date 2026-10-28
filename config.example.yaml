@@ -34,6 +34,12 @@ ca_file: ""
 extra_skip_dirs: []
 #extra_skip_dirs: ["/data/backup", "/srv/uploads", "/home/*/projects"]
 
+# Optional. Folders scanned for app dependencies (Laravel/Composer vendor,
+# node_modules, ...), on top of OS packages. pm2 apps saved with `pm2 save`
+# are added automatically. Unset = ["/var/www", "/srv", "/opt"];
+# [] = OS packages only (pm2 apps skipped too). Absolute paths.
+#app_dirs: ["/var/www", "/srv", "/opt", "/home/deploy/apps"]
+
 # Optional. Address of the report page (vuln-agent-serve.service, enabled by
 # install). Empty = 127.0.0.1:8090; from a laptop: ssh -L 8090:127.0.0.1:8090 <host>.
 # The page has NO authentication: any other address (e.g. a Tailscale IP such

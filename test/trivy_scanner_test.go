@@ -97,9 +97,10 @@ func TestParseLarge(t *testing.T) {
 
 func TestArgs(t *testing.T) {
 	r := &trivy.Runner{CacheDir: "/var/lib/vuln-agent/cache"}
-	got := r.Args(entity.DefaultScanConfig(), "/out.json")
+	got := r.Args(entity.DefaultScanConfig(), "/", "os", "/out.json")
 	for _, want := range [][]string{
 		{"rootfs", "/"},
+		{"--pkg-types", "os"},
 		{"--scanners", "vuln"},
 		{"--severity", "HIGH,CRITICAL"},
 		{"--timeout", "30m0s"},
@@ -115,7 +116,7 @@ func TestArgs(t *testing.T) {
 	}
 	cfg := entity.DefaultScanConfig()
 	cfg.SkipDirs = nil
-	if slices.Contains(r.Args(cfg, "/o"), "--skip-dirs") {
+	if slices.Contains(r.Args(cfg, "/", "os", "/o"), "--skip-dirs") {
 		t.Fatal("--skip-dirs without value")
 	}
 }
@@ -126,20 +127,47 @@ func fakeRunner(t *testing.T, mode string) *trivy.Runner {
 	fixture, _ := filepath.Abs("testdata/normal.json")
 	t.Setenv("FAKE_TRIVY_MODE", mode)
 	t.Setenv("FAKE_TRIVY_FIXTURE", fixture)
+	t.Setenv("FAKE_TRIVY_LOG", filepath.Join(t.TempDir(), "runs.log"))
 	return &trivy.Runner{Bin: bin, CacheDir: t.TempDir(), TmpDir: t.TempDir()}
 }
 
 func TestScanExec(t *testing.T) {
 	r := fakeRunner(t, "ok")
+	app := t.TempDir()
+	r.AppDirs = []string{app, filepath.Join(app, "nested"), "/does/not/exist"}
+	os.Mkdir(filepath.Join(app, "nested"), 0o755)
 	got, err := r.Scan(context.Background(), entity.DefaultScanConfig())
-	if err != nil || len(got) != 4 {
+	if err != nil || len(got) != 8 {
 		t.Fatalf("got %d, %v", len(got), err)
+	}
+	runs, _ := os.ReadFile(os.Getenv("FAKE_TRIVY_LOG"))
+	if want := "/ os\n" + app + " library\n"; string(runs) != want {
+		t.Fatalf("runs = %q, want %q", runs, want)
+	}
+	prefix := strings.TrimPrefix(app, "/") + "/"
+	if got[2].Target != "usr/local/bin/app" || got[6].Target != prefix+"usr/local/bin/app" {
+		t.Fatalf("binary target: %q / %q", got[2].Target, got[6].Target)
+	}
+	if got[7].PkgPath != prefix+"var/www/shop/node_modules/devalue/package.json" || got[7].Target != got[3].Target {
+		t.Fatalf("app pkg path: %+v", got[7])
 	}
 	if left, _ := os.ReadDir(r.TmpDir); len(left) != 0 {
 		t.Fatalf("temp file not removed: %v", left)
 	}
 	if v, err := r.Version(context.Background()); err != nil || v != "0.99.0" {
 		t.Fatalf("version %q, %v", v, err)
+	}
+}
+
+func TestAppTargets(t *testing.T) {
+	d := t.TempDir()
+	for _, sub := range []string{"www/a", "srv"} {
+		os.MkdirAll(filepath.Join(d, sub), 0o755)
+	}
+	os.WriteFile(filepath.Join(d, "file"), nil, 0o644)
+	got := trivy.AppTargets([]string{d + "/www/a", d + "/www/", d + "/srv", d + "/srv", d + "/missing", d + "/file", "/"})
+	if want := []string{d + "/srv", d + "/www"}; !slices.Equal(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 

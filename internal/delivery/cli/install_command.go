@@ -36,6 +36,9 @@ hostname_override: ""
 ca_file: ""
 # Folders to exclude, added to the default skip list, e.g. ["/data/backup"].
 extra_skip_dirs: []
+# Folders scanned for app dependencies (Composer, node_modules), plus pm2 apps.
+# Unset = ["/var/www", "/srv", "/opt"]; [] = OS packages only.
+#app_dirs: ["/var/www", "/srv", "/opt"]
 # Report page address (no auth). Empty = 127.0.0.1:8090, reach it with
 # ssh -L 8090:127.0.0.1:8090 <host>. After a change: systemctl restart vuln-agent-serve
 serve_addr: ""

@@ -4,6 +4,8 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"slices"
+	"strings"
 	"testing"
 
 	"github.com/idnatiya/netra-vuln-agent/internal/gateway/hostinfo"
@@ -62,5 +64,24 @@ func TestOSFamily(t *testing.T) {
 		if got := (&hostinfo.Linux{Root: root}).Inspect(context.Background()).OSFamily; got != want {
 			t.Errorf("%q: got %q want %q", in, got, want)
 		}
+	}
+}
+
+func TestPM2Dirs(t *testing.T) {
+	root := t.TempDir()
+	writeFiles(t, root, map[string]string{
+		"/root/.pm2/dump.pm2":        `[{"name":"api","pm_cwd":"/srv/api"},{"name":"x","pm_cwd":"relative"}]`,
+		"/home/deploy/.pm2/dump.pm2": `[{"name":"web","pm_cwd":"/home/deploy/web","env":{"A":"1"}}]`,
+		"/home/broken/.pm2/dump.pm2": `{not json`,
+	})
+	dirs, err := (&hostinfo.Linux{Root: root}).PM2Dirs()
+	if !slices.Equal(dirs, []string{"/srv/api", "/home/deploy/web"}) {
+		t.Fatalf("dirs = %v", dirs)
+	}
+	if err == nil || !strings.Contains(err.Error(), "broken") {
+		t.Fatalf("err = %v", err)
+	}
+	if dirs, err := (&hostinfo.Linux{Root: t.TempDir()}).PM2Dirs(); dirs != nil || err != nil {
+		t.Fatalf("no pm2: %v, %v", dirs, err)
 	}
 }

@@ -76,6 +76,7 @@ hostname_override: ""                   # optional; defaults to the OS hostname
 ca_file: ""                             # optional, for a custom CA
 extra_skip_dirs: []                     # optional; added to the skip_dirs in effect (both modes)
 serve_addr: ""                          # optional; report page address, empty = 127.0.0.1:8090
+app_dirs: [...]                         # optional; app folders to scan, unset = /var/www, /srv, /opt; [] = OS only
 ```
 
 ## CLI subcommands
@@ -91,16 +92,17 @@ serve_addr: ""                          # optional; report page address, empty =
 
 ## `scan` flow
 1. Central mode: send spooled reports first, then fetch scan config from `GET /api/v1/config` (read-only). On failure (or standalone), use the last locally cached config, or the default if none exists.
-2. Run Trivy with a `context` timeout (default 40 minutes), at low priority, with default arguments:
+2. Run Trivy with a `context` timeout (default 40 minutes) covering all runs, at low priority. One run for OS packages (`rootfs / --pkg-types os`), then one per existing app dir (`rootfs <dir> --pkg-types library`; app dirs = `app_dirs` (default `/var/www`, `/srv`, `/opt`) plus the `pm_cwd` of pm2 apps read from `/root/.pm2/dump.pm2` and `/home/*/.pm2/dump.pm2`, never by running pm2; missing, nested, and duplicate dirs dropped). App run paths are relative to the dir, so `Target`/`PkgPath` get the dir prefixed. Any failed run makes the scan an error. Default arguments:
    ```
-   rootfs /
+   rootfs <target>
    --scanners vuln
+   --pkg-types os|library
    --list-all-pkgs=false
    --ignore-unfixed
    --severity HIGH,CRITICAL
    --timeout 30m
    --cache-dir /var/lib/vuln-agent/cache
-   --skip-dirs /proc,/sys,/dev,/run,/tmp,/snap,/var/lib/snapd,/var/lib/docker,/var/lib/containerd,/mnt,/media,/var/cache,/root/.cache,/home/*/.cache,/home/*/.local/share/pnpm,/usr/share/doc
+   --skip-dirs /proc,/sys,/dev,/run,/tmp,/snap,/var/lib/snapd,/var/lib/docker,/var/lib/containerd,/mnt,/media,/var/cache,/root/.cache,/home/*/.cache,/home/*/.local/share/pnpm,/usr/share/doc,/opt/vuln-agent
    --format json -q --output <temp file>
    ```
    `severity`, `ignore_unfixed`, `skip_dirs`, and `timeout` can be overridden by config from central, but the agent ONLY accepts those fields. Reject any other field. Central's `skip_dirs` replaces the default list; the local `extra_skip_dirs` is then appended (duplicates skipped; dropped with a warning if the merged config is invalid, e.g. over 100 entries). The scan config cache keeps central's config without the extras.

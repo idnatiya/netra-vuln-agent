@@ -3,6 +3,7 @@ package config
 import (
 	"log/slog"
 	"path/filepath"
+	"slices"
 	"time"
 
 	"github.com/idnatiya/netra-vuln-agent/internal/gateway/central"
@@ -41,6 +42,13 @@ func NewApp(f *File, version string, log *slog.Logger) (*App, error) {
 	app := &App{
 		Host:    &hostinfo.Linux{HostnameOverride: cfg.HostnameOverride, AgentVersion: version},
 		Scanner: &trivy.Runner{Bin: TrivyBin, CacheDir: filepath.Join(StateDir, "cache"), TmpDir: StateDir},
+	}
+	if dirs := cfg.ScanAppDirs(); len(dirs) > 0 {
+		pm2, err := app.Host.PM2Dirs()
+		if err != nil {
+			log.Warn("read pm2 app list", "err", err)
+		}
+		app.Scanner.AppDirs = slices.Concat(dirs, pm2)
 	}
 	app.Scan = &usecase.Scan{
 		Scanner: app.Scanner, Host: app.Host, History: History(),

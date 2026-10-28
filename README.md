@@ -66,9 +66,20 @@ sudo vuln-agent scan
 ```
 Reports are kept locally as in standalone mode and also sent to central. Failed sends are spooled and retried on the next scan or `vuln-agent flush`. To revoke a host, run `central host revoke <hostname>` on central.
 
+## What gets scanned
+
+Two kinds of Trivy runs per scan, kept small on purpose:
+- **OS packages** (`rootfs / --pkg-types os`): everything installed with apt/dnf, so the kernel, OpenSSH, nginx/Apache, PHP, Node.js from NodeSource, OpenSSL, and so on.
+- **App dependencies** (`rootfs <dir> --pkg-types library`) in `/var/www`, `/srv`, `/opt`, plus the working dir of every pm2 app saved with `pm2 save` (read from `/root/.pm2/dump.pm2` and `/home/*/.pm2/dump.pm2`; pm2 is never run). This finds Laravel/Composer packages (`vendor/composer/installed.json`) and Node packages (`node_modules`); lockfiles alone are not read.
+
+Apps elsewhere: list their folders in `/etc/vuln-agent/config.yaml` (this replaces the default list; `[]` scans OS packages only):
+```yaml
+app_dirs: ["/var/www", "/srv", "/opt", "/home/deploy/apps"]
+```
+
 ## Excluding folders
 
-Trivy skips `/proc`, `/sys`, `/dev`, `/run`, `/tmp`, snap/docker/containerd state, `/mnt`, `/media`, caches, and `/usr/share/doc` by default. To skip more on one host, list them in `/etc/vuln-agent/config.yaml`; they are added to the defaults (or to central's list), in both modes:
+Trivy skips `/proc`, `/sys`, `/dev`, `/run`, `/tmp`, snap/docker/containerd state, `/mnt`, `/media`, caches, `/usr/share/doc`, and `/opt/vuln-agent` by default. To skip more on one host, list them in `/etc/vuln-agent/config.yaml`; they are added to the defaults (or to central's list), in both modes:
 ```yaml
 extra_skip_dirs: ["/data/backup", "/home/*/projects"]
 ```
@@ -76,7 +87,7 @@ Run `sudo vuln-agent check` after editing. To change the list for every host of 
 
 ## What the agent reads and sends
 
-It reads the filesystem through Trivy (`rootfs /`, skipping pseudo filesystems and caches), `/etc/os-release`, the running kernel, uptime, the reboot-required flag, and whether automatic updates are enabled. The report holds that host metadata and, per finding: target, type, CVE, package name/path, installed and fixed version, severity, and title. Nothing else is sent, and the agent never runs commands it receives from central.
+It reads, through Trivy, the OS package database and the app folders above (skipping pseudo filesystems and caches), pm2 dump files, `/etc/os-release`, the running kernel, uptime, the reboot-required flag, and whether automatic updates are enabled. The report holds that host metadata and, per finding: target, type, CVE, package name/path, installed and fixed version, severity, and title. Nothing else is sent, and the agent never runs commands it receives from central.
 
 ## License
 

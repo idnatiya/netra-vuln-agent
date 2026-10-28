@@ -125,3 +125,22 @@ func TestServeAddress(t *testing.T) {
 		}
 	}
 }
+
+func TestAppDirs(t *testing.T) {
+	for yml, want := range map[string]string{
+		``:                               "[/var/www /srv /opt]",
+		`app_dirs: []`:                   "[]",
+		`app_dirs: ["/home/deploy/app"]`: "[/home/deploy/app]",
+		`app_dirs: ["app"]`:              "error",
+		`app_dirs: ["-x"]`:               "error",
+	} {
+		f, _, err := config.Load(writeConfig(t, "central_url: \"\"\n"+yml+"\n", 0o600))
+		got := "error"
+		if err == nil {
+			got = fmt.Sprint(f.Config.ScanAppDirs())
+		}
+		if got != want {
+			t.Errorf("%q: got %s (%v), want %s", yml, got, err, want)
+		}
+	}
+}

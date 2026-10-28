@@ -9,6 +9,8 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 
@@ -24,13 +26,17 @@ type Runner struct {
 	Bin      string // /opt/vuln-agent/bin/trivy
 	CacheDir string // /var/lib/vuln-agent/cache
 	TmpDir   string // temp output location; not /tmp since it is skipped and may be PrivateTmp
+	// AppDirs are scanned for language packages (Composer, npm, ...); / itself only for OS packages.
+	AppDirs []string
 }
 
-// Args builds the Trivy arguments. cfg must already pass Validate.
-func (r *Runner) Args(cfg entity.ScanConfig, output string) []string {
+// Args builds the Trivy arguments for one run. cfg must already pass Validate.
+// pkgTypes is "os" (scan / for OS packages) or "library" (scan an app dir).
+func (r *Runner) Args(cfg entity.ScanConfig, target, pkgTypes, output string) []string {
 	args := []string{
-		"rootfs", "/",
+		"rootfs", target,
 		"--scanners", "vuln",
+		"--pkg-types", pkgTypes,
 		"--list-all-pkgs=false",
 		fmt.Sprintf("--ignore-unfixed=%t", cfg.IgnoreUnfixed),
 		"--severity", strings.Join(cfg.Severities, ","),
@@ -43,7 +49,51 @@ func (r *Runner) Args(cfg entity.ScanConfig, output string) []string {
 	return append(args, "--format", "json", "-q", "--output", output)
 }
 
+// Scan runs Trivy for OS packages on /, then for language packages in each
+// existing app dir, and merges the findings with paths relative to /.
 func (r *Runner) Scan(ctx context.Context, cfg entity.ScanConfig) ([]entity.Finding, error) {
+	findings, err := r.run(ctx, cfg, "/", "os")
+	if err != nil {
+		return nil, err
+	}
+	for _, dir := range AppTargets(r.AppDirs) {
+		fs, err := r.run(ctx, cfg, dir, "library")
+		if err != nil {
+			return nil, fmt.Errorf("%s: %w", dir, err)
+		}
+		// Trivy reports paths relative to the scanned dir.
+		prefix := strings.Trim(dir, "/") + "/"
+		for _, f := range fs {
+			if f.PkgPath != "" {
+				f.PkgPath = prefix + f.PkgPath
+			} else { // Target is the file path (composer-vendor, gobinary, ...)
+				f.Target = prefix + f.Target
+			}
+			findings = append(findings, f)
+		}
+	}
+	return findings, nil
+}
+
+// AppTargets cleans the app dirs, drops missing ones, / itself, duplicates,
+// and dirs inside another listed dir (that run already covers them).
+func AppTargets(dirs []string) []string {
+	var out []string
+	for _, d := range dirs {
+		d = filepath.Clean(d)
+		if fi, err := os.Stat(d); d == "/" || err != nil || !fi.IsDir() {
+			continue
+		}
+		out = append(out, d)
+	}
+	slices.Sort(out)
+	all := slices.Compact(out)
+	return slices.DeleteFunc(slices.Clone(all), func(d string) bool {
+		return slices.ContainsFunc(all, func(p string) bool { return strings.HasPrefix(d, p+"/") })
+	})
+}
+
+func (r *Runner) run(ctx context.Context, cfg entity.ScanConfig, target, pkgTypes string) ([]entity.Finding, error) {
 	f, err := os.CreateTemp(r.TmpDir, "trivy-*.json")
 	if err != nil {
 		return nil, fmt.Errorf("create output file: %w", err)
@@ -53,7 +103,7 @@ func (r *Runner) Scan(ctx context.Context, cfg entity.ScanConfig) ([]entity.Find
 	defer os.Remove(out)
 
 	var stderr tail
-	cmd := lowPriority(ctx, r.Bin, r.Args(cfg, out)...)
+	cmd := lowPriority(ctx, r.Bin, r.Args(cfg, target, pkgTypes, out)...)
 	cmd.Stderr = &stderr
 	cmd.WaitDelay = 10 * time.Second
 	if err := cmd.Run(); err != nil {

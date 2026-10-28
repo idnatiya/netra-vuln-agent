@@ -35,6 +35,7 @@ func Default() Config {
 			"/proc", "/sys", "/dev", "/run", "/tmp", "/snap", "/var/lib/snapd",
 			"/var/lib/docker", "/var/lib/containerd", "/mnt", "/media", "/var/cache",
 			"/root/.cache", "/home/*/.cache", "/home/*/.local/share/pnpm", "/usr/share/doc",
+			"/opt/vuln-agent", // the agent and its own Trivy binary
 		},
 		Timeout: 30 * time.Minute,
 	}
