@@ -23,6 +23,7 @@ If a design decision is ambiguous, ask first.
 - Scanner: **Trivy binary** invoked via `os/exec` (DO NOT import Trivy as a library). Trivy version is pinned by `TRIVY_VERSION` in the `Makefile` (ldflag `main.trivyVersion`).
 - Install: `vuln-agent install` (no Ansible, no .deb/.rpm, no CI release pipeline)
 - Distribution: npm package `netra-vuln-agent` (`sudo npm i -g netra-vuln-agent`). Root `package.json` + `vuln-agent.js` (Node shim, no deps) ship both `dist/vuln-agent-linux-{amd64,arm64}` binaries. Postinstall runs `vuln-agent install` only when global and root, and always exits 0 (a failed postinstall makes npm remove the binary needed to retry).
+- License: GPL-3.0-only (`LICENSE`, copyright idnatiya); keep new dependencies GPL-3.0-compatible.
 - Release: bump `version` in `package.json`, commit, tag `vX.Y.Z`, `make npm-pack` (binaries get the same version), `npm publish <tgz>`.
 
 ## Repo Layout

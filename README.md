@@ -70,3 +70,9 @@ Reports are kept locally as in standalone mode and also sent to central. Failed 
 ## What the agent reads and sends
 
 It reads the filesystem through Trivy (`rootfs /`, skipping pseudo filesystems and caches), `/etc/os-release`, the running kernel, uptime, the reboot-required flag, and whether automatic updates are enabled. The report holds that host metadata and, per finding: target, type, CVE, package name/path, installed and fixed version, severity, and title. Nothing else is sent, and the agent never runs commands it receives from central.
+
+## License
+
+Copyright (C) 2026 idnatiya
+
+GPL-3.0-only. See [LICENSE](LICENSE).
