@@ -1,6 +1,0 @@
-# Dev central on the laptop (Tailscale IP), e.g. `make dev CENTRAL_ADDR=100.77.238.106:18080`.
-# Plain http is fine: Tailscale encrypts the link.
-vuln_agent_central_url: http://100.77.238.106:18080
-vuln_agent_client_id: tencent
-# The enroll token is not stored here; pass it from a mode-600 file:
-#   make scan-dev ARGS="-e @/path/to/enroll-vars.yml"

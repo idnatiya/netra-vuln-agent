@@ -1,12 +1,6 @@
 # Build output
 /dist/
 
-# Dev data: raw reports from fakecentral
-/dev-out/
-
-# Ansible
-*.retry
-
 # Go test artifacts
 *.test
 *.out

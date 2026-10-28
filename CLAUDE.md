@@ -20,10 +20,9 @@ If a design decision is ambiguous, ask first.
 ## Stack
 - Language: **Go** (latest stable); stdlib `net/http` for the central client and `serve`, `html/template` for the report page
 - Static binary (`CGO_ENABLED=0`), targets `linux/amd64` and `linux/arm64`
-- Scanner: **Trivy binary** invoked via `os/exec` (DO NOT import Trivy as a library). Trivy version is pinned in the build config.
-- Packaging (Phase 4): **nfpm** or **GoReleaser** producing `.deb` and `.rpm`, plus a `.tar.gz` tarball + `install.sh`
-- Deployment: **Ansible role** (`deploy/ansible/roles/vuln_agent`)
-- CI: **GitHub Actions**
+- Scanner: **Trivy binary** invoked via `os/exec` (DO NOT import Trivy as a library). Trivy version is pinned by `TRIVY_VERSION` in the `Makefile` (ldflag `main.trivyVersion`).
+- Install: `vuln-agent install` (no Ansible, no .deb/.rpm, no CI release pipeline)
+- Distribution (planned): an npm wrapper shipping the linux amd64/arm64 binary; the operator then runs `sudo vuln-agent install`
 
 ## Repo Layout
 ```
@@ -41,9 +40,7 @@ internal/
     web/                # HTML report page + read-only HTTP handler
 wire/                   # public: the JSON contract with central
 scanconfig/             # public: Config, Default(), Validate() (central validates overrides with it)
-packaging/              # config.example.yaml (systemd units, nfpm config in Phase 4)
-deploy/ansible/         # role "vuln_agent", dev inventory, example per-client inventory
-deploy/dev/fakecentral/ # dev stand-in for central (logs + saves agent payloads)
+packaging/              # config.example.yaml
 docs/
 ```
 Dependency rule: `domain` <- `usecase` <- `adapter` <- `cmd`. Domain knows nothing about JSON/HTTP/exec. Interfaces are defined on the consumer side.
@@ -78,6 +75,7 @@ ca_file: ""                             # optional, for a custom CA
 - `vuln-agent enroll [--force]` (central only): read `central_url` + `client_id` from config, read the enroll token from env `VULN_AGENT_ENROLL_TOKEN` or stdin (NEVER via CLI args, so it does not leak in `ps`), call `POST /api/v1/enroll`, and write `host_token` into `config.yaml` atomically (mode 600). Refuse if a token is already set, unless `--force`.
 - `vuln-agent version`
 - `vuln-agent check`: validate config and the Trivy binary, plus token and connectivity to central in central mode
+- `vuln-agent install` (root, operator-run, idempotent): see Install below
 
 ## `scan` flow
 1. Central mode: send spooled reports first, then fetch scan config from `GET /api/v1/config` (read-only). On failure (or standalone), use the last locally cached config, or the default if none exists.
@@ -107,31 +105,20 @@ The HTML page shows host facts, counts, findings by severity, and new/resolved s
 ## Heartbeat
 `POST /api/v1/heartbeat` with compact host metadata. Scheduled every 15 minutes.
 
-## systemd (Phase 4)
-- `vuln-agent-scan.service` + `vuln-agent-scan.timer` (daily, `RandomizedDelaySec=2h`, `Persistent=true`)
-- `vuln-agent-heartbeat.service` + `.timer` (every 15 minutes)
-- `vuln-agent-serve.service` (optional, not enabled by default)
-- Resource limits: `CPUQuota=100%`, `MemoryMax=1G`, `Nice=19`, `IOSchedulingClass=idle`
+## Install (`vuln-agent install`, `cmd/vuln-agent/install.go`)
+- Create dirs (`/opt/vuln-agent/bin` 755, `/etc/vuln-agent` and `/var/lib/vuln-agent/{spool,reports,cache}` 700)
+- Copy the running binary to `/opt/vuln-agent/bin/vuln-agent`, symlink `/usr/bin/vuln-agent`
+- Download the pinned Trivy release from GitHub, verify it against the release checksums file, install `/opt/vuln-agent/bin/trivy` (skipped if that version is already installed)
+- Write a standalone `config.yaml` (mode 600) only if none exists; never overwrite (it may hold the host token)
+- Write systemd units to `/etc/systemd/system/` and enable both timers:
+  - `vuln-agent-scan.service` + `.timer` (daily, `RandomizedDelaySec=2h`, `Persistent=true`)
+  - `vuln-agent-heartbeat.service` + `.timer` (every 15 minutes)
+  - `vuln-agent-serve.service` (written, not enabled)
+  - Resource limits: `CPUQuota=100%`, `MemoryMax=1G`, `Nice=19`, `IOSchedulingClass=idle`
+- Enroll stays a separate manual step (`vuln-agent enroll`)
 
 ## Logging
 Log to stdout/stderr (into journald), structured format (`log/slog`). NEVER print the token in logs.
-
-## Deployment (`deploy/ansible/roles/vuln_agent`)
-- Detect `ansible_architecture` (x86_64/aarch64) and later `ansible_os_family` for `.deb`/`.rpm`
-- `vuln_agent_install_method: binary` (now: copy `dist/vuln-agent-linux-<arch>` + pinned Trivy release with checksum) -> `package` once Phase 4 ships packages; tarball fallback for unknown distros
-- Template `config.yaml` from inventory vars, compared by content and preserving the existing host token (enroll rewrites the file)
-- Empty `vuln_agent_central_url` + `vuln_agent_client_id` = standalone (no enroll)
-- Enroll only when no token (or `vuln_agent_force_enroll`), enroll token from Ansible Vault, `no_log`
-- Run `vuln-agent check`; enable timers once packaging provides the systemd units
-- Example inventory grouped per client with different SSH user/port/key per group and `ProxyJump`
-- Sample VM loop: `make scan-dev ARGS="-e @<enroll-vars.yml>"` (a mode-600 file with `vuln_agent_enroll_token`, never committed)
-
-## Packaging & CI (Phase 4)
-- nfpm/GoReleaser produces: `.deb`, `.rpm`, `.tar.gz` (amd64 + arm64)
-- Download the pinned Trivy binary at build time, verify its checksum, bundle it into the package
-- Postinstall: create directories, set permissions, `systemctl daemon-reload`, enable timers (but do not start a scan if the config is not filled in yet)
-- Preremove: stop and disable timers
-- GitHub Actions: lint, test, build, package, publish release artifacts
 
 ## Testing
 - `make test`

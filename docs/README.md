@@ -13,12 +13,21 @@ Runs Trivy on a Linux VM, keeps a slim report of HIGH/CRITICAL package vulnerabi
   └──────────────────────────────┘   └──────────────────────────────┘
 ```
 
-## Install (binary, for now)
+## Install
 
 ```sh
 make build-linux     # dist/vuln-agent-linux-{amd64,arm64}
+scp dist/vuln-agent-linux-amd64 <vm>:
+ssh <vm> sudo ./vuln-agent-linux-amd64 install
 ```
-Copy the binary to `/opt/vuln-agent/bin/vuln-agent` and Trivy to `/opt/vuln-agent/bin/trivy` (or use the Ansible role in `deploy/ansible`), then write `/etc/vuln-agent/config.yaml` (mode 600) from `packaging/config.example.yaml`.
+`install` copies the binary to `/opt/vuln-agent/bin/vuln-agent` (linked as `/usr/bin/vuln-agent`), downloads the pinned Trivy release (checksum verified), writes a standalone `/etc/vuln-agent/config.yaml` if none exists, and enables the daily scan and 15-minute heartbeat systemd timers. It is safe to rerun; an existing config is never touched. See `packaging/config.example.yaml` for all config fields.
+
+Uninstall:
+```sh
+sudo systemctl disable --now vuln-agent-scan.timer vuln-agent-heartbeat.timer vuln-agent-serve.service
+sudo rm -f /etc/systemd/system/vuln-agent-* /usr/bin/vuln-agent && sudo systemctl daemon-reload
+sudo rm -rf /opt/vuln-agent /etc/vuln-agent /var/lib/vuln-agent
+```
 
 ## Standalone
 

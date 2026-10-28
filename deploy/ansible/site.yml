@@ -1,5 +1,0 @@
-- name: Install and enroll vuln-agent
-  hosts: all
-  become: true
-  roles:
-    - vuln_agent

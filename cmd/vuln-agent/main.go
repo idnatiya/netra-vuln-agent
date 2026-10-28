@@ -51,6 +51,7 @@ commands:
   flush      resend spooled reports
   enroll     enroll this host (token from $VULN_AGENT_ENROLL_TOKEN or stdin) [-force]
   check      validate config, Trivy binary, and central connectivity
+  install    install this binary, the pinned Trivy, a default config, and systemd timers (root)
   version    print version
 
 Without central_url in the config the agent runs standalone: scan only keeps
@@ -89,6 +90,8 @@ func run(args []string, stdin io.Reader) int {
 		err = report(os.Stdout, *html)
 	case "serve":
 		err = serve(ctx, log, *addr)
+	case "install":
+		err = install(ctx, log)
 	default:
 		err = dispatch(ctx, log, cmd, *configPath, *force, stdin)
 	}

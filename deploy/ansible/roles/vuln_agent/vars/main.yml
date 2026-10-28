@@ -1,7 +1,0 @@
-vuln_agent_arch_map:
-  x86_64: amd64
-  aarch64: arm64
-# Arch suffix used in Trivy release asset names.
-vuln_agent_trivy_arch_map:
-  x86_64: 64bit
-  aarch64: ARM64
