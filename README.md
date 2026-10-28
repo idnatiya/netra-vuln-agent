@@ -15,12 +15,24 @@ Runs Trivy on a Linux VM, keeps a slim report of HIGH/CRITICAL package vulnerabi
 
 ## Install
 
+On the VM (no Node needed), download the binary for its arch from the latest GitHub Release, check it, and install:
+```sh
+a=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
+u=https://github.com/idnatiya/netra-vuln-agent/releases/latest/download
+curl -fsSLO "$u/vuln-agent-linux-$a" -fsSLO "$u/SHA256SUMS"
+grep " vuln-agent-linux-$a\$" SHA256SUMS | sha256sum -c - \
+  && chmod +x "vuln-agent-linux-$a" && sudo "./vuln-agent-linux-$a" install
+rm -f "vuln-agent-linux-$a" SHA256SUMS
+```
+Run the same block to update. For a specific version set `u=https://github.com/idnatiya/netra-vuln-agent/releases/download/vX.Y.Z`. The checksum catches a broken download, not a compromised release.
+
+`vuln-agent install` copies the binary to `/opt/vuln-agent/bin/vuln-agent` (linked as `/usr/bin/vuln-agent`), downloads the pinned Trivy release (checksum verified), writes a standalone `/etc/vuln-agent/config.yaml` if none exists, enables the daily scan and 15-minute heartbeat systemd timers, and starts the report page on `127.0.0.1:8090` (`vuln-agent-serve.service`). It is safe to rerun; an existing config is never touched. See `config.example.yaml` for all config fields.
+
+With Node available, npm works too:
 ```sh
 sudo npm i -g netra-vuln-agent
 ```
-As root, the package's postinstall runs `vuln-agent install`: it copies the binary to `/opt/vuln-agent/bin/vuln-agent` (linked as `/usr/bin/vuln-agent`), downloads the pinned Trivy release (checksum verified), writes a standalone `/etc/vuln-agent/config.yaml` if none exists, enables the daily scan and 15-minute heartbeat systemd timers, and starts the report page on `127.0.0.1:8090` (`vuln-agent-serve.service`). It is safe to rerun; an existing config is never touched. See `config.example.yaml` for all config fields.
-
-The npm install never fails because of this step. If npm ran without root or with `--ignore-scripts`, or the step failed (e.g. GitHub unreachable), run it yourself:
+As root, its postinstall runs `vuln-agent install`. The npm install never fails because of this step. If npm ran without root or with `--ignore-scripts`, or the step failed (e.g. GitHub unreachable), run it yourself:
 ```sh
 sudo "$(command -v vuln-agent)" install
 ```
