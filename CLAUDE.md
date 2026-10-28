@@ -111,7 +111,7 @@ serve_addr: ""                          # optional; report page address, empty =
 6. If sending fails, save it to the spool. Status codes: 400/413/422 = permanent reject (dropped); 401/403/409/429/5xx = spooled and retried.
 7. If Trivy fails, still keep/send a report with status `error` and its error message (truncated to at most 4KB).
 
-The HTML page shows host facts, counts, findings by severity, and new/resolved since the previous successful scan (key: CVE, package, installed version, target, pkg path). Its CSP is `default-src 'none'; style-src 'unsafe-inline'`: no scripts or remote assets.
+The HTML page shows host facts, counts, findings grouped per component like central's dashboard (`Finding.Component()` in `internal/entity/component_entity.go`, a copy of central's rules: OS packages by installed version, app folder, or binary), each with a fix note and a command shown as text only (never run), and new/resolved since the previous successful scan (key: CVE, package, installed version, target, pkg path). Its CSP is `default-src 'none'; style-src 'unsafe-inline'`: no scripts or remote assets. Its look follows `DESIGN.md` (OpenCode style: monospace system font stack, cream canvas, hairline rules, `[+]`/`[-]` markers, one dark TUI header); severity colors are the only use of the semantic palette.
 
 ## Heartbeat
 `POST /api/v1/heartbeat` with compact host metadata. Scheduled every 15 minutes.

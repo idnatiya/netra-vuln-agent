@@ -5,69 +5,145 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Report.Host.Hostname}} · vuln-agent</title>
 <style>
-:root { --bg:#fff; --fg:#1a1a1a; --muted:#666; --line:#e3e3e3; --card:#f7f7f7; --crit:#b42318; --high:#c4570a; --ok:#18794e; }
-@media (prefers-color-scheme: dark) { :root { --bg:#141414; --fg:#e8e8e8; --muted:#9a9a9a; --line:#2c2c2c; --card:#1d1d1d; --crit:#ff7a6e; --high:#ffa25c; --ok:#5fd39a; } }
+/* Tokens from DESIGN.md (OpenCode style). No remote fonts: the CSP allows none. */
+:root {
+  --canvas:#fdfcfc; --ink:#201d1d; --body:#424245; --mute:#646262; --ash:#9a9898;
+  --hairline:rgba(15,0,0,.12); --surface-card:#f1eeee;
+  --surface-dark:#201d1d; --surface-dark-elevated:#302c2c; --on-dark:#fdfcfc; --on-dark-mute:#9a9898;
+  --crit:#a50011; --high:#995f06; --ok:#1a7f37;
+  --hero-crit:#ff3b30; --hero-high:#ff9f0a; --hero-ok:#30d158;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --canvas:#201d1d; --ink:#fdfcfc; --body:#d6d4d4; --mute:#9a9898; --ash:#6e6e73;
+    --hairline:rgba(253,252,252,.12); --surface-card:#302c2c;
+    --surface-dark:#0f0000; --surface-dark-elevated:#2a2525; --crit:#ff3b30; --high:#ff9f0a; --ok:#30d158; }
+}
 * { box-sizing:border-box; }
-body { margin:0; padding:24px 16px; background:var(--bg); color:var(--fg); font:14px/1.5 system-ui,sans-serif; }
-main { max-width:1100px; margin:0 auto; }
-h1 { font-size:22px; margin:0 0 4px; } h2 { font-size:16px; margin:28px 0 8px; }
-.muted { color:var(--muted); }
-.facts { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; margin:16px 0; }
-.fact { background:var(--card); border:1px solid var(--line); border-radius:6px; padding:8px 10px; }
-.fact b { display:block; font-size:12px; font-weight:500; color:var(--muted); }
-.crit { color:var(--crit); font-weight:600; } .high { color:var(--high); font-weight:600; } .ok { color:var(--ok); font-weight:600; }
-.err { background:var(--card); border-left:3px solid var(--crit); padding:8px 12px; white-space:pre-wrap; word-break:break-word; }
-.table { overflow-x:auto; }
-table { width:100%; border-collapse:collapse; } th,td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
-th { font-size:12px; font-weight:500; color:var(--muted); } td.v { font-family:ui-monospace,monospace; font-size:12px; white-space:nowrap; }
-a { color:inherit; }
-ul.hist { padding-left:18px; }
+body { margin:0; padding:32px 16px 48px; background:var(--canvas); color:var(--ink);
+  font:14px/1.5 "Berkeley Mono","IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace; }
+main { max-width:960px; margin:0 auto; }
+a { color:inherit; text-decoration:underline; text-underline-offset:2px; }
+h2 { font-size:16px; font-weight:700; margin:48px 0 0; padding-bottom:8px; border-bottom:1px solid var(--hairline); }
+h3 { font-size:14px; font-weight:700; margin:24px 0 0; }
+.mute { color:var(--mute); } .crit { color:var(--crit); } .high { color:var(--high); } .ok { color:var(--ok); }
+.n { font-variant-numeric:tabular-nums; }
+
+/* hero-tui-mockup: the page's only dark surface */
+.tui { background:var(--surface-dark); color:var(--on-dark); padding:24px; }
+.tui .prompt { background:var(--surface-dark-elevated); border-radius:4px; padding:8px 12px; color:var(--on-dark-mute); overflow-wrap:anywhere; }
+.tui .prompt b { color:var(--on-dark); font-weight:500; }
+.tui h1 { font-size:28px; font-weight:700; line-height:1.5; margin:16px 0 12px; overflow-wrap:anywhere; }
+.tui dl { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:0 24px; margin:0; }
+.tui dl div { display:flex; gap:8px; padding:2px 0; min-width:0; }
+.tui dt { color:var(--on-dark-mute); flex:0 0 11ch; }
+.tui dd { margin:0; min-width:0; overflow-wrap:anywhere; }
+.tui .crit { color:var(--hero-crit); } .tui .high { color:var(--hero-high); } .tui .ok { color:var(--hero-ok); }
+.tui .keys { margin-top:16px; color:var(--on-dark-mute); font-size:12px; }
+.err { margin-top:12px; padding:12px 16px; background:var(--surface-dark-elevated); border-radius:4px; color:var(--hero-crit); white-space:pre-wrap; overflow-wrap:anywhere; }
+
+/* faq-row: one component per row, [+]/[-] toggle */
+details { border-bottom:1px solid var(--hairline); }
+summary { display:flex; gap:12px; align-items:baseline; padding:12px 0; cursor:pointer; list-style:none; }
+summary::-webkit-details-marker { display:none; }
+summary::before { content:"[+]"; color:var(--mute); flex:none; }
+details[open] > summary::before { content:"[-]"; color:var(--ink); }
+.head { flex:1; min-width:0; }
+.head .tag { color:var(--mute); margin-left:8px; } .head .tag.high { color:var(--high); }
+.head .key { color:var(--mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.nums { display:flex; gap:16px; flex:none; text-align:right; }
+.nums span { min-width:7ch; } .nums .zero { color:var(--ash); }
+.body { padding:0 0 16px 36px; display:grid; grid-template-columns:minmax(0,1fr); gap:12px; color:var(--body); }
+pre { margin:0; padding:12px 16px; background:var(--surface-card); color:var(--ink); border-radius:4px; font:inherit; white-space:pre-wrap; overflow-wrap:anywhere; }
+pre::before { content:"$ "; color:var(--mute); }
+
+/* list-row: findings, history */
+ul.rows { list-style:none; margin:0; padding:0; }
+ul.rows li { display:flex; gap:12px; padding:8px 0; border-top:1px solid var(--hairline); min-width:0; }
+ul.rows li:first-child { border-top:0; }
+ul.rows .m { flex:1; min-width:0; }
+.sev { flex:none; width:6ch; } .sev.critical { color:var(--crit); }
+.title { color:var(--mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.path { color:var(--mute); overflow-wrap:anywhere; }
+.mark { flex:none; color:var(--mute); }
+footer { margin-top:48px; padding-top:16px; border-top:1px solid var(--hairline); color:var(--mute); font-size:12px; }
+@media (max-width:640px) { .tui { padding:16px; } .tui h1 { font-size:22px; } .nums .cves { display:none; } .body { padding-left:0; } }
 </style>
 </head>
 <body><main>
 {{- $r := .Report}}
-<h1>{{$r.Host.Hostname}}</h1>
-<div class="muted">Scanned {{time $r.ScannedAt}} in {{dur $r.Duration}} · Trivy {{$r.TrivyVersion}} · agent {{$r.Host.AgentVersion}}</div>
-
-<div class="facts">
-  <div class="fact"><b>Status</b>{{if eq (print $r.Status) "ok"}}<span class="ok">ok</span>{{else}}<span class="crit">{{$r.Status}}</span>{{end}}</div>
-  <div class="fact"><b>Critical</b><span class="{{if index .Counts "CRITICAL"}}crit{{end}}">{{index .Counts "CRITICAL"}}</span></div>
-  <div class="fact"><b>High</b><span class="{{if index .Counts "HIGH"}}high{{end}}">{{index .Counts "HIGH"}}</span></div>
-  <div class="fact"><b>OS</b>{{$r.Host.OSName}} {{$r.Host.OSVersion}} ({{$r.Host.Arch}})</div>
-  <div class="fact"><b>Running kernel</b>{{$r.Host.KernelRunning}}</div>
-  <div class="fact"><b>Reboot required</b>{{if $r.Host.RebootRequired}}<span class="high">yes</span>{{else}}no{{end}}</div>
-  <div class="fact"><b>Automatic updates</b>{{if $r.Host.AutoUpdateEnabled}}enabled{{else}}disabled{{end}}</div>
-</div>
-
-{{if $r.Error}}<h2>Scan error</h2><div class="err">{{$r.Error}}</div>{{end}}
-
-{{if .Compared}}
-<h2>Since the previous scan</h2>
-<p>{{len .New}} new · {{len .Resolved}} resolved</p>
-{{if .New}}<h3>New</h3>{{template "table" .New}}{{end}}
-{{if .Resolved}}<h3>Resolved</h3>{{template "table" .Resolved}}{{end}}
-{{end}}
+<section class="tui">
+  <div class="prompt">$ <b>vuln-agent report</b> · {{time $r.ScannedAt}}</div>
+  <h1>{{$r.Host.Hostname}}</h1>
+  <dl>
+    <div><dt>status</dt><dd>{{if eq (print $r.Status) "ok"}}<span class="ok">ok</span>{{else}}<span class="crit">{{$r.Status}}</span>{{end}}</dd></div>
+    <div><dt>critical</dt><dd class="n {{if index .Counts "CRITICAL"}}crit{{end}}">{{index .Counts "CRITICAL"}}</dd></div>
+    <div><dt>high</dt><dd class="n {{if index .Counts "HIGH"}}high{{end}}">{{index .Counts "HIGH"}}</dd></div>
+    <div><dt>components</dt><dd class="n">{{len .Components}}</dd></div>
+    <div><dt>reboot</dt><dd>{{if $r.Host.RebootRequired}}<span class="high">required</span>{{else}}no{{end}}</dd></div>
+    <div><dt>auto-update</dt><dd>{{if $r.Host.AutoUpdateEnabled}}enabled{{else}}disabled{{end}}</dd></div>
+    <div><dt>os</dt><dd>{{$r.Host.OSName}} {{$r.Host.OSVersion}} ({{$r.Host.Arch}})</dd></div>
+    <div><dt>kernel</dt><dd>{{$r.Host.KernelRunning}}</dd></div>
+    <div><dt>scan took</dt><dd>{{dur $r.Duration}}</dd></div>
+    <div><dt>trivy</dt><dd>{{$r.TrivyVersion}}</dd></div>
+  </dl>
+  {{if $r.Error}}<div class="err">{{$r.Error}}</div>{{end}}
+  <div class="keys">read-only · findings grouped per component · open a row for the fix</div>
+</section>
 
 {{if eq (print $r.Status) "ok"}}
-<h2>Open findings ({{len .Findings}})</h2>
-{{if .Findings}}{{template "table" .Findings}}{{else}}<p class="ok">No findings.</p>{{end}}
+<h2>Components ({{len .Components}})</h2>
+{{- range .Components}}
+<details>
+  <summary>
+    <div class="head">
+      <b>{{.Title}}</b><span class="tag">{{kind .Kind}}</span>
+      {{- if eq .Kernel "running"}}<span class="tag high">running</span>{{else if eq .Kernel "standby"}}<span class="tag">fallback, not running</span>{{end}}
+      <div class="key" title="{{.Key}}">{{.Key}}</div>
+    </div>
+    <div class="nums n">
+      <span class="{{if .Critical}}crit{{else}}zero{{end}}">{{.Critical}} crit</span>
+      <span class="{{if .High}}high{{else}}zero{{end}}">{{.High}} high</span>
+      <span class="cves mute">{{.CVEs}} CVE</span>
+    </div>
+  </summary>
+  <div class="body">
+    <div>{{.Note}}</div>
+    {{if .Command}}<pre>{{.Command}}</pre>{{end}}
+    <div class="mute">[x] {{len .Packages}} package(s): {{join .Packages ", "}}</div>
+    {{template "rows" .Findings}}
+  </div>
+</details>
+{{- else}}
+<p class="ok">[x] No findings.</p>
+{{- end}}
+{{end}}
+
+{{if .Compared}}
+<h2>Since the previous scan · {{len .New}} new · {{len .Resolved}} resolved</h2>
+{{if .New}}<h3>[+] New</h3>{{template "rows" .New}}{{end}}
+{{if .Resolved}}<h3>[-] Resolved</h3>{{template "rows" .Resolved}}{{end}}
 {{end}}
 
 {{if .Linked}}
 <h2>History</h2>
-<ul class="hist">
+<ul class="rows">
 {{- range .History}}
-  <li>{{if eq . $.ID}}<b>{{name .}}</b>{{else}}<a href="/reports/{{.}}">{{name .}}</a>{{end}} · <a href="/reports/{{.}}.json">json</a></li>
+  <li><span class="mark">{{if eq . $.ID}}[*]{{else}}[ ]{{end}}</span><span class="m">{{if eq . $.ID}}<b>{{name .}}</b>{{else}}<a href="/reports/{{.}}">{{name .}}</a>{{end}}</span><a class="mute" href="/reports/{{.}}.json">json</a></li>
 {{- end}}
 </ul>
 {{end}}
+<footer>vuln-agent {{$r.Host.AgentVersion}} · read-only report</footer>
 </main></body>
 </html>
-{{define "table"}}
-<div class="table"><table>
-<tr><th>Severity</th><th>CVE</th><th>Package</th><th>Installed</th><th>Fixed</th><th>Target</th><th>Title</th></tr>
+{{define "rows"}}
+<ul class="rows">
 {{- range .}}
-<tr><td class="{{lower .Severity}}">{{.Severity}}</td><td class="v">{{.VulnerabilityID}}</td><td>{{.PkgName}}</td><td class="v">{{.InstalledVersion}}</td><td class="v">{{.FixedVersion}}</td><td>{{.Target}}{{if .PkgPath}}<br><span class="muted">{{.PkgPath}}</span>{{end}}</td><td>{{.Title}}</td></tr>
+<li><span class="sev {{lower .Severity}}">[{{sevshort .Severity}}]</span><div class="m">
+  <a href="{{advisory .VulnerabilityID}}" target="_blank" rel="noopener noreferrer">{{.VulnerabilityID}}</a>
+  <span class="mute">{{.PkgName}} {{.InstalledVersion}} → </span><span class="ok">{{or .FixedVersion "no fix"}}</span>
+  {{- if .PkgPath}}<div class="path">{{.PkgPath}}</div>{{end}}
+  <div class="title" title="{{.Title}}">{{.Title}}</div>
+</div></li>
 {{- end}}
-</table></div>
+</ul>
 {{end}}
