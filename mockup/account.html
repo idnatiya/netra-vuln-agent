@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account · netra-vuln</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
+  <link rel="stylesheet" href="theme.css">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="tw-config.js"></script>
+  <script src="app.js"></script>
+</head>
+<body class="flex h-screen overflow-hidden">
+  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-night/60 md:hidden"></div>
+  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full flex-col border-r border-hairline-violet bg-sidebar text-white transition-transform duration-200 md:static md:translate-x-0">
+    <div class="flex items-center gap-1 p-3">
+      <button class="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 hover:bg-on-dark-faint/60">
+        <span class="flex size-7 shrink-0 items-center justify-center rounded-md bg-violet font-semibold">N</span>
+        <span class="flex-1 truncate text-left font-semibold">netra-vuln</span>
+        <svg class="size-4 text-on-dark-muted shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <button data-sidebar-toggle aria-label="Close menu" class="inline-flex size-8 items-center justify-center rounded-md text-on-dark-muted hover:text-white md:hidden"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-2">
+      <a href="index.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>Hosts</a><a href="findings.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search CVEs</a><a href="clients.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clients</a><a href="add-agent.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add agent</a>
+    </nav>
+    <div class="space-y-0.5 border-t border-hairline-violet p-3">
+      <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a>
+      <a href="account.html" class="flex items-center gap-3 rounded-md px-3 py-2 bg-on-dark-faint" aria-current="page">
+        <span class="flex size-6 items-center justify-center rounded-full bg-violet-mid text-[13px] font-semibold">A</span>
+        <span class="min-w-0 flex-1"><span class="block truncate">admin</span><span class="block text-[13px] text-on-dark-muted">v0.2.0</span></span>
+      </a>
+    </div>
+  </aside>
+
+  <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
+    <header class="flex h-14 shrink-0 items-center justify-between gap-3 border-b px-4 sm:px-6">
+      <div class="flex min-w-0 items-center gap-2">
+        <button data-sidebar-toggle aria-label="Open menu" class="-ml-1 inline-flex size-8 shrink-0 items-center justify-center rounded-md hover:bg-muted md:hidden"><svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button>
+        <nav aria-label="Breadcrumb" class="flex min-w-0 items-center"><span class="text-muted-foreground">Settings</span><svg class="mx-1 size-3.5 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><span class="truncate font-medium">Account</span></nav>
+      </div>
+      <a href="login.html" class="inline-flex h-9 items-center gap-1.5 rounded-sm border border-input bg-muted/40 px-3 font-semibold hover:bg-muted"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg><span class="hidden md:inline">Sign out</span></a>
+    </header>
+    <main class="relative flex flex-1 flex-col overflow-y-auto">
+      <div class="grid w-full flex-1 grid-cols-1 content-start gap-5 p-4 pb-12 sm:p-6 sm:pb-12 lg:px-8">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div><h1 class="text-[22px] font-semibold">Account</h1><p class="mt-0.5 text-muted-foreground">Your admin account on this central.</p></div>
+        <div class="flex items-center gap-2"></div>
+      </div>
+      <div class="grid max-w-4xl grid-cols-1 gap-6">
+        <section class="overflow-hidden rounded-md border bg-card">
+          <div class="flex items-center justify-between gap-3 border-b bg-muted px-4 py-2.5"><h2 class="micro-cap text-muted-foreground">Profile</h2></div>
+          <div class="grid grid-cols-1 gap-2 border-b px-4 py-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:items-center md:gap-6">
+            <div><p class="font-medium">Username</p><p class="mt-0.5 text-[13px] text-muted-foreground">Usernames are set on the server with <code>central admin create</code>.</p></div>
+            <div><div class="flex h-10 items-center rounded-sm border border-input bg-muted/40 px-3 text-muted-foreground">admin</div></div>
+          </div>
+          <div class="grid grid-cols-1 gap-2 border-b px-4 py-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:items-center md:gap-6">
+            <div><p class="font-medium">Role</p><p class="mt-0.5 text-[13px] text-muted-foreground">Every admin sees all clients.</p></div>
+            <div><div class="flex h-10 items-center rounded-sm border border-input bg-muted/40 px-3 text-muted-foreground">Admin</div></div>
+          </div>
+          <div class="grid grid-cols-1 gap-2 border-b px-4 py-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:items-center md:gap-6">
+            <div><p class="font-medium">Created</p></div>
+            <div><div class="flex h-10 items-center rounded-sm border border-input bg-muted/40 px-3 text-muted-foreground">Sep 1, 2026</div></div>
+          </div>
+          
+        </section>
+        <form action="account.html">
+          <input type="text" autocomplete="username" value="admin" hidden>
+        <section class="overflow-hidden rounded-md border bg-card">
+          <div class="flex items-center justify-between gap-3 border-b bg-muted px-4 py-2.5"><h2 class="micro-cap text-muted-foreground">Password</h2></div>
+          <div class="grid grid-cols-1 gap-2 border-b px-4 py-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:items-center md:gap-6">
+            <div><p class="font-medium">Current password</p></div>
+            <div><input id="current-password" type="password" autocomplete="current-password" required class="h-10 w-full rounded-sm border border-input bg-background px-3"></div>
+          </div>
+          <div class="grid grid-cols-1 gap-2 border-b px-4 py-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:items-center md:gap-6">
+            <div><p class="font-medium">New password</p><p class="mt-0.5 text-[13px] text-muted-foreground">At least 12 characters.</p></div>
+            <div><input id="new-password" type="password" autocomplete="new-password" required class="h-10 w-full rounded-sm border border-input bg-background px-3"></div>
+          </div>
+          <div class="grid grid-cols-1 gap-2 border-b px-4 py-4 last:border-b-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:items-center md:gap-6">
+            <div><p class="font-medium">Confirm new password</p></div>
+            <div><input id="confirm-password" type="password" autocomplete="new-password" required class="h-10 w-full rounded-sm border border-input bg-background px-3"></div>
+          </div>
+          <div class="flex flex-wrap items-center justify-end gap-3 border-t bg-muted/40 px-4 py-3"><p class="mr-auto text-[13px] text-muted-foreground">Other sessions are signed out when the password changes.</p><button type="submit" class="inline-flex h-9 items-center gap-1.5 rounded-sm bg-primary px-3 font-semibold text-primary-foreground hover:bg-primary/90">Change password</button></div>
+        </section>
+        </form>
+        <section class="overflow-hidden rounded-md border bg-card">
+          <div class="flex items-center justify-between gap-3 border-b bg-muted px-4 py-2.5"><h2 class="micro-cap text-muted-foreground">Sessions</h2><button data-dialog="revoke-sessions" class="inline-flex h-9 items-center gap-1.5 rounded-sm border border-input bg-muted/40 px-3 font-semibold hover:bg-muted h-8 text-[13px]">Sign out other sessions</button></div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[640px] whitespace-nowrap">
+              <thead class="micro-cap border-b text-left text-muted-foreground"><tr><th class="px-4 py-2 font-semibold">Device</th><th class="px-4 py-2 font-semibold">IP</th><th class="px-4 py-2 font-semibold">Signed in</th><th class="px-4 py-2 font-semibold">Expires</th><th></th></tr></thead>
+              <tbody class="divide-y"><tr><td class="px-4 py-3"><span class="font-medium">Chrome on macOS</span><span class="ml-2 rounded-xs bg-lime px-1.5 micro-cap text-ink">This session</span></td><td class="px-4 py-3 font-mono text-[13px]">100.64.0.7</td><td class="px-4 py-3 text-[13px] text-muted-foreground">Today, 08:12</td><td class="px-4 py-3 text-[13px] text-muted-foreground">in 10h</td><td class="px-4 py-3 text-right"><span class="text-[13px] text-muted-foreground">–</span></td></tr><tr><td class="px-4 py-3"><span class="font-medium">Firefox on Ubuntu</span></td><td class="px-4 py-3 font-mono text-[13px]">100.64.0.21</td><td class="px-4 py-3 text-[13px] text-muted-foreground">Today, 06:40</td><td class="px-4 py-3 text-[13px] text-muted-foreground">in 9h</td><td class="px-4 py-3 text-right"><button data-dialog="revoke-one" class="text-[13px] text-muted-foreground hover:text-foreground">Sign out</button></td></tr><tr><td class="px-4 py-3"><span class="font-medium">Safari on iPhone</span></td><td class="px-4 py-3 font-mono text-[13px]">100.64.0.33</td><td class="px-4 py-3 text-[13px] text-muted-foreground">Yesterday, 22:05</td><td class="px-4 py-3 text-[13px] text-muted-foreground">in 1h</td><td class="px-4 py-3 text-right"><button data-dialog="revoke-one" class="text-[13px] text-muted-foreground hover:text-foreground">Sign out</button></td></tr></tbody>
+            </table>
+          </div>
+          
+        </section>
+        <p class="text-[13px] text-muted-foreground">Sessions last 12 hours. Signing in again from a device starts a new session.</p>
+      </div>
+      </div>
+
+    </main>
+  </div>
+  <dialog id="revoke-sessions" class="w-[calc(100%-2rem)] max-w-md rounded-xl border bg-background p-6 text-foreground">
+    <h2 class="text-[17px] font-semibold">Sign out 2 other sessions?</h2>
+    <p class="mt-2 text-muted-foreground">Firefox on Ubuntu and Safari on iPhone are signed out right away. This session stays signed in.</p>
+    <div class="mt-6 flex justify-end gap-2">
+      <button data-close class="inline-flex h-9 items-center gap-1.5 rounded-sm border border-input bg-muted/40 px-3 font-semibold hover:bg-muted">Cancel</button>
+      <button data-close class="inline-flex h-9 items-center gap-1.5 rounded-sm bg-primary px-3 font-semibold text-primary-foreground hover:bg-primary/90">Sign out others</button>
+    </div>
+  </dialog>
+  <dialog id="revoke-one" class="w-[calc(100%-2rem)] max-w-md rounded-xl border bg-background p-6 text-foreground">
+    <h2 class="text-[17px] font-semibold">Sign out this session?</h2>
+    <p class="mt-2 text-muted-foreground">That device has to sign in again to use central.</p>
+    <div class="mt-6 flex justify-end gap-2">
+      <button data-close class="inline-flex h-9 items-center gap-1.5 rounded-sm border border-input bg-muted/40 px-3 font-semibold hover:bg-muted">Cancel</button>
+      <button data-close class="inline-flex h-9 items-center gap-1.5 rounded-sm bg-primary px-3 font-semibold text-primary-foreground hover:bg-primary/90">Sign out</button>
+    </div>
+  </dialog>
+
+</body>
+</html>
