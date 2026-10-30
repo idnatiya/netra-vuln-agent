@@ -1,34 +1,33 @@
-/* Tokens from DESIGN.md (Sentry design analysis), stored as oklch channels so
-   Tailwind opacity modifiers work. Dark violet canvas everywhere: content on
-   canvas-dark, sidebar and code blocks on surface-night. */
+/* Palette after owasp.org (ink #101820, OWASP blues, cyan, gold) on a dark
+   canvas, plus semantic severity colors. Stored as oklch channels so Tailwind
+   opacity modifiers work. */
 :root {
-  /* work area: dark canvas */
-  --background: 0.228 0.055 296;        /* surface-canvas-dark #1f1633 */
-  --foreground: 1 0 0;                  /* on-primary #ffffff */
-  --card: 0.228 0.055 296;              /* ink-deep #1f1633, set apart by hairline */
+  --background: 0.205 0.020 248.8;        /* ink #101820 */
+  --foreground: 1 0 0;                    /* #ffffff */
+  --card: 0.240 0.023 251.4;              /* #17202a, white 5% on ink */
   --card-foreground: 1 0 0;
-  --primary: 1 0 0;                     /* button-inverted: white fill */
-  --primary-foreground: 0.228 0.055 296;/* ink-deep label */
-  --muted: 0.276 0.060 294.7;           /* #2a2142, between canvas and on-dark-faint */
-  --muted-foreground: 0.789 0.012 313.2;/* on-dark-muted #bdb8c0 */
-  --accent: 0.276 0.060 294.7;
+  --sidebar: 0.174 0.016 248.7;           /* #0b1117 */
+  --sunken: 0.174 0.016 248.7;            /* #0b1117, code blocks */
+  --muted: 0.260 0.021 248.7;             /* #1c252e */
+  --muted-foreground: 0.787 0.004 236.5;  /* #b7babc, white 70% on ink */
+  --accent: 0.260 0.021 248.7;
   --accent-foreground: 1 0 0;
-  --border: 0.330 0.076 291;            /* hairline-violet #362d59 */
-  --input: 0.330 0.076 291;             /* hairline-violet #362d59 */
-  --ring: 0.803 0.084 257.5;            /* ring-focus #9dc1f5 */
-  /* sidebar and code */
-  --sidebar: 0.188 0.040 296.1;         /* surface-night #150f23 */
-  --night: 0.188 0.040 296.1;           /* surface-night #150f23 */
-  --hairline-violet: 0.330 0.076 291;   /* #362d59 */
-  --on-dark-muted: 0.789 0.012 313.2;   /* #bdb8c0 */
-  --on-dark-faint: 0.355 0.030 303.6;   /* #3f3849 */
-  /* accents */
-  --lime: 0.891 0.189 123.8;            /* #c2ef4e */
-  --pink: 0.747 0.156 359.4;            /* #fa7faa */
-  --violet: 0.544 0.148 285.5;          /* #6a5fc1 */
-  --violet-deep: 0.354 0.153 292.7;     /* #422082 */
-  --violet-mid: 0.535 0.070 309.1;      /* #79628c */
-  --ink: 0.228 0.055 296;               /* ink #1f1633, text on light fills */
+  --border: 0.308 0.023 248.6;            /* #27313b, white 10% on ink */
+  --input: 0.355 0.022 248.4;             /* #333d47 */
+  --on-dark-muted: 0.787 0.004 236.5;     /* #b7babc */
+  --on-dark-faint: 0.382 0.022 248.4;     /* #3a444e */
+  --primary: 0.468 0.164 256.7;           /* OWASP blue #0056b3 */
+  --primary-foreground: 1 0 0;
+  --brand: 0.370 0.164 261.4;             /* OWASP blue #003594 */
+  --link: 0.684 0.140 232.3;              /* OWASP cyan #00a7e1 */
+  --ring: 0.684 0.140 232.3;
+  --gold: 0.828 0.167 79.6;               /* OWASP gold #ffb81b */
+  --ink: 0.205 0.020 248.8;               /* #101820, text on gold/orange */
+  /* semantic */
+  --critical: 0.626 0.193 23.0;           /* #e5484d */
+  --high: 0.691 0.191 45.0;               /* #f76b15 */
+  --ok: 0.641 0.133 157.7;                /* #30a46c */
+  --info: 0.684 0.140 232.3;              /* #00a7e1 */
   color-scheme: dark;
 }
 
@@ -45,12 +44,10 @@ body {
 
 code, kbd, samp, pre { font-family: Monaco, Menlo, "Ubuntu Mono", monospace; }
 
-/* Typography roles (DESIGN.md: button-cap, button-cap-light, micro-cap) */
 .btn-cap { font-size: 14px; font-weight: 700; line-height: 1.14; letter-spacing: 0.2px; text-transform: uppercase; }
 .btn-cap-light { font-size: 14px; font-weight: 500; line-height: 1.29; letter-spacing: 0.2px; text-transform: uppercase; }
 .micro-cap { font-size: 11px; font-weight: 600; line-height: 1.8; letter-spacing: 0.25px; text-transform: uppercase; }
 
-/* text-input-focused: inset depth plus the only blue in the system */
 input:focus-visible, textarea:focus-visible, select:focus-visible {
   outline: none;
   box-shadow: rgba(0, 0, 0, 0.15) 0 2px 10px inset, 0 0 0 2px oklch(var(--ring));
@@ -58,7 +55,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible {
 
 [hidden] { display: none !important; }
 dialog { box-shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.1) 0 4px 6px -4px; }
-dialog::backdrop { background: oklch(0.188 0.040 296.1 / 0.6); }
+dialog::backdrop { background: oklch(0.174 0.016 248.7 / 0.7); }
 details > summary { list-style: none; }
 details > summary::-webkit-details-marker { display: none; }
 details[open] .chevron { transform: rotate(90deg); }

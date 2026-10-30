@@ -1,4 +1,4 @@
-// Tailwind Play CDN config: DESIGN.md tokens mapped to the CSS variables in theme.css.
+// Tailwind Play CDN config: palette tokens mapped to the CSS variables in theme.css.
 const token = (name) => `oklch(var(--${name}) / <alpha-value>)`
 
 tailwind.config = {
@@ -15,14 +15,17 @@ tailwind.config = {
         input: token('input'),
         ring: token('ring'),
         sidebar: token('sidebar'),
-        night: token('night'),
-        ink: token('ink'),
-        'hairline-violet': token('hairline-violet'),
+        sunken: token('sunken'),
         'on-dark-muted': token('on-dark-muted'),
         'on-dark-faint': token('on-dark-faint'),
-        lime: token('lime'),
-        pink: token('pink'),
-        violet: { DEFAULT: token('violet'), deep: token('violet-deep'), mid: token('violet-mid') },
+        brand: token('brand'),
+        link: token('link'),
+        gold: token('gold'),
+        ink: token('ink'),
+        critical: token('critical'),
+        high: token('high'),
+        ok: token('ok'),
+        info: token('info'),
       },
       borderColor: { DEFAULT: token('border') },
       fontFamily: {

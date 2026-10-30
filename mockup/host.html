@@ -12,23 +12,23 @@
   <script src="app.js"></script>
 </head>
 <body class="flex h-screen overflow-hidden">
-  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-night/60 md:hidden"></div>
-  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full flex-col border-r border-hairline-violet bg-sidebar text-white transition-transform duration-200 md:static md:translate-x-0">
+  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-sidebar/70 md:hidden"></div>
+  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full flex-col border-r border-border bg-sidebar text-white transition-transform duration-200 md:static md:translate-x-0">
     <div class="flex items-center gap-1 p-3">
       <button class="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 hover:bg-on-dark-faint/60">
-        <span class="flex size-7 shrink-0 items-center justify-center rounded-md bg-violet font-semibold">N</span>
+        <span class="flex size-7 shrink-0 items-center justify-center rounded-md bg-gold font-semibold text-ink">N</span>
         <span class="flex-1 truncate text-left font-semibold">netra-vuln</span>
         <svg class="size-4 text-on-dark-muted shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <button data-sidebar-toggle aria-label="Close menu" class="inline-flex size-8 items-center justify-center rounded-md text-on-dark-muted hover:text-white md:hidden"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
     <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-2">
-      <a href="index.html" aria-current="page" class="flex items-center gap-3 rounded-md bg-on-dark-faint px-3 py-2.5 font-medium text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>Hosts</a><a href="findings.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search CVEs</a><a href="clients.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clients</a><a href="add-agent.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add agent</a>
+      <a href="index.html" aria-current="page" class="relative flex items-center gap-3 rounded-md bg-on-dark-faint/70 px-3 py-2.5 font-medium text-white"><span class="absolute inset-y-2 left-0 w-0.5 rounded-r bg-link"></span><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>Hosts</a><a href="findings.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search CVEs</a><a href="clients.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clients</a><a href="add-agent.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add agent</a>
     </nav>
-    <div class="space-y-0.5 border-t border-hairline-violet p-3">
+    <div class="space-y-0.5 border-t border-border p-3">
       <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a>
       <a href="account.html" class="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-on-dark-faint/60">
-        <span class="flex size-6 items-center justify-center rounded-full bg-violet-mid text-[13px] font-semibold">A</span>
+        <span class="flex size-6 items-center justify-center rounded-full bg-brand text-[13px] font-semibold">A</span>
         <span class="min-w-0 flex-1"><span class="block truncate">admin</span><span class="block text-[13px] text-on-dark-muted">v0.2.0</span></span>
       </a>
     </div>
@@ -47,12 +47,12 @@
       <div class="flex flex-wrap items-start justify-between gap-6">
         <div class="min-w-0 space-y-1">
           <h1 class="text-[22px] font-semibold">acme-web-01</h1>
-          <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">A</span>acme</span><span>Ubuntu 24.04 · amd64 · kernel 6.8.0-45-generic</span></p>
-          <p class="inline-flex items-center gap-1.5 text-[13px]"><span class="size-1.5 rounded-full bg-violet-mid"></span>Reboot required</p>
+          <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-brand text-[9px] font-semibold">A</span>acme</span><span>Ubuntu 24.04 · amd64 · kernel 6.8.0-45-generic</span></p>
+          <p class="inline-flex items-center gap-1.5 text-[13px]"><span class="size-1.5 rounded-full bg-info"></span>Reboot required</p>
         </div>
         <div class="flex gap-6">
-          <div><p class="micro-cap text-muted-foreground">Open critical</p><p class="mt-0.5 inline-flex items-center gap-1.5 text-[22px] font-semibold tabular-nums"><span class="size-2 rounded-[2px] bg-pink"></span>2</p></div>
-          <div><p class="micro-cap text-muted-foreground">Open high</p><p class="mt-0.5 inline-flex items-center gap-1.5 text-[22px] font-semibold tabular-nums"><span class="size-2 rounded-[2px] bg-violet-mid"></span>9</p></div>
+          <div><p class="micro-cap text-muted-foreground">Open critical</p><p class="mt-0.5 inline-flex items-center gap-1.5 text-[22px] font-semibold tabular-nums"><span class="size-2 rounded-[2px] bg-critical"></span>2</p></div>
+          <div><p class="micro-cap text-muted-foreground">Open high</p><p class="mt-0.5 inline-flex items-center gap-1.5 text-[22px] font-semibold tabular-nums"><span class="size-2 rounded-[2px] bg-high"></span>9</p></div>
           <div><p class="micro-cap text-muted-foreground">Last scan</p><p class="mt-0.5 inline-flex items-center gap-1.5 text-[22px] font-semibold tabular-nums">5h ago</p></div>
         </div>
       </div>
@@ -78,7 +78,7 @@
           </div>
           <div data-panel="open">
           <details class="relative border-b last:border-b-0" open>
-            <span class="absolute inset-y-0 left-0 w-[3px] bg-pink"></span>
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-critical"></span>
             <summary class="grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 cursor-pointer px-4 py-3.5 hover:bg-muted/40">
               <div class="flex min-w-0 items-start gap-2">
                 <svg class="chevron mt-0.5 size-4 shrink-0 text-muted-foreground transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
@@ -92,7 +92,7 @@
             </summary>
             <div class="grid grid-cols-1 gap-3 px-4 pb-4 pl-10">
             <p>This is the kernel the host is running. Upgrade it, then reboot so the new kernel is loaded.</p>
-            <div class="flex items-start gap-2 rounded-md bg-night px-4 py-3 text-white">
+            <div class="flex items-start gap-2 rounded-md bg-sunken px-4 py-3 text-white">
               <code class="min-w-0 flex-1 overflow-x-auto whitespace-pre font-mono text-[13px] leading-6">sudo apt-get update && sudo apt-get install --only-upgrade linux-image-generic && sudo reboot</code>
               <button data-copy="" class="-my-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md text-on-dark-muted hover:bg-on-dark-faint hover:text-white"></button>
             </div>
@@ -103,13 +103,13 @@
             <div class="overflow-x-auto rounded-md border">
               <table class="w-full min-w-[520px] whitespace-nowrap">
                 <thead class="micro-cap bg-muted text-left text-muted-foreground"><tr><th class="px-3 py-1.5 font-semibold">CVE</th><th class="px-3 py-1.5 font-semibold">Severity</th><th class="px-3 py-1.5 font-semibold">Package</th><th class="px-3 py-1.5 font-semibold">Fixed in</th><th></th></tr></thead>
-                <tbody class="divide-y"><tr><td class="px-3 py-2 font-mono text-[13px]"><a href="#" class="underline-offset-2 hover:underline">CVE-2026-21344</a></td><td class="px-3 py-2"><span class="micro-cap rounded-xs px-1.5 bg-pink text-ink">CRITICAL</span></td><td class="px-3 py-2">linux-image-6.8.0-45-generic</td><td class="px-3 py-2 font-mono text-[13px]">6.8.0-49.49</td><td class="px-3 py-2 text-right"><button data-dialog="triage" class="text-[13px] text-muted-foreground hover:text-foreground">Triage</button></td></tr><tr><td class="px-3 py-2 font-mono text-[13px]"><a href="#" class="underline-offset-2 hover:underline">CVE-2026-19870</a></td><td class="px-3 py-2"><span class="micro-cap rounded-xs px-1.5 bg-violet-mid text-white">HIGH</span></td><td class="px-3 py-2">linux-modules-6.8.0-45-generic</td><td class="px-3 py-2 font-mono text-[13px]">6.8.0-49.49</td><td class="px-3 py-2 text-right"><button data-dialog="triage" class="text-[13px] text-muted-foreground hover:text-foreground">Triage</button></td></tr><tr><td class="px-3 py-2 font-mono text-[13px]"><a href="#" class="underline-offset-2 hover:underline">CVE-2026-18112</a></td><td class="px-3 py-2"><span class="micro-cap rounded-xs px-1.5 bg-violet-mid text-white">HIGH</span></td><td class="px-3 py-2">linux-image-6.8.0-45-generic</td><td class="px-3 py-2 font-mono text-[13px]">6.8.0-49.49</td><td class="px-3 py-2 text-right"><button data-dialog="triage" class="text-[13px] text-muted-foreground hover:text-foreground">Triage</button></td></tr></tbody>
+                <tbody class="divide-y"><tr><td class="px-3 py-2 font-mono text-[13px]"><a href="#" class="text-link underline-offset-2 hover:underline">CVE-2026-21344</a></td><td class="px-3 py-2"><span class="micro-cap rounded-xs px-1.5 bg-critical text-white">CRITICAL</span></td><td class="px-3 py-2">linux-image-6.8.0-45-generic</td><td class="px-3 py-2 font-mono text-[13px]">6.8.0-49.49</td><td class="px-3 py-2 text-right"><button data-dialog="triage" class="text-[13px] text-muted-foreground hover:text-foreground">Triage</button></td></tr><tr><td class="px-3 py-2 font-mono text-[13px]"><a href="#" class="text-link underline-offset-2 hover:underline">CVE-2026-19870</a></td><td class="px-3 py-2"><span class="micro-cap rounded-xs px-1.5 bg-high text-ink">HIGH</span></td><td class="px-3 py-2">linux-modules-6.8.0-45-generic</td><td class="px-3 py-2 font-mono text-[13px]">6.8.0-49.49</td><td class="px-3 py-2 text-right"><button data-dialog="triage" class="text-[13px] text-muted-foreground hover:text-foreground">Triage</button></td></tr><tr><td class="px-3 py-2 font-mono text-[13px]"><a href="#" class="text-link underline-offset-2 hover:underline">CVE-2026-18112</a></td><td class="px-3 py-2"><span class="micro-cap rounded-xs px-1.5 bg-high text-ink">HIGH</span></td><td class="px-3 py-2">linux-image-6.8.0-45-generic</td><td class="px-3 py-2 font-mono text-[13px]">6.8.0-49.49</td><td class="px-3 py-2 text-right"><button data-dialog="triage" class="text-[13px] text-muted-foreground hover:text-foreground">Triage</button></td></tr></tbody>
               </table>
             </div>
             </div>
           </details>
           <details class="relative border-b last:border-b-0">
-            <span class="absolute inset-y-0 left-0 w-[3px] bg-pink"></span>
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-critical"></span>
             <summary class="grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 cursor-pointer px-4 py-3.5 hover:bg-muted/40">
               <div class="flex min-w-0 items-start gap-2">
                 <svg class="chevron mt-0.5 size-4 shrink-0 text-muted-foreground transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
@@ -123,14 +123,14 @@
             </summary>
             <div class="grid grid-cols-1 gap-3 px-4 pb-4 pl-10">
             <p>Composer dependencies of this app. Update them, run the tests, and deploy.</p>
-            <div class="flex items-start gap-2 rounded-md bg-night px-4 py-3 text-white">
+            <div class="flex items-start gap-2 rounded-md bg-sunken px-4 py-3 text-white">
               <code class="min-w-0 flex-1 overflow-x-auto whitespace-pre font-mono text-[13px] leading-6">cd /var/www/shop && composer update guzzlehttp/guzzle symfony/http-kernel --with-dependencies</code>
               <button data-copy="" class="-my-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md text-on-dark-muted hover:bg-on-dark-faint hover:text-white"></button>
             </div>
             </div>
           </details>
           <details class="relative border-b last:border-b-0">
-            <span class="absolute inset-y-0 left-0 w-[3px] bg-violet-mid"></span>
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-high"></span>
             <summary class="grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 cursor-pointer px-4 py-3.5 hover:bg-muted/40">
               <div class="flex min-w-0 items-start gap-2">
                 <svg class="chevron mt-0.5 size-4 shrink-0 text-muted-foreground transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
@@ -144,14 +144,14 @@
             </summary>
             <div class="grid grid-cols-1 gap-3 px-4 pb-4 pl-10">
             <p>An older kernel kept as a fallback. It is not running; remove it.</p>
-            <div class="flex items-start gap-2 rounded-md bg-night px-4 py-3 text-white">
+            <div class="flex items-start gap-2 rounded-md bg-sunken px-4 py-3 text-white">
               <code class="min-w-0 flex-1 overflow-x-auto whitespace-pre font-mono text-[13px] leading-6">sudo apt-get purge linux-image-6.8.0-31-generic linux-modules-6.8.0-31-generic</code>
               <button data-copy="" class="-my-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md text-on-dark-muted hover:bg-on-dark-faint hover:text-white"></button>
             </div>
             </div>
           </details>
           <details class="relative border-b last:border-b-0">
-            <span class="absolute inset-y-0 left-0 w-[3px] bg-violet-mid"></span>
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-high"></span>
             <summary class="grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 cursor-pointer px-4 py-3.5 hover:bg-muted/40">
               <div class="flex min-w-0 items-start gap-2">
                 <svg class="chevron mt-0.5 size-4 shrink-0 text-muted-foreground transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
@@ -165,7 +165,7 @@
             </summary>
             <div class="grid grid-cols-1 gap-3 px-4 pb-4 pl-10">
             <p>A compiled binary. Find which package installed it and upgrade that package.</p>
-            <div class="flex items-start gap-2 rounded-md bg-night px-4 py-3 text-white">
+            <div class="flex items-start gap-2 rounded-md bg-sunken px-4 py-3 text-white">
               <code class="min-w-0 flex-1 overflow-x-auto whitespace-pre font-mono text-[13px] leading-6">dpkg -S /usr/bin/dockerd</code>
               <button data-copy="" class="-my-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md text-on-dark-muted hover:bg-on-dark-faint hover:text-white"></button>
             </div>
@@ -184,7 +184,7 @@
         <aside class="space-y-4">
         <section class="space-y-2 border-b pb-4 last:border-b-0">
           <h3 class="micro-cap text-muted-foreground">Last scan</h3>
-          <dl class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5"><dt class="text-muted-foreground">Status</dt><dd class="truncate text-right"><span class="inline-flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-lime"></span>ok</span></dd><dt class="text-muted-foreground">Resolved</dt><dd class="truncate text-right">5</dd><dt class="text-muted-foreground">New</dt><dd class="truncate text-right">2</dd><dt class="text-muted-foreground">Duration</dt><dd class="truncate text-right">4m 12s</dd><dt class="text-muted-foreground">Scanned</dt><dd class="truncate text-right">5h ago</dd></dl>
+          <dl class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5"><dt class="text-muted-foreground">Status</dt><dd class="truncate text-right"><span class="inline-flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-ok"></span>ok</span></dd><dt class="text-muted-foreground">Resolved</dt><dd class="truncate text-right">5</dd><dt class="text-muted-foreground">New</dt><dd class="truncate text-right">2</dd><dt class="text-muted-foreground">Duration</dt><dd class="truncate text-right">4m 12s</dd><dt class="text-muted-foreground">Scanned</dt><dd class="truncate text-right">5h ago</dd></dl>
         </section>
         <section class="space-y-2 border-b pb-4 last:border-b-0">
           <h3 class="micro-cap text-muted-foreground">Host details</h3>

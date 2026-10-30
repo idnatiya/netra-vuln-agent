@@ -12,23 +12,23 @@
   <script src="app.js"></script>
 </head>
 <body class="flex h-screen overflow-hidden">
-  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-night/60 md:hidden"></div>
-  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full flex-col border-r border-hairline-violet bg-sidebar text-white transition-transform duration-200 md:static md:translate-x-0">
+  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-sidebar/70 md:hidden"></div>
+  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full flex-col border-r border-border bg-sidebar text-white transition-transform duration-200 md:static md:translate-x-0">
     <div class="flex items-center gap-1 p-3">
       <button class="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 hover:bg-on-dark-faint/60">
-        <span class="flex size-7 shrink-0 items-center justify-center rounded-md bg-violet font-semibold">N</span>
+        <span class="flex size-7 shrink-0 items-center justify-center rounded-md bg-gold font-semibold text-ink">N</span>
         <span class="flex-1 truncate text-left font-semibold">netra-vuln</span>
         <svg class="size-4 text-on-dark-muted shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <button data-sidebar-toggle aria-label="Close menu" class="inline-flex size-8 items-center justify-center rounded-md text-on-dark-muted hover:text-white md:hidden"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
     <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-2">
-      <a href="index.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>Hosts</a><a href="findings.html" aria-current="page" class="flex items-center gap-3 rounded-md bg-on-dark-faint px-3 py-2.5 font-medium text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search CVEs</a><a href="clients.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clients</a><a href="add-agent.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add agent</a>
+      <a href="index.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>Hosts</a><a href="findings.html" aria-current="page" class="relative flex items-center gap-3 rounded-md bg-on-dark-faint/70 px-3 py-2.5 font-medium text-white"><span class="absolute inset-y-2 left-0 w-0.5 rounded-r bg-link"></span><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search CVEs</a><a href="clients.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clients</a><a href="add-agent.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add agent</a>
     </nav>
-    <div class="space-y-0.5 border-t border-hairline-violet p-3">
+    <div class="space-y-0.5 border-t border-border p-3">
       <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a>
       <a href="account.html" class="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-on-dark-faint/60">
-        <span class="flex size-6 items-center justify-center rounded-full bg-violet-mid text-[13px] font-semibold">A</span>
+        <span class="flex size-6 items-center justify-center rounded-full bg-brand text-[13px] font-semibold">A</span>
         <span class="min-w-0 flex-1"><span class="block truncate">admin</span><span class="block text-[13px] text-on-dark-muted">v0.2.0</span></span>
       </a>
     </div>
@@ -61,58 +61,58 @@
           <span class="micro-cap">CVE</span><span class="micro-cap hidden md:block">Package</span><span class="micro-cap hidden md:block">Installed → fixed</span><span class="micro-cap hidden md:block">Host</span><span class="micro-cap text-right">First seen</span>
         </div>
           <div class="relative grid grid-cols-[minmax(0,1fr)_5rem] items-center gap-x-4 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)_11rem_6rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
-            <span class="absolute inset-y-0 left-0 w-[3px] bg-pink"></span>
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-critical"></span>
             <div class="min-w-0">
-              <p class="flex items-center gap-2"><a href="#" class="truncate font-mono font-semibold underline-offset-2 hover:underline">CVE-2026-21344</a><span class="micro-cap rounded-xs px-1.5 bg-pink text-ink">critical</span></p>
+              <p class="flex items-center gap-2"><a href="#" class="truncate font-mono font-semibold underline-offset-2 hover:text-link hover:underline">CVE-2026-21344</a><span class="micro-cap rounded-xs px-1.5 bg-critical text-white">critical</span></p>
               <p class="mt-0.5 truncate text-[13px] text-muted-foreground">kernel: use-after-free in netfilter</p>
             </div>
             <div class="hidden min-w-0 md:block"><p class="truncate">linux-image-6.8.0-45-generic</p></div>
             <div class="hidden min-w-0 font-mono text-[13px] md:block"><p class="truncate">6.8.0-45.45</p><p class="truncate text-muted-foreground">→ 6.8.0-49.49</p></div>
-            <div class="hidden min-w-0 md:block"><a href="host.html" class="block truncate hover:underline">acme-web-01</a><div class="mt-0.5"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">A</span>acme</span></div></div>
+            <div class="hidden min-w-0 md:block"><a href="host.html" class="block truncate hover:underline">acme-web-01</a><div class="mt-0.5"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-brand text-[9px] font-semibold">A</span>acme</span></div></div>
             <div class="text-right text-[13px] text-muted-foreground">12d ago<br><button data-dialog="triage" class="mt-0.5 hover:text-foreground">Triage</button></div>
           </div>
           <div class="relative grid grid-cols-[minmax(0,1fr)_5rem] items-center gap-x-4 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)_11rem_6rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
-            <span class="absolute inset-y-0 left-0 w-[3px] bg-pink"></span>
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-critical"></span>
             <div class="min-w-0">
-              <p class="flex items-center gap-2"><a href="#" class="truncate font-mono font-semibold underline-offset-2 hover:underline">CVE-2026-0412</a><span class="micro-cap rounded-xs px-1.5 bg-pink text-ink">critical</span></p>
+              <p class="flex items-center gap-2"><a href="#" class="truncate font-mono font-semibold underline-offset-2 hover:text-link hover:underline">CVE-2026-0412</a><span class="micro-cap rounded-xs px-1.5 bg-critical text-white">critical</span></p>
               <p class="mt-0.5 truncate text-[13px] text-muted-foreground">guzzle: header injection in redirects</p>
             </div>
             <div class="hidden min-w-0 md:block"><p class="truncate">guzzlehttp/guzzle</p></div>
             <div class="hidden min-w-0 font-mono text-[13px] md:block"><p class="truncate">7.8.1</p><p class="truncate text-muted-foreground">→ 7.9.3</p></div>
-            <div class="hidden min-w-0 md:block"><a href="host.html" class="block truncate hover:underline">acme-web-01</a><div class="mt-0.5"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">A</span>acme</span></div></div>
+            <div class="hidden min-w-0 md:block"><a href="host.html" class="block truncate hover:underline">acme-web-01</a><div class="mt-0.5"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-brand text-[9px] font-semibold">A</span>acme</span></div></div>
             <div class="text-right text-[13px] text-muted-foreground">2d ago<br><button data-dialog="triage" class="mt-0.5 hover:text-foreground">Triage</button></div>
           </div>
           <div class="relative grid grid-cols-[minmax(0,1fr)_5rem] items-center gap-x-4 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)_11rem_6rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
-            <span class="absolute inset-y-0 left-0 w-[3px] bg-violet-mid"></span>
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-high"></span>
             <div class="min-w-0">
-              <p class="flex items-center gap-2"><a href="#" class="truncate font-mono font-semibold underline-offset-2 hover:underline">CVE-2026-1187</a><span class="micro-cap rounded-xs px-1.5 bg-violet-mid text-white">high</span></p>
+              <p class="flex items-center gap-2"><a href="#" class="truncate font-mono font-semibold underline-offset-2 hover:text-link hover:underline">CVE-2026-1187</a><span class="micro-cap rounded-xs px-1.5 bg-high text-ink">high</span></p>
               <p class="mt-0.5 truncate text-[13px] text-muted-foreground">openssl: crash in X.509 name check</p>
             </div>
             <div class="hidden min-w-0 md:block"><p class="truncate">openssl-libs</p></div>
             <div class="hidden min-w-0 font-mono text-[13px] md:block"><p class="truncate">1:3.0.7-27.el9</p><p class="truncate text-muted-foreground">→ 1:3.0.7-29.el9</p></div>
-            <div class="hidden min-w-0 md:block"><a href="host.html" class="block truncate hover:underline">gx-app-prod</a><div class="mt-0.5"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">G</span>globex</span></div></div>
+            <div class="hidden min-w-0 md:block"><a href="host.html" class="block truncate hover:underline">gx-app-prod</a><div class="mt-0.5"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-brand text-[9px] font-semibold">G</span>globex</span></div></div>
             <div class="text-right text-[13px] text-muted-foreground">1mo ago<br><button data-dialog="triage" class="mt-0.5 hover:text-foreground">Triage</button></div>
           </div>
           <div class="relative grid grid-cols-[minmax(0,1fr)_5rem] items-center gap-x-4 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)_11rem_6rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
-            <span class="absolute inset-y-0 left-0 w-[3px] bg-violet-mid"></span>
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-high"></span>
             <div class="min-w-0">
-              <p class="flex items-center gap-2"><a href="#" class="truncate font-mono font-semibold underline-offset-2 hover:underline">CVE-2025-48734</a><span class="micro-cap rounded-xs px-1.5 bg-violet-mid text-white">high</span></p>
+              <p class="flex items-center gap-2"><a href="#" class="truncate font-mono font-semibold underline-offset-2 hover:text-link hover:underline">CVE-2025-48734</a><span class="micro-cap rounded-xs px-1.5 bg-high text-ink">high</span></p>
               <p class="mt-0.5 truncate text-[13px] text-muted-foreground">postgresql: SQL injection via quoting</p>
             </div>
             <div class="hidden min-w-0 md:block"><p class="truncate">postgresql-16</p></div>
             <div class="hidden min-w-0 font-mono text-[13px] md:block"><p class="truncate">16.4-0ubuntu0.24.04</p><p class="truncate text-muted-foreground">→ 16.9-0ubuntu0.24.04</p></div>
-            <div class="hidden min-w-0 md:block"><a href="host.html" class="block truncate hover:underline">acme-db-01</a><div class="mt-0.5"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">A</span>acme</span></div></div>
+            <div class="hidden min-w-0 md:block"><a href="host.html" class="block truncate hover:underline">acme-db-01</a><div class="mt-0.5"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-brand text-[9px] font-semibold">A</span>acme</span></div></div>
             <div class="text-right text-[13px] text-muted-foreground">3mo ago<br><button data-dialog="triage" class="mt-0.5 hover:text-foreground">Triage</button></div>
           </div>
           <div class="relative grid grid-cols-[minmax(0,1fr)_5rem] items-center gap-x-4 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)_11rem_6rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
-            <span class="absolute inset-y-0 left-0 w-[3px] bg-violet-mid"></span>
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-high"></span>
             <div class="min-w-0">
-              <p class="flex items-center gap-2"><a href="#" class="truncate font-mono font-semibold underline-offset-2 hover:underline">GHSA-9wx4-h78v-vm56</a><span class="micro-cap rounded-xs px-1.5 bg-violet-mid text-white">high</span></p>
+              <p class="flex items-center gap-2"><a href="#" class="truncate font-mono font-semibold underline-offset-2 hover:text-link hover:underline">GHSA-9wx4-h78v-vm56</a><span class="micro-cap rounded-xs px-1.5 bg-high text-ink">high</span></p>
               <p class="mt-0.5 truncate text-[13px] text-muted-foreground">x/net: excessive memory in HTTP/2</p>
             </div>
             <div class="hidden min-w-0 md:block"><p class="truncate">golang.org/x/net</p></div>
             <div class="hidden min-w-0 font-mono text-[13px] md:block"><p class="truncate">v0.23.0</p><p class="truncate text-muted-foreground">→ v0.38.0</p></div>
-            <div class="hidden min-w-0 md:block"><a href="host.html" class="block truncate hover:underline">acme-web-01</a><div class="mt-0.5"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">A</span>acme</span></div></div>
+            <div class="hidden min-w-0 md:block"><a href="host.html" class="block truncate hover:underline">acme-web-01</a><div class="mt-0.5"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-brand text-[9px] font-semibold">A</span>acme</span></div></div>
             <div class="text-right text-[13px] text-muted-foreground">3w ago<br><button data-dialog="triage" class="mt-0.5 hover:text-foreground">Triage</button></div>
           </div>
       </div>

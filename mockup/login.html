@@ -19,18 +19,18 @@
         <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
         netra-vuln
       </a>
-      <h1 class="font-display text-5xl font-medium leading-[1.15]">Every client VM's <span class="rounded-xs bg-lime px-3 text-ink">critical</span> CVEs in one place.</h1>
+      <h1 class="font-display text-5xl font-medium leading-[1.15]">Every client VM's <span class="rounded-xs bg-gold px-3 text-ink">critical</span> CVEs in one place.</h1>
       <p class="max-w-lg leading-loose text-on-dark-muted">Agents on each VM run Trivy daily and push the results here. Central never connects to a VM.</p>
-      <div class="max-w-md rounded-xl border border-hairline-violet bg-night text-sm">
-        <div class="grid grid-cols-[1fr_4rem_3rem] border-b border-hairline-violet px-4 py-2 micro-cap text-on-dark-muted"><span>Latest reports</span><span class="text-right">Critical</span><span class="text-right">High</span></div>
-        <div class="grid grid-cols-[1fr_4rem_3rem] border-b border-hairline-violet px-4 py-2 tabular-nums"><span>acme-web-01 <span class="text-xs text-on-dark-muted">· 5h ago</span></span><span class="text-right font-semibold">2</span><span class="text-right">9</span></div>
-        <div class="grid grid-cols-[1fr_4rem_3rem] border-b border-hairline-violet px-4 py-2 tabular-nums"><span>gx-app-prod <span class="text-xs text-on-dark-muted">· 7h ago</span></span><span class="text-right font-semibold">1</span><span class="text-right">6</span></div>
+      <div class="max-w-md rounded-xl border border-border bg-card text-sm">
+        <div class="grid grid-cols-[1fr_4rem_3rem] border-b border-border px-4 py-2 micro-cap text-on-dark-muted"><span>Latest reports</span><span class="text-right">Critical</span><span class="text-right">High</span></div>
+        <div class="grid grid-cols-[1fr_4rem_3rem] border-b border-border px-4 py-2 tabular-nums"><span>acme-web-01 <span class="text-xs text-on-dark-muted">· 5h ago</span></span><span class="text-right font-semibold">2</span><span class="text-right">9</span></div>
+        <div class="grid grid-cols-[1fr_4rem_3rem] border-b border-border px-4 py-2 tabular-nums"><span>gx-app-prod <span class="text-xs text-on-dark-muted">· 7h ago</span></span><span class="text-right font-semibold">1</span><span class="text-right">6</span></div>
         <div class="grid grid-cols-[1fr_4rem_3rem] px-4 py-2 tabular-nums text-on-dark-muted"><span><span class="text-white">initech-erp</span> <span class="text-xs">· 4h ago</span></span><span class="text-right">0</span><span class="text-right">0</span></div>
       </div>
     </div>
 
     <!-- Sign-in form -->
-    <div class="mx-auto w-full max-w-sm space-y-6 rounded-xl border border-hairline-violet bg-night p-8">
+    <div class="mx-auto w-full max-w-sm space-y-6 rounded-xl border border-border bg-card p-8">
       <a href="login.html" class="flex items-center gap-2 text-base font-semibold lg:hidden">
         <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
         netra-vuln
@@ -40,8 +40,8 @@
         <p class="text-sm text-on-dark-muted">Use the admin account created with <code class="text-white">central admin create</code>.</p>
       </div>
 
-      <div data-login-error hidden class="flex items-center gap-2 rounded-md border-l-4 border-pink bg-on-dark-faint px-3 py-2 text-sm">
-        <svg class="size-4 shrink-0 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+      <div data-login-error hidden class="flex items-center gap-2 rounded-md border-l-4 border-critical bg-muted px-3 py-2 text-sm">
+        <svg class="size-4 shrink-0 text-critical" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
         Invalid username or password.
       </div>
 
@@ -54,10 +54,10 @@
           <span>Password</span>
           <input type="password" required autocomplete="current-password" class="h-11 w-full rounded-sm border border-input bg-background px-3 font-medium text-white">
         </label>
-        <button type="submit" class="btn-cap mt-2 h-11 w-full rounded-md bg-white px-4 text-ink shadow-[rgba(0,0,0,0.08)_0_2px_8px_0] hover:bg-[#f0f0f0]">Sign in</button>
+        <button type="submit" class="btn-cap mt-2 h-11 w-full rounded-md bg-primary px-4 text-primary-foreground hover:bg-brand">Sign in</button>
       </form>
 
-      <p class="border-t border-hairline-violet pt-4 text-xs text-on-dark-muted">Sessions last 12 hours. Admins are created on the server with <code class="text-white">central admin create</code>.</p>
+      <p class="border-t border-border pt-4 text-xs text-on-dark-muted">Sessions last 12 hours. Admins are created on the server with <code class="text-white">central admin create</code>.</p>
     </div>
   </div>
 </body>
