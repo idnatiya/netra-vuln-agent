@@ -15,7 +15,7 @@ Runs Trivy on a Linux VM, keeps a slim report of HIGH/CRITICAL package vulnerabi
 
 ## Install
 
-On the VM (no Node needed), download the binary for its arch from the latest GitHub Release, check it, and install:
+On the VM, download the binary for its arch from the latest GitHub Release, check it, and install:
 ```sh
 a=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
 u=https://github.com/idnatiya/netra-vuln-agent/releases/latest/download
@@ -28,28 +28,17 @@ Run the same block to update. For a specific version set `u=https://github.com/i
 
 `vuln-agent install` copies the binary to `/opt/vuln-agent/bin/vuln-agent` (linked as `/usr/bin/vuln-agent`), downloads the pinned Trivy release (checksum verified), writes a standalone `/etc/vuln-agent/config.yaml` if none exists, enables the daily scan and 15-minute heartbeat systemd timers, and starts the report page on `127.0.0.1:8090` (`vuln-agent-serve.service`). It is safe to rerun; an existing config is never touched. See `config.example.yaml` for all config fields.
 
-With Node available, npm works too:
-```sh
-sudo npm i -g netra-vuln-agent
-```
-As root, its postinstall runs `vuln-agent install`. The npm install never fails because of this step. If npm ran without root or with `--ignore-scripts`, or the step failed (e.g. GitHub unreachable), run it yourself:
-```sh
-sudo "$(command -v vuln-agent)" install
-```
-`sudo npm update -g netra-vuln-agent` reruns it, so the systemd timers pick up the new binary.
-
-Without npm, install or update from a checkout over SSH (builds both binaries, picks the VM's arch, runs `install`; sudo may ask for a password):
+From a checkout, install or update over SSH (builds both binaries, picks the VM's arch, runs `install`; sudo may ask for a password):
 ```sh
 make deploy HOSTS="user@vm1 user@vm2"
 ```
-On a host installed with npm, a later `sudo npm update -g netra-vuln-agent` puts the npm version back.
+A host installed earlier with the old npm package needs `sudo npm rm -g netra-vuln-agent` once, so its npm shim no longer shadows `/usr/bin/vuln-agent`.
 
 Uninstall:
 ```sh
 sudo systemctl disable --now vuln-agent-scan.timer vuln-agent-heartbeat.timer vuln-agent-serve.service
 sudo rm -f /etc/systemd/system/vuln-agent-* /usr/bin/vuln-agent && sudo systemctl daemon-reload
 sudo rm -rf /opt/vuln-agent /etc/vuln-agent /var/lib/vuln-agent
-sudo npm rm -g netra-vuln-agent
 ```
 
 ## Standalone

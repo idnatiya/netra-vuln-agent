@@ -1,6 +1,5 @@
 # Build output
 /dist/
-*.tgz
 
 # Go test artifacts
 *.test

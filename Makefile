@@ -2,7 +2,7 @@ VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 TRIVY_VERSION ?= 0.72.0
 
 .DEFAULT_GOAL := help
-.PHONY: help test build-linux npm-pack deploy release
+.PHONY: help test build-linux deploy release
 
 help: ## Show this help
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_\/-]+:.*## / {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -18,14 +18,9 @@ build-linux: ## Build vuln-agent for linux amd64 + arm64 into dist/
 			-o dist/vuln-agent-linux-$$arch ./cmd/vuln-agent || exit 1; \
 	done
 
-npm-pack: ## Build both binaries at package.json's version and pack the npm tarball
-	$(MAKE) build-linux VERSION=v$$(node -p "require('./package.json').version")
-	npm pack
-
 release: ## Publish dist binaries + SHA256SUMS as a GitHub Release for the tag on HEAD (needs gh auth)
 	@tag=$$(git describe --tags --exact-match 2>/dev/null) || { echo "HEAD has no tag: git tag vX.Y.Z && git push origin vX.Y.Z"; exit 2; }; \
 	test -z "$$(git status --porcelain)" || { echo "working tree not clean"; exit 2; }; \
-	test "$$tag" = "v$$(node -p "require('./package.json').version")" || { echo "tag $$tag != package.json version"; exit 2; }; \
 	$(MAKE) --no-print-directory build-linux VERSION=$$tag && \
 	(cd dist && shasum -a 256 vuln-agent-linux-amd64 vuln-agent-linux-arm64 > SHA256SUMS) && \
 	gh release create $$tag --verify-tag --title $$tag --generate-notes \

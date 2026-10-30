@@ -22,9 +22,9 @@ If a design decision is ambiguous, ask first.
 - Static binary (`CGO_ENABLED=0`), targets `linux/amd64` and `linux/arm64`
 - Scanner: **Trivy binary** invoked via `os/exec` (DO NOT import Trivy as a library). Trivy version is pinned by `TRIVY_VERSION` in the `Makefile` (ldflag `main.trivyVersion`).
 - Install: `vuln-agent install` (no Ansible, no .deb/.rpm, no CI release pipeline)
-- Distribution: GitHub Release assets `vuln-agent-linux-{amd64,arm64}` + `SHA256SUMS` (`make release`, manual via `gh`); the README's curl block downloads, checks, and runs `install`. Alternative: npm package `netra-vuln-agent` (`sudo npm i -g netra-vuln-agent`). Root `package.json` + `vuln-agent.js` (Node shim, no deps) ship both `dist/vuln-agent-linux-{amd64,arm64}` binaries. Postinstall runs `vuln-agent install` only when global and root, and always exits 0 (a failed postinstall makes npm remove the binary needed to retry).
+- Distribution: GitHub Release assets `vuln-agent-linux-{amd64,arm64}` + `SHA256SUMS` (`make release`, manual via `gh`); the README's curl block downloads, checks, and runs `install`.
 - License: GPL-3.0-only (`LICENSE`, copyright idnatiya); keep new dependencies GPL-3.0-compatible.
-- Release: bump `version` in `package.json`, commit, tag `vX.Y.Z` and push the tag, `make release` (GitHub Release; refuses without a tag on HEAD, a clean tree, and a matching `package.json`), then optionally `make npm-pack` + `npm publish <tgz>`.
+- Release: commit, tag `vX.Y.Z` and push the tag, `make release` (GitHub Release; refuses without a tag on HEAD and a clean tree).
 - Manual/dev update over SSH: `make deploy HOSTS="user@vm ..."` (build, scp to the user's home, `sudo ./vuln-agent.new install`, remove it).
 
 ## Repo Layout
