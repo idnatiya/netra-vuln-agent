@@ -5,189 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Add agent · netra-vuln</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
   <link rel="stylesheet" href="theme.css">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="tw-config.js"></script>
   <script src="app.js"></script>
 </head>
 <body class="flex h-screen overflow-hidden">
-  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden"></div>
-  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full select-none flex-col border-r bg-sidebar transition-transform duration-200 md:static md:translate-x-0">
-    <div class="flex h-16 items-center justify-between border-b px-5">
-      <a href="index.html" class="flex items-center gap-3">
-        <span class="flex size-9 items-center justify-center rounded-lg border border-blue-500/30 bg-gradient-to-br from-blue-500/20 to-indigo-500/10 text-blue-400 shadow-[0_0_15px_-3px_rgba(59,130,246,0.3)]">
-          <svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-        </span>
-        <span>
-          <span class="flex items-center gap-1.5 text-sm font-semibold tracking-tight text-white">netra-vuln <span class="inline-flex items-center rounded border border-blue-500/30 bg-blue-500/15 px-1.5 py-0.5 font-mono text-[10px] font-medium text-blue-400">CENTRAL</span></span>
-          <span class="mt-0.5 flex items-center gap-1.5 font-mono text-xs text-zinc-500"><span class="inline-block size-1.5 rounded-full bg-emerald-400"></span>Vulnerability monitor</span>
-        </span>
-      </a>
-      <button data-sidebar-toggle aria-label="Close menu" class="inline-flex size-8 items-center justify-center rounded-md text-zinc-400 hover:text-white md:hidden">
-        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-night/60 md:hidden"></div>
+  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full flex-col border-r border-hairline-violet bg-sidebar text-white transition-transform duration-200 md:static md:translate-x-0">
+    <div class="flex items-center gap-1 p-3">
+      <button class="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 hover:bg-on-dark-faint/60">
+        <span class="flex size-7 shrink-0 items-center justify-center rounded-md bg-violet font-semibold">N</span>
+        <span class="flex-1 truncate text-left font-semibold">netra-vuln</span>
+        <svg class="size-4 text-on-dark-muted shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
       </button>
+      <button data-sidebar-toggle aria-label="Close menu" class="inline-flex size-8 items-center justify-center rounded-md text-on-dark-muted hover:text-white md:hidden"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
-    <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-        <a href="index.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
-          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></span><span class="truncate">Hosts</span>
-        </a>
-        <a href="findings.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
-          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><span class="truncate">Search CVEs</span>
-        </a>
-        <a href="clients.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
-          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="truncate">Clients</span>
-        </a>
-        <a href="add-agent.html" class="group relative flex items-center gap-3 rounded-lg border border-primary/25 bg-primary/15 px-3.5 py-2.5 text-sm font-semibold text-blue-300 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
-          <span class="absolute bottom-1.5 left-0 top-1.5 w-1 rounded-r bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span>
-          <span class="text-blue-400"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></span><span class="truncate">Add agent</span>
-        </a>
+    <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-2">
+      <a href="index.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>Hosts</a><a href="findings.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search CVEs</a><a href="clients.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clients</a><a href="add-agent.html" aria-current="page" class="flex items-center gap-3 rounded-md bg-on-dark-faint px-3 py-2.5 font-medium text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add agent</a>
     </nav>
-    <div class="space-y-2.5 border-t bg-sidebar-footer p-3">
-      <a href="index.html" class="group flex items-center justify-between rounded-lg border border-zinc-800/60 bg-zinc-900/60 p-2.5 text-xs transition-colors hover:border-zinc-700/80">
-        <span class="flex items-center gap-2">
-          <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span></span>
-          <span class="font-medium text-zinc-400 group-hover:text-zinc-200">Agents</span>
-        </span>
-        <span class="font-mono font-semibold text-zinc-300 group-hover:text-white">8/9 reporting</span>
-      </a>
-      <div class="flex items-center justify-between px-2.5 py-1 text-xs text-zinc-500">
-        <span class="flex items-center gap-1.5 truncate"><svg class="size-3.5 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></svg>admin</span>
-        <span class="font-mono text-[11px] uppercase text-zinc-600">v0.2.0</span>
+    <div class="space-y-0.5 border-t border-hairline-violet p-3">
+      <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a>
+      <div class="flex items-center gap-3 px-3 py-2">
+        <span class="flex size-6 items-center justify-center rounded-full bg-violet-mid text-[13px] font-semibold">A</span>
+        <span class="min-w-0 flex-1"><span class="block truncate">admin</span><span class="block text-[13px] text-on-dark-muted">v0.2.0</span></span>
       </div>
     </div>
   </aside>
 
-  <div class="relative flex min-w-0 flex-1 flex-col overflow-hidden">
-    <header class="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-3 border-b bg-[#0e0f12]/80 px-4 backdrop-blur-md sm:px-6 md:px-8">
-      <div class="flex min-w-0 items-center gap-2 sm:gap-3">
-        <button data-sidebar-toggle aria-label="Open menu" class="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-zinc-400 hover:bg-zinc-800 hover:text-white md:hidden">
-          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
-        </button>
-        <div class="flex min-w-0 items-center truncate text-sm font-medium text-zinc-500">
-          <span class="hidden sm:inline">Central</span>
-          <svg class="mx-1.5 hidden size-4 shrink-0 text-zinc-600 sm:inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          <span class="truncate text-sm font-semibold text-zinc-100 sm:text-base">Add agent</span>
-        </div>
+  <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
+    <header class="flex h-14 shrink-0 items-center justify-between gap-3 border-b px-4 sm:px-6">
+      <div class="flex min-w-0 items-center gap-2">
+        <button data-sidebar-toggle aria-label="Open menu" class="-ml-1 inline-flex size-8 shrink-0 items-center justify-center rounded-md hover:bg-muted md:hidden"><svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button>
+        <nav aria-label="Breadcrumb" class="flex min-w-0 items-center"><span class="truncate font-medium">Add agent</span></nav>
       </div>
-      <div class="flex shrink-0 items-center gap-2 sm:gap-3">
-        <label class="hidden items-center gap-2 rounded-lg border border-zinc-800/80 bg-zinc-900/90 px-3 py-1.5 font-mono text-xs text-zinc-300 shadow-sm sm:inline-flex">
-          <span class="font-sans text-zinc-500">Client:</span>
-          <select aria-label="Client" class="bg-transparent font-mono text-xs text-zinc-200 focus:outline-none">
-            <option>all</option><option>acme</option><option>globex</option><option>initech</option>
-          </select>
-        </label>
-        <span class="hidden h-4 w-px bg-zinc-800 sm:block"></span>
-        <a href="login.html" class="inline-flex h-9 items-center gap-2 rounded-md border border-red-500/20 bg-red-500/10 px-3.5 text-xs font-medium text-red-400 hover:bg-red-500/20">
-          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-          <span class="hidden md:inline">Sign out</span>
-        </a>
-      </div>
+      <a href="login.html" class="inline-flex h-9 items-center gap-1.5 rounded-sm border border-input bg-muted/40 px-3 font-semibold hover:bg-muted"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg><span class="hidden md:inline">Sign out</span></a>
     </header>
-
-    <main class="ambient-glow flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
-    <div class="mx-auto grid w-full max-w-3xl gap-6 pb-12">
-    <div>
-      <h1 class="text-xl font-semibold">Add agent</h1>
-      <p class="mt-1 text-sm text-muted-foreground">Run one command on a VM. The agent installs itself, enrolls, and sends its first scan here.</p>
-    </div>
-
-    <ol class="grid gap-4">
-      <!-- step 1 -->
-      <li class="grid gap-4 rounded-lg border bg-card p-5 sm:grid-cols-[auto_1fr]">
-        <span class="flex size-7 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">1</span>
-        <div class="grid gap-3">
-          <div>
-            <h2 class="font-medium">Choose the client</h2>
-            <p class="text-sm text-muted-foreground">The VM's findings belong to this client.</p>
-          </div>
-          <div class="flex flex-wrap items-center gap-3">
-            <select aria-label="Client" class="h-9 w-full rounded-md border border-input bg-background px-2 text-sm shadow-sm sm:w-64">
-              <option>acme</option><option>globex</option><option>initech</option>
-            </select>
-            <a href="clients.html" class="text-sm text-muted-foreground underline-offset-2 hover:text-foreground hover:underline">Create a client</a>
-          </div>
-        </div>
-      </li>
-
-      <!-- step 2 -->
-      <li class="grid gap-4 rounded-lg border bg-card p-5 sm:grid-cols-[auto_1fr]">
-        <span class="flex size-7 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">2</span>
-        <div class="grid min-w-0 gap-3" data-tabs>
-          <div class="flex flex-wrap items-start gap-3">
-            <div>
-              <h2 class="font-medium">Run the install command on the VM</h2>
-              <p class="text-sm text-muted-foreground">As root or with sudo. Safe to run again to update.</p>
-            </div>
-            <div class="ml-auto flex rounded-md border p-0.5 text-sm" role="tablist">
-              <button data-tab="oneline" role="tab" class="rounded px-3 py-1 text-muted-foreground aria-selected:bg-muted aria-selected:text-foreground">One line</button>
-              <button data-tab="manual" role="tab" class="rounded px-3 py-1 text-muted-foreground aria-selected:bg-muted aria-selected:text-foreground">Manual</button>
-            </div>
-          </div>
-
-          <div data-panel="oneline" class="grid gap-3">
-            <div class="flex items-start gap-2 rounded-lg border border-zinc-800/80 bg-terminal p-4 text-zinc-100">
-              <code class="min-w-0 flex-1 whitespace-pre-wrap break-all font-mono text-xs leading-6"><span class="select-none text-zinc-500">$ </span>curl -fsSL https://vuln.example.com/install.sh | sudo NETRA_ENROLL_TOKEN=nvt_acme_7Qm2xR9kLp4vT8sW sh</code>
-              <button data-copy="" class="-my-1 inline-flex size-8 shrink-0 items-center justify-center rounded-md text-zinc-300 hover:bg-white/10 hover:text-white"></button>
-            </div>
-            <p class="flex items-start gap-2 rounded-md border border-sev-medium/40 bg-sev-medium/10 px-3 py-2 text-xs">
-              <svg class="mt-px size-4 shrink-0 text-sev-medium" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-              The command contains acme's enroll token. Anyone with it can add hosts to acme; share it only with people who manage these VMs.
-              <button class="ml-auto shrink-0 font-medium underline-offset-2 hover:underline">Rotate token</button>
-            </p>
-          </div>
-
-          <div data-panel="manual" class="grid gap-3 text-sm">
-            <p class="text-muted-foreground">Download the binary from the GitHub Release, check it, install, then enroll:</p>
-            <div class="flex items-start gap-2 rounded-lg border border-zinc-800/80 bg-terminal p-4 text-zinc-100">
-              <code class="min-w-0 flex-1 whitespace-pre-wrap break-all font-mono text-xs leading-6">a=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
+    <main class="relative flex flex-1 flex-col overflow-y-auto">
+      <div class="grid w-full flex-1 grid-cols-1 content-start gap-5 p-4 pb-12 sm:p-6 sm:pb-12 lg:px-8">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div><h1 class="text-[22px] font-semibold">Add agent</h1><p class="mt-0.5 text-muted-foreground">Run one command on a VM. The agent installs itself, enrolls, and sends its first scan here.</p></div>
+        <div class="flex items-center gap-2"></div>
+      </div>
+      <div class="grid max-w-4xl grid-cols-1 gap-8">
+        <section class="grid grid-cols-[1.75rem_minmax(0,1fr)] gap-x-4 gap-y-3">
+          <span class="flex size-7 items-center justify-center rounded-full border border-input font-semibold">1</span>
+          <div class="space-y-0.5"><h2 class="text-[17px] font-semibold">Choose the client</h2><p class="text-muted-foreground">The VM's findings belong to this client.</p></div>
+          <div class="col-start-2 grid grid-cols-1 gap-3"><div class="flex flex-wrap items-center gap-3"><div class="inline-flex max-w-full overflow-x-auto rounded-sm border border-input bg-muted/40"><button class="inline-flex h-9 items-center gap-2 px-3 font-medium hover:bg-muted "><svg class="size-4 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>acme<svg class="size-3.5 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></div><a href="clients.html" class="text-muted-foreground underline-offset-2 hover:text-foreground hover:underline">Create a client</a></div></div>
+        </section>
+        <section class="grid grid-cols-[1.75rem_minmax(0,1fr)] gap-x-4 gap-y-3">
+          <span class="flex size-7 items-center justify-center rounded-full border border-input font-semibold">2</span>
+          <div class="space-y-0.5"><h2 class="text-[17px] font-semibold">Install</h2><p class="text-muted-foreground">Run as root or with sudo on the VM. Safe to run again to update.</p></div>
+          <div class="col-start-2 grid grid-cols-1 gap-3"><div class="overflow-hidden rounded-md border" data-tabs>
+              <div class="flex border-b bg-muted text-[13px]" role="tablist">
+                <button data-tab="oneline" role="tab" class="-mb-px border-b-2 border-transparent px-3 py-2 font-medium text-muted-foreground aria-selected:border-foreground aria-selected:text-foreground">One line</button>
+                <button data-tab="manual" role="tab" class="-mb-px border-b-2 border-transparent px-3 py-2 font-medium text-muted-foreground aria-selected:border-foreground aria-selected:text-foreground">Manual</button>
+              </div>
+              <div data-panel="oneline" class="flex items-start gap-2 bg-night px-4 py-3 text-white"><code class="min-w-0 flex-1 overflow-x-auto whitespace-pre font-mono text-[13px] leading-6">curl -fsSL https://vuln.example.com/install.sh | sudo NETRA_ENROLL_TOKEN=nvt_acme_7Qm2xR9kLp4vT8sW sh</code><button data-copy="" class="-my-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md text-on-dark-muted hover:bg-on-dark-faint hover:text-white"></button></div>
+              <div data-panel="manual" class="flex items-start gap-2 bg-night px-4 py-3 text-white"><code class="min-w-0 flex-1 overflow-x-auto whitespace-pre font-mono text-[13px] leading-6">a=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
 u=https://github.com/idnatiya/netra-vuln-agent/releases/latest/download
 curl -fsSLO "$u/vuln-agent-linux-$a" -fsSLO "$u/SHA256SUMS"
 grep " vuln-agent-linux-$a\$" SHA256SUMS | sha256sum -c - \
-  && chmod +x "vuln-agent-linux-$a" && sudo "./vuln-agent-linux-$a" install
+  &amp;&amp; chmod +x "vuln-agent-linux-$a" &amp;&amp; sudo "./vuln-agent-linux-$a" install
 # set central_url: https://vuln.example.com and client_id: acme
 sudoedit /etc/vuln-agent/config.yaml
-echo nvt_acme_7Qm2xR9kLp4vT8sW | sudo vuln-agent enroll</code>
-              <button data-copy="" class="-my-1 inline-flex size-8 shrink-0 items-center justify-center rounded-md text-zinc-300 hover:bg-white/10 hover:text-white"></button>
+echo nvt_acme_7Qm2xR9kLp4vT8sW | sudo vuln-agent enroll</code><button data-copy="" class="-my-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md text-on-dark-muted hover:bg-on-dark-faint hover:text-white"></button></div>
             </div>
-          </div>
-
-          <ul class="grid gap-1 text-xs text-muted-foreground sm:grid-cols-2">
-            <li>• Ubuntu/Debian, AlmaLinux/Rocky/CentOS · amd64, arm64</li>
-            <li>• Outbound HTTPS to vuln.example.com and github.com</li>
-            <li>• Installs to /opt/vuln-agent, config in /etc/vuln-agent</li>
-            <li>• Daily scan + heartbeat every 15 min (systemd timers)</li>
-          </ul>
+            <div class="flex items-start gap-2 rounded-md border-l-4 border-pink bg-muted px-3 py-2">
+              <svg class="mt-0.5 size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              <p class="flex-1">The command contains acme's enroll token. Anyone with it can add hosts to acme; share it only with people who manage these VMs.</p>
+              <button class="shrink-0 text-[13px] font-semibold underline-offset-2 hover:underline">Rotate token</button>
+            </div>
+            <dl class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5"><dt class="text-muted-foreground">Supported</dt><dd class="truncate text-left">Ubuntu, Debian, AlmaLinux, Rocky, CentOS · amd64, arm64</dd><dt class="text-muted-foreground">Network</dt><dd class="truncate text-left">Outbound HTTPS to vuln.example.com and github.com</dd><dt class="text-muted-foreground">Runs</dt><dd class="truncate text-left">Daily scan, heartbeat every 15 minutes</dd></dl></div>
+        </section>
+        <section class="grid grid-cols-[1.75rem_minmax(0,1fr)] gap-x-4 gap-y-3">
+          <span class="flex size-7 items-center justify-center rounded-full border border-input font-semibold">3</span>
+          <div class="space-y-0.5"><h2 class="text-[17px] font-semibold">Verify</h2><p class="text-muted-foreground">Optional: check the config, Trivy, and the connection to central.</p></div>
+          <div class="col-start-2 grid grid-cols-1 gap-3"><div class="flex items-start gap-2 rounded-md bg-night px-4 py-3 text-white">
+              <code class="min-w-0 flex-1 overflow-x-auto whitespace-pre font-mono text-[13px] leading-6">sudo vuln-agent check</code>
+              <button data-copy="" class="-my-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-md text-on-dark-muted hover:bg-on-dark-faint hover:text-white"></button>
+            </div></div>
+        </section>
+      </div>
+      </div>
+      <div class="sticky bottom-0 border-t bg-sidebar/95 backdrop-blur-sm">
+        <div class="flex flex-wrap items-center gap-3 px-4 py-3 sm:px-6 lg:px-8">
+          <svg class="size-4 animate-spin text-on-dark-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
+          <span class="text-muted-foreground">Waiting for agents from <span class="text-foreground">acme</span>…</span>
+          <span class="ml-auto inline-flex items-center gap-2"><span class="size-2 rounded-full bg-lime"></span><span class="font-semibold">acme-worker-02</span><span class="hidden text-[13px] text-muted-foreground sm:inline">connected 12s ago</span></span>
+          <a href="host.html" class="inline-flex h-9 items-center gap-1.5 rounded-sm bg-primary px-3 font-semibold text-primary-foreground hover:bg-primary/90">View host</a>
         </div>
-      </li>
-
-      <!-- step 3 -->
-      <li class="grid gap-4 rounded-lg border bg-card p-5 sm:grid-cols-[auto_1fr]">
-        <span class="flex size-7 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">3</span>
-        <div class="grid gap-3">
-          <div>
-            <h2 class="font-medium">See it connect</h2>
-            <p class="text-sm text-muted-foreground">New hosts for acme show up here as soon as they enroll.</p>
-          </div>
-          <div class="divide-y rounded-md border">
-            <div class="flex flex-wrap items-center gap-3 p-3">
-              <span class="relative flex size-2.5"><span class="absolute inline-flex size-full animate-ping rounded-full bg-ok opacity-75"></span><span class="relative inline-flex size-2.5 rounded-full bg-ok"></span></span>
-              <div class="min-w-0 flex-1">
-                <p class="text-sm font-medium">acme-worker-02</p>
-                <p class="text-xs text-muted-foreground">Ubuntu 24.04 · amd64 · connected 12s ago · first scan running</p>
-              </div>
-              <a href="host.html" class="inline-flex h-8 items-center rounded-md border bg-background px-3 text-sm font-medium shadow-sm hover:bg-accent">View host</a>
-            </div>
-            <div class="flex items-center gap-3 p-3 text-sm text-muted-foreground">
-              <svg class="size-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
-              Waiting for more agents…
-            </div>
-          </div>
-        </div>
-      </li>
-    </ol>
-    </div>
+      </div>
     </main>
   </div>
+
 </body>
 </html>

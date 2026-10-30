@@ -1,65 +1,64 @@
-/* Dark-only palette after antigravity-oauth-proxy/web/src/style.css, stored as
-   oklch channels so Tailwind opacity modifiers work (bg-sev-critical/10). */
+/* Tokens from DESIGN.md (Sentry design analysis), stored as oklch channels so
+   Tailwind opacity modifiers work. Dark violet canvas everywhere: content on
+   canvas-dark, sidebar and code blocks on surface-night. */
 :root {
-  --radius: 0.75rem;
-  --background: 0.155 0.004 270;          /* #0b0c0e */
-  --foreground: 0.967 0.002 286;          /* #f4f4f6 */
-  --card: 0.185 0.005 270;                /* #121316 */
-  --card-foreground: 0.967 0.002 286;
-  --popover: 0.185 0.005 270;
-  --popover-foreground: 0.967 0.002 286;
-  --sidebar: 0.17 0.006 270;              /* #0e0f12 */
-  --sidebar-footer: 0.16 0.005 270;       /* #090a0c-ish */
-  --primary: 0.546 0.215 262.9;           /* blue-600 */
-  --primary-foreground: 0.985 0 0;
-  --secondary: 0.274 0.006 286;           /* zinc-800 */
-  --secondary-foreground: 0.985 0 0;
-  --muted: 0.24 0.006 286;
-  --muted-foreground: 0.705 0.015 286;    /* zinc-400 */
-  --accent: 0.274 0.006 286;
-  --accent-foreground: 0.985 0 0;
-  --destructive: 0.637 0.237 25.3;        /* red-500 */
-  --border: 0.25 0.006 286;               /* zinc-800/80 on the canvas */
-  --input: 0.274 0.006 286;
-  --ring: 0.623 0.214 259.8;              /* blue-500 */
-  --sev-critical: 0.7 0.19 25;
-  --sev-high: 0.76 0.15 52;
-  --sev-medium: 0.83 0.14 88;
-  --sev-low: 0.72 0.06 250;
-  --ok: 0.74 0.13 155;
-  --terminal: 0.165 0.006 270;            /* #0d0e11 */
+  /* work area: dark canvas */
+  --background: 0.228 0.055 296;        /* surface-canvas-dark #1f1633 */
+  --foreground: 1 0 0;                  /* on-primary #ffffff */
+  --card: 0.228 0.055 296;              /* ink-deep #1f1633, set apart by hairline */
+  --card-foreground: 1 0 0;
+  --primary: 1 0 0;                     /* button-inverted: white fill */
+  --primary-foreground: 0.228 0.055 296;/* ink-deep label */
+  --muted: 0.276 0.060 294.7;           /* #2a2142, between canvas and on-dark-faint */
+  --muted-foreground: 0.789 0.012 313.2;/* on-dark-muted #bdb8c0 */
+  --accent: 0.276 0.060 294.7;
+  --accent-foreground: 1 0 0;
+  --border: 0.330 0.076 291;            /* hairline-violet #362d59 */
+  --input: 0.330 0.076 291;             /* hairline-violet #362d59 */
+  --ring: 0.803 0.084 257.5;            /* ring-focus #9dc1f5 */
+  /* sidebar and code */
+  --sidebar: 0.188 0.040 296.1;         /* surface-night #150f23 */
+  --night: 0.188 0.040 296.1;           /* surface-night #150f23 */
+  --hairline-violet: 0.330 0.076 291;   /* #362d59 */
+  --on-dark-muted: 0.789 0.012 313.2;   /* #bdb8c0 */
+  --on-dark-faint: 0.355 0.030 303.6;   /* #3f3849 */
+  /* accents */
+  --lime: 0.891 0.189 123.8;            /* #c2ef4e */
+  --pink: 0.747 0.156 359.4;            /* #fa7faa */
+  --violet: 0.544 0.148 285.5;          /* #6a5fc1 */
+  --violet-deep: 0.354 0.153 292.7;     /* #422082 */
+  --violet-mid: 0.535 0.070 309.1;      /* #79628c */
+  --ink: 0.228 0.055 296;               /* ink #1f1633, text on light fills */
   color-scheme: dark;
 }
 
 * { border-color: oklch(var(--border)); }
 
-html { font-size: 16.5px; }
-
 body {
   background: oklch(var(--background));
   color: oklch(var(--foreground));
-  font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-feature-settings: "tnum" 1;
+  font-family: Rubik, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-code, kbd, samp, pre { font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+code, kbd, samp, pre { font-family: Monaco, Menlo, "Ubuntu Mono", monospace; }
 
-/* Ambient canvas glow */
-.ambient-glow {
-  background-image:
-    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(59, 130, 246, 0.08) 0%, transparent 80%),
-    radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 40%);
+/* Typography roles (DESIGN.md: button-cap, button-cap-light, micro-cap) */
+.btn-cap { font-size: 14px; font-weight: 700; line-height: 1.14; letter-spacing: 0.2px; text-transform: uppercase; }
+.btn-cap-light { font-size: 14px; font-weight: 500; line-height: 1.29; letter-spacing: 0.2px; text-transform: uppercase; }
+.micro-cap { font-size: 11px; font-weight: 600; line-height: 1.8; letter-spacing: 0.25px; text-transform: uppercase; }
+
+/* text-input-focused: inset depth plus the only blue in the system */
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: none;
+  box-shadow: rgba(0, 0, 0, 0.15) 0 2px 10px inset, 0 0 0 2px oklch(var(--ring));
 }
-
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.22); }
 
 [hidden] { display: none !important; }
-dialog::backdrop { background: rgb(0 0 0 / 0.7); backdrop-filter: blur(2px); }
+dialog { box-shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.1) 0 4px 6px -4px; }
+dialog::backdrop { background: oklch(0.188 0.040 296.1 / 0.6); }
 details > summary { list-style: none; }
 details > summary::-webkit-details-marker { display: none; }
 details[open] .chevron { transform: rotate(90deg); }

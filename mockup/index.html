@@ -5,265 +5,202 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hosts · netra-vuln</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap">
   <link rel="stylesheet" href="theme.css">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="tw-config.js"></script>
   <script src="app.js"></script>
 </head>
 <body class="flex h-screen overflow-hidden">
-  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden"></div>
-  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full select-none flex-col border-r bg-sidebar transition-transform duration-200 md:static md:translate-x-0">
-    <div class="flex h-16 items-center justify-between border-b px-5">
-      <a href="index.html" class="flex items-center gap-3">
-        <span class="flex size-9 items-center justify-center rounded-lg border border-blue-500/30 bg-gradient-to-br from-blue-500/20 to-indigo-500/10 text-blue-400 shadow-[0_0_15px_-3px_rgba(59,130,246,0.3)]">
-          <svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-        </span>
-        <span>
-          <span class="flex items-center gap-1.5 text-sm font-semibold tracking-tight text-white">netra-vuln <span class="inline-flex items-center rounded border border-blue-500/30 bg-blue-500/15 px-1.5 py-0.5 font-mono text-[10px] font-medium text-blue-400">CENTRAL</span></span>
-          <span class="mt-0.5 flex items-center gap-1.5 font-mono text-xs text-zinc-500"><span class="inline-block size-1.5 rounded-full bg-emerald-400"></span>Vulnerability monitor</span>
-        </span>
-      </a>
-      <button data-sidebar-toggle aria-label="Close menu" class="inline-flex size-8 items-center justify-center rounded-md text-zinc-400 hover:text-white md:hidden">
-        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-night/60 md:hidden"></div>
+  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full flex-col border-r border-hairline-violet bg-sidebar text-white transition-transform duration-200 md:static md:translate-x-0">
+    <div class="flex items-center gap-1 p-3">
+      <button class="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 hover:bg-on-dark-faint/60">
+        <span class="flex size-7 shrink-0 items-center justify-center rounded-md bg-violet font-semibold">N</span>
+        <span class="flex-1 truncate text-left font-semibold">netra-vuln</span>
+        <svg class="size-4 text-on-dark-muted shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
       </button>
+      <button data-sidebar-toggle aria-label="Close menu" class="inline-flex size-8 items-center justify-center rounded-md text-on-dark-muted hover:text-white md:hidden"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
-    <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-        <a href="index.html" class="group relative flex items-center gap-3 rounded-lg border border-primary/25 bg-primary/15 px-3.5 py-2.5 text-sm font-semibold text-blue-300 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
-          <span class="absolute bottom-1.5 left-0 top-1.5 w-1 rounded-r bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span>
-          <span class="text-blue-400"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></span><span class="truncate">Hosts</span>
-        </a>
-        <a href="findings.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
-          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><span class="truncate">Search CVEs</span>
-        </a>
-        <a href="clients.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
-          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="truncate">Clients</span>
-        </a>
-        <a href="add-agent.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
-          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></span><span class="truncate">Add agent</span>
-        </a>
+    <nav class="flex-1 space-y-0.5 overflow-y-auto px-3 py-2">
+      <a href="index.html" aria-current="page" class="flex items-center gap-3 rounded-md bg-on-dark-faint px-3 py-2.5 font-medium text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>Hosts</a><a href="findings.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>Search CVEs</a><a href="clients.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clients</a><a href="add-agent.html" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add agent</a>
     </nav>
-    <div class="space-y-2.5 border-t bg-sidebar-footer p-3">
-      <a href="index.html" class="group flex items-center justify-between rounded-lg border border-zinc-800/60 bg-zinc-900/60 p-2.5 text-xs transition-colors hover:border-zinc-700/80">
-        <span class="flex items-center gap-2">
-          <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span></span>
-          <span class="font-medium text-zinc-400 group-hover:text-zinc-200">Agents</span>
-        </span>
-        <span class="font-mono font-semibold text-zinc-300 group-hover:text-white">8/9 reporting</span>
-      </a>
-      <div class="flex items-center justify-between px-2.5 py-1 text-xs text-zinc-500">
-        <span class="flex items-center gap-1.5 truncate"><svg class="size-3.5 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></svg>admin</span>
-        <span class="font-mono text-[11px] uppercase text-zinc-600">v0.2.0</span>
+    <div class="space-y-0.5 border-t border-hairline-violet p-3">
+      <a href="#" class="flex items-center gap-3 rounded-md px-3 py-2.5 text-on-dark-muted hover:bg-on-dark-faint/60 hover:text-white"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Help</a>
+      <div class="flex items-center gap-3 px-3 py-2">
+        <span class="flex size-6 items-center justify-center rounded-full bg-violet-mid text-[13px] font-semibold">A</span>
+        <span class="min-w-0 flex-1"><span class="block truncate">admin</span><span class="block text-[13px] text-on-dark-muted">v0.2.0</span></span>
       </div>
     </div>
   </aside>
 
-  <div class="relative flex min-w-0 flex-1 flex-col overflow-hidden">
-    <header class="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-3 border-b bg-[#0e0f12]/80 px-4 backdrop-blur-md sm:px-6 md:px-8">
-      <div class="flex min-w-0 items-center gap-2 sm:gap-3">
-        <button data-sidebar-toggle aria-label="Open menu" class="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-zinc-400 hover:bg-zinc-800 hover:text-white md:hidden">
-          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
-        </button>
-        <div class="flex min-w-0 items-center truncate text-sm font-medium text-zinc-500">
-          <span class="hidden sm:inline">Central</span>
-          <svg class="mx-1.5 hidden size-4 shrink-0 text-zinc-600 sm:inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          <span class="truncate text-sm font-semibold text-zinc-100 sm:text-base">Hosts</span>
-        </div>
+  <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
+    <header class="flex h-14 shrink-0 items-center justify-between gap-3 border-b px-4 sm:px-6">
+      <div class="flex min-w-0 items-center gap-2">
+        <button data-sidebar-toggle aria-label="Open menu" class="-ml-1 inline-flex size-8 shrink-0 items-center justify-center rounded-md hover:bg-muted md:hidden"><svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg></button>
+        <nav aria-label="Breadcrumb" class="flex min-w-0 items-center"><span class="truncate font-medium">Hosts</span></nav>
       </div>
-      <div class="flex shrink-0 items-center gap-2 sm:gap-3">
-        <label class="hidden items-center gap-2 rounded-lg border border-zinc-800/80 bg-zinc-900/90 px-3 py-1.5 font-mono text-xs text-zinc-300 shadow-sm sm:inline-flex">
-          <span class="font-sans text-zinc-500">Client:</span>
-          <select aria-label="Client" class="bg-transparent font-mono text-xs text-zinc-200 focus:outline-none">
-            <option>all</option><option>acme</option><option>globex</option><option>initech</option>
-          </select>
-        </label>
-        <span class="hidden h-4 w-px bg-zinc-800 sm:block"></span>
-        <a href="login.html" class="inline-flex h-9 items-center gap-2 rounded-md border border-red-500/20 bg-red-500/10 px-3.5 text-xs font-medium text-red-400 hover:bg-red-500/20">
-          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-          <span class="hidden md:inline">Sign out</span>
-        </a>
-      </div>
+      <a href="login.html" class="inline-flex h-9 items-center gap-1.5 rounded-sm border border-input bg-muted/40 px-3 font-semibold hover:bg-muted"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg><span class="hidden md:inline">Sign out</span></a>
     </header>
-
-    <main class="ambient-glow flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
-    <div class="w-full pb-12 grid gap-6">
-      <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div class="group relative flex flex-col justify-between overflow-hidden rounded-lg border bg-card p-5 shadow-sm transition-all duration-200 hover:border-zinc-700/80 hover:shadow-lg hover:shadow-black/30">
-          <div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-blue-500 to-indigo-500"></div>
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Hosts</span>
-            <span class="flex size-9 items-center justify-center rounded-lg border transition-transform duration-200 group-hover:scale-105 bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-[0_0_12px_-2px_rgba(59,130,246,0.25)]"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></span>
-          </div>
-          <div class="mt-4 font-mono text-3xl font-bold tracking-tight text-white">9</div>
-          <div class="mt-3 truncate font-mono text-sm text-zinc-400">3 clients · 1 enrolling</div>
+    <main class="relative flex flex-1 flex-col overflow-y-auto">
+      <div class="grid w-full flex-1 grid-cols-1 content-start gap-5 p-4 pb-12 sm:p-6 sm:pb-12 lg:px-8">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div><h1 class="text-[22px] font-semibold">Hosts</h1><p class="mt-0.5 text-muted-foreground">Every enrolled VM, worst first.</p></div>
+        <div class="flex items-center gap-2"><a href="add-agent.html" class="inline-flex h-9 items-center gap-1.5 rounded-sm bg-primary px-3 font-semibold text-primary-foreground hover:bg-primary/90"><svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add agent</a></div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="inline-flex max-w-full overflow-x-auto rounded-sm border border-input bg-muted/40"><button class="inline-flex h-9 items-center gap-2 px-3 font-medium hover:bg-muted "><svg class="size-4 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>All clients<svg class="size-3.5 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><button class="inline-flex h-9 items-center gap-2 px-3 font-medium hover:bg-muted border-l"><svg class="size-4 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>Critical + high<svg class="size-3.5 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><button class="inline-flex h-9 items-center gap-2 px-3 font-medium hover:bg-muted border-l"><svg class="size-4 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>Unresolved<svg class="size-3.5 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></div>
+      </div>
+      <div class="flex h-10 items-center gap-2 rounded-sm border border-input bg-background px-3">
+          <svg class="size-4 text-muted-foreground shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span class="inline-flex items-center rounded-xs bg-muted px-1.5 py-0.5 font-mono text-[13px]"><span class="text-muted-foreground">is:</span><span>attention</span></span>
+          <input aria-label="Search" placeholder="Search hosts by name, OS, or issue…" class="min-w-0 flex-1 bg-transparent placeholder:text-muted-foreground focus:outline-none" style="box-shadow:none">
         </div>
-        <div class="group relative flex flex-col justify-between overflow-hidden rounded-lg border bg-card p-5 shadow-sm transition-all duration-200 hover:border-zinc-700/80 hover:shadow-lg hover:shadow-black/30">
-          <div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-red-500 to-rose-500"></div>
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-zinc-400">With critical</span>
-            <span class="flex size-9 items-center justify-center rounded-lg border transition-transform duration-200 group-hover:scale-105 bg-red-500/10 text-red-400 border-red-500/20 shadow-[0_0_12px_-2px_rgba(239,68,68,0.25)]"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+      <nav class="flex gap-6 overflow-x-auto border-b"><a href="#" class="-mb-px whitespace-nowrap border-b-2 pb-2 border-foreground font-medium text-foreground" aria-current="page">Needs attention<span class="ml-1.5 rounded-full bg-muted px-1.5 text-[13px] text-muted-foreground">6</span></a><a href="#" class="-mb-px whitespace-nowrap border-b-2 pb-2 border-transparent text-muted-foreground hover:text-foreground">All<span class="ml-1.5 rounded-full bg-muted px-1.5 text-[13px] text-muted-foreground">9</span></a><a href="#" class="-mb-px whitespace-nowrap border-b-2 pb-2 border-transparent text-muted-foreground hover:text-foreground">Not reporting<span class="ml-1.5 rounded-full bg-muted px-1.5 text-[13px] text-muted-foreground">1</span></a><a href="#" class="-mb-px whitespace-nowrap border-b-2 pb-2 border-transparent text-muted-foreground hover:text-foreground">Revoked<span class="ml-1.5 rounded-full bg-muted px-1.5 text-[13px] text-muted-foreground">0</span></a></nav>
+      <div class="overflow-hidden rounded-md border bg-card">
+        <div class="grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_9rem_5rem_5rem_8rem] border-b bg-muted px-4 py-2.5 text-muted-foreground">
+          <div class="flex min-w-0 items-center gap-3">
+            <input type="checkbox" aria-label="Select all" class="accent-white">
+            <button disabled class="h-7 rounded-sm border border-input px-2 text-[13px] font-semibold opacity-50">Mark accepted</button>
+            <button disabled class="hidden h-7 rounded-sm border border-input px-2 text-[13px] font-semibold opacity-50 sm:inline-block">Revoke</button>
+            <button class="ml-auto hidden items-center gap-1 text-[13px] font-medium hover:text-foreground sm:inline-flex"><svg class="size-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="M11 4h10"/><path d="M11 8h7"/><path d="M11 12h4"/></svg>Worst first</button>
           </div>
-          <div class="mt-4 font-mono text-3xl font-bold tracking-tight text-white">3</div>
-          <div class="mt-3 truncate font-mono text-sm text-zinc-400">7 open findings</div>
+          <div class="micro-cap hidden sm:block">Graph · 14d</div>
+          <div class="micro-cap text-right">Critical</div>
+          <div class="micro-cap text-right">High</div>
+          <div class="micro-cap hidden text-right sm:block">Last scan</div>
         </div>
-        <div class="group relative flex flex-col justify-between overflow-hidden rounded-lg border bg-card p-5 shadow-sm transition-all duration-200 hover:border-zinc-700/80 hover:shadow-lg hover:shadow-black/30">
-          <div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-amber-500 to-yellow-500"></div>
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Not reporting</span>
-            <span class="flex size-9 items-center justify-center rounded-lg border transition-transform duration-200 group-hover:scale-105 bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-[0_0_12px_-2px_rgba(245,158,11,0.25)]"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"/><path d="M8.5 16.43a5 5 0 0 1 7 0"/><path d="M5 12.86a10 10 0 0 1 5.17-2.69"/><path d="M19 12.86a10 10 0 0 0-2-1.39"/><path d="M2 8.82a15 15 0 0 1 4.18-2.65"/><path d="M22 8.82a15 15 0 0 0-11.29-3.76"/><path d="m2 2 20 20"/></svg></span>
+          <div class="relative grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_9rem_5rem_5rem_8rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-pink"></span>
+            <div class="flex min-w-0 items-start gap-3">
+              <input type="checkbox" aria-label="Select acme-db-01" class="mt-1 accent-white">
+              <div class="min-w-0">
+                <a href="host.html" class="font-semibold underline-offset-2 hover:underline">acme-db-01</a>
+                <p class="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[13px] text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">A</span>acme</span><span>Ubuntu 22.04 · amd64 · <span class="text-foreground">No heartbeat for 3 days</span></span></p>
+              </div>
+            </div>
+            <div class="hidden sm:block"><svg class="text-pink/70" width="140" height="28" viewBox="0 0 140 28" fill="currentColor" aria-hidden="true"><rect x="0" y="17" width="8" height="11" rx="1"/><rect x="10" y="16" width="8" height="12" rx="1"/><rect x="20" y="13" width="8" height="15" rx="1"/><rect x="30" y="13" width="8" height="15" rx="1"/><rect x="40" y="11" width="8" height="17" rx="1"/><rect x="50" y="9" width="8" height="19" rx="1"/><rect x="60" y="6" width="8" height="22" rx="1"/><rect x="70" y="4" width="8" height="24" rx="1"/><rect x="80" y="3" width="8" height="25" rx="1"/><rect x="90" y="2" width="8" height="26" rx="1"/><rect x="100" y="2" width="8" height="26" rx="1"/><rect x="110" y="2" width="8" height="26" rx="1"/><rect x="120" y="2" width="8" height="26" rx="1"/><rect x="130" y="2" width="8" height="26" rx="1"/></svg></div>
+            <div class="text-right tabular-nums"><span class="font-semibold">4</span></div>
+            <div class="text-right tabular-nums"><span class="font-semibold">17</span></div>
+            <div class="hidden text-right text-[13px] text-muted-foreground sm:block">3d ago</div>
           </div>
-          <div class="mt-4 font-mono text-3xl font-bold tracking-tight text-white">1</div>
-          <div class="mt-3 truncate font-mono text-sm text-zinc-400">acme-db-01 · 3 days</div>
-        </div>
-        <div class="group relative flex flex-col justify-between overflow-hidden rounded-lg border bg-card p-5 shadow-sm transition-all duration-200 hover:border-zinc-700/80 hover:shadow-lg hover:shadow-black/30">
-          <div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-purple-500 to-pink-500"></div>
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Waiting for reboot</span>
-            <span class="flex size-9 items-center justify-center rounded-lg border transition-transform duration-200 group-hover:scale-105 bg-purple-500/10 text-purple-400 border-purple-500/20 shadow-[0_0_12px_-2px_rgba(168,85,247,0.25)]"><svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>
+          <div class="relative grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_9rem_5rem_5rem_8rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-pink"></span>
+            <div class="flex min-w-0 items-start gap-3">
+              <input type="checkbox" aria-label="Select acme-web-01" class="mt-1 accent-white">
+              <div class="min-w-0">
+                <a href="host.html" class="font-semibold underline-offset-2 hover:underline">acme-web-01</a>
+                <p class="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[13px] text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">A</span>acme</span><span>Ubuntu 24.04 · amd64 · <span class="text-foreground">Reboot required</span></span></p>
+              </div>
+            </div>
+            <div class="hidden sm:block"><svg class="text-pink/70" width="140" height="28" viewBox="0 0 140 28" fill="currentColor" aria-hidden="true"><rect x="0" y="5" width="8" height="23" rx="1"/><rect x="10" y="5" width="8" height="23" rx="1"/><rect x="20" y="7" width="8" height="21" rx="1"/><rect x="30" y="4" width="8" height="24" rx="1"/><rect x="40" y="2" width="8" height="26" rx="1"/><rect x="50" y="2" width="8" height="26" rx="1"/><rect x="60" y="8" width="8" height="20" rx="1"/><rect x="70" y="8" width="8" height="20" rx="1"/><rect x="80" y="7" width="8" height="21" rx="1"/><rect x="90" y="7" width="8" height="21" rx="1"/><rect x="100" y="10" width="8" height="18" rx="1"/><rect x="110" y="10" width="8" height="18" rx="1"/><rect x="120" y="2" width="8" height="26" rx="1"/><rect x="130" y="10" width="8" height="18" rx="1"/></svg></div>
+            <div class="text-right tabular-nums"><span class="font-semibold">2</span></div>
+            <div class="text-right tabular-nums"><span class="font-semibold">9</span></div>
+            <div class="hidden text-right text-[13px] text-muted-foreground sm:block">5h ago</div>
           </div>
-          <div class="mt-4 font-mono text-3xl font-bold tracking-tight text-white">2</div>
-          <div class="mt-3 truncate font-mono text-sm text-zinc-400">kernel updates pending</div>
-        </div>
+          <div class="relative grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_9rem_5rem_5rem_8rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-pink"></span>
+            <div class="flex min-w-0 items-start gap-3">
+              <input type="checkbox" aria-label="Select gx-app-prod" class="mt-1 accent-white">
+              <div class="min-w-0">
+                <a href="host.html" class="font-semibold underline-offset-2 hover:underline">gx-app-prod</a>
+                <p class="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[13px] text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">G</span>globex</span><span>AlmaLinux 9.4 · amd64</span></p>
+              </div>
+            </div>
+            <div class="hidden sm:block"><svg class="text-pink/70" width="140" height="28" viewBox="0 0 140 28" fill="currentColor" aria-hidden="true"><rect x="0" y="9" width="8" height="19" rx="1"/><rect x="10" y="9" width="8" height="19" rx="1"/><rect x="20" y="6" width="8" height="22" rx="1"/><rect x="30" y="6" width="8" height="22" rx="1"/><rect x="40" y="6" width="8" height="22" rx="1"/><rect x="50" y="2" width="8" height="26" rx="1"/><rect x="60" y="2" width="8" height="26" rx="1"/><rect x="70" y="2" width="8" height="26" rx="1"/><rect x="80" y="2" width="8" height="26" rx="1"/><rect x="90" y="2" width="8" height="26" rx="1"/><rect x="100" y="2" width="8" height="26" rx="1"/><rect x="110" y="2" width="8" height="26" rx="1"/><rect x="120" y="2" width="8" height="26" rx="1"/><rect x="130" y="2" width="8" height="26" rx="1"/></svg></div>
+            <div class="text-right tabular-nums"><span class="font-semibold">1</span></div>
+            <div class="text-right tabular-nums"><span class="font-semibold">6</span></div>
+            <div class="hidden text-right text-[13px] text-muted-foreground sm:block">7h ago</div>
+          </div>
+          <div class="relative grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_9rem_5rem_5rem_8rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-violet-mid"></span>
+            <div class="flex min-w-0 items-start gap-3">
+              <input type="checkbox" aria-label="Select acme-web-02" class="mt-1 accent-white">
+              <div class="min-w-0">
+                <a href="host.html" class="font-semibold underline-offset-2 hover:underline">acme-web-02</a>
+                <p class="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[13px] text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">A</span>acme</span><span>Ubuntu 24.04 · amd64 · <span class="text-foreground">Last scan failed</span></span></p>
+              </div>
+            </div>
+            <div class="hidden sm:block"><svg class="text-violet-mid" width="140" height="28" viewBox="0 0 140 28" fill="currentColor" aria-hidden="true"><rect x="0" y="8" width="8" height="20" rx="1"/><rect x="10" y="8" width="8" height="20" rx="1"/><rect x="20" y="8" width="8" height="20" rx="1"/><rect x="30" y="2" width="8" height="26" rx="1"/><rect x="40" y="2" width="8" height="26" rx="1"/><rect x="50" y="2" width="8" height="26" rx="1"/><rect x="60" y="8" width="8" height="20" rx="1"/><rect x="70" y="8" width="8" height="20" rx="1"/><rect x="80" y="8" width="8" height="20" rx="1"/><rect x="90" y="8" width="8" height="20" rx="1"/><rect x="100" y="8" width="8" height="20" rx="1"/><rect x="110" y="8" width="8" height="20" rx="1"/><rect x="120" y="8" width="8" height="20" rx="1"/><rect x="130" y="8" width="8" height="20" rx="1"/></svg></div>
+            <div class="text-right tabular-nums"><span class="text-muted-foreground">–</span></div>
+            <div class="text-right tabular-nums"><span class="font-semibold">3</span></div>
+            <div class="hidden text-right text-[13px] text-muted-foreground sm:block"><span class="inline-flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-pink"></span>failed</span></div>
+          </div>
+          <div class="relative grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_9rem_5rem_5rem_8rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-violet-mid"></span>
+            <div class="flex min-w-0 items-start gap-3">
+              <input type="checkbox" aria-label="Select gx-app-staging" class="mt-1 accent-white">
+              <div class="min-w-0">
+                <a href="host.html" class="font-semibold underline-offset-2 hover:underline">gx-app-staging</a>
+                <p class="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[13px] text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">G</span>globex</span><span>Rocky Linux 8.10 · amd64</span></p>
+              </div>
+            </div>
+            <div class="hidden sm:block"><svg class="text-violet-mid" width="140" height="28" viewBox="0 0 140 28" fill="currentColor" aria-hidden="true"><rect x="0" y="2" width="8" height="26" rx="1"/><rect x="10" y="2" width="8" height="26" rx="1"/><rect x="20" y="2" width="8" height="26" rx="1"/><rect x="30" y="6" width="8" height="22" rx="1"/><rect x="40" y="6" width="8" height="22" rx="1"/><rect x="50" y="6" width="8" height="22" rx="1"/><rect x="60" y="6" width="8" height="22" rx="1"/><rect x="70" y="11" width="8" height="17" rx="1"/><rect x="80" y="11" width="8" height="17" rx="1"/><rect x="90" y="11" width="8" height="17" rx="1"/><rect x="100" y="11" width="8" height="17" rx="1"/><rect x="110" y="11" width="8" height="17" rx="1"/><rect x="120" y="11" width="8" height="17" rx="1"/><rect x="130" y="11" width="8" height="17" rx="1"/></svg></div>
+            <div class="text-right tabular-nums"><span class="text-muted-foreground">–</span></div>
+            <div class="text-right tabular-nums"><span class="font-semibold">4</span></div>
+            <div class="hidden text-right text-[13px] text-muted-foreground sm:block">7h ago</div>
+          </div>
+          <div class="relative grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_9rem_5rem_5rem_8rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-lime"></span>
+            <div class="flex min-w-0 items-start gap-3">
+              <input type="checkbox" aria-label="Select acme-worker-01" class="mt-1 accent-white">
+              <div class="min-w-0">
+                <a href="host.html" class="font-semibold underline-offset-2 hover:underline">acme-worker-01</a>
+                <p class="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[13px] text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">A</span>acme</span><span>Debian 12 · arm64</span></p>
+              </div>
+            </div>
+            <div class="hidden sm:block"><svg class="text-on-dark-faint" width="140" height="28" viewBox="0 0 140 28" fill="currentColor" aria-hidden="true"><rect x="0" y="2" width="8" height="26" rx="1"/><rect x="10" y="2" width="8" height="26" rx="1"/><rect x="20" y="15" width="8" height="13" rx="1"/><rect x="30" y="15" width="8" height="13" rx="1"/><rect x="40" y="15" width="8" height="13" rx="1"/><rect x="50" y="26" width="8" height="2" rx="1"/><rect x="60" y="26" width="8" height="2" rx="1"/><rect x="70" y="26" width="8" height="2" rx="1"/><rect x="80" y="26" width="8" height="2" rx="1"/><rect x="90" y="26" width="8" height="2" rx="1"/><rect x="100" y="26" width="8" height="2" rx="1"/><rect x="110" y="26" width="8" height="2" rx="1"/><rect x="120" y="26" width="8" height="2" rx="1"/><rect x="130" y="26" width="8" height="2" rx="1"/></svg></div>
+            <div class="text-right tabular-nums"><span class="text-muted-foreground">–</span></div>
+            <div class="text-right tabular-nums"><span class="text-muted-foreground">–</span></div>
+            <div class="hidden text-right text-[13px] text-muted-foreground sm:block">2h ago</div>
+          </div>
+          <div class="relative grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_9rem_5rem_5rem_8rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-lime"></span>
+            <div class="flex min-w-0 items-start gap-3">
+              <input type="checkbox" aria-label="Select gx-mail" class="mt-1 accent-white">
+              <div class="min-w-0">
+                <a href="host.html" class="font-semibold underline-offset-2 hover:underline">gx-mail</a>
+                <p class="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[13px] text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">G</span>globex</span><span>CentOS Stream 9 · amd64</span></p>
+              </div>
+            </div>
+            <div class="hidden sm:block"><svg class="text-on-dark-faint" width="140" height="28" viewBox="0 0 140 28" fill="currentColor" aria-hidden="true"><rect x="0" y="26" width="8" height="2" rx="1"/><rect x="10" y="26" width="8" height="2" rx="1"/><rect x="20" y="26" width="8" height="2" rx="1"/><rect x="30" y="26" width="8" height="2" rx="1"/><rect x="40" y="26" width="8" height="2" rx="1"/><rect x="50" y="26" width="8" height="2" rx="1"/><rect x="60" y="26" width="8" height="2" rx="1"/><rect x="70" y="26" width="8" height="2" rx="1"/><rect x="80" y="26" width="8" height="2" rx="1"/><rect x="90" y="26" width="8" height="2" rx="1"/><rect x="100" y="26" width="8" height="2" rx="1"/><rect x="110" y="26" width="8" height="2" rx="1"/><rect x="120" y="26" width="8" height="2" rx="1"/><rect x="130" y="26" width="8" height="2" rx="1"/></svg></div>
+            <div class="text-right tabular-nums"><span class="text-muted-foreground">–</span></div>
+            <div class="text-right tabular-nums"><span class="text-muted-foreground">–</span></div>
+            <div class="hidden text-right text-[13px] text-muted-foreground sm:block">1h ago</div>
+          </div>
+          <div class="relative grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_9rem_5rem_5rem_8rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-lime"></span>
+            <div class="flex min-w-0 items-start gap-3">
+              <input type="checkbox" aria-label="Select initech-erp" class="mt-1 accent-white">
+              <div class="min-w-0">
+                <a href="host.html" class="font-semibold underline-offset-2 hover:underline">initech-erp</a>
+                <p class="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[13px] text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">I</span>initech</span><span>Ubuntu 22.04 · amd64</span></p>
+              </div>
+            </div>
+            <div class="hidden sm:block"><svg class="text-on-dark-faint" width="140" height="28" viewBox="0 0 140 28" fill="currentColor" aria-hidden="true"><rect x="0" y="2" width="8" height="26" rx="1"/><rect x="10" y="2" width="8" height="26" rx="1"/><rect x="20" y="2" width="8" height="26" rx="1"/><rect x="30" y="2" width="8" height="26" rx="1"/><rect x="40" y="26" width="8" height="2" rx="1"/><rect x="50" y="26" width="8" height="2" rx="1"/><rect x="60" y="26" width="8" height="2" rx="1"/><rect x="70" y="26" width="8" height="2" rx="1"/><rect x="80" y="26" width="8" height="2" rx="1"/><rect x="90" y="26" width="8" height="2" rx="1"/><rect x="100" y="26" width="8" height="2" rx="1"/><rect x="110" y="26" width="8" height="2" rx="1"/><rect x="120" y="26" width="8" height="2" rx="1"/><rect x="130" y="26" width="8" height="2" rx="1"/></svg></div>
+            <div class="text-right tabular-nums"><span class="text-muted-foreground">–</span></div>
+            <div class="text-right tabular-nums"><span class="text-muted-foreground">–</span></div>
+            <div class="hidden text-right text-[13px] text-muted-foreground sm:block">4h ago</div>
+          </div>
+          <div class="relative grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_9rem_5rem_5rem_8rem] border-b px-4 py-3.5 last:border-b-0 hover:bg-muted/40">
+            <span class="absolute inset-y-0 left-0 w-[3px] bg-on-dark-faint"></span>
+            <div class="flex min-w-0 items-start gap-3">
+              <input type="checkbox" aria-label="Select initech-files" class="mt-1 accent-white">
+              <div class="min-w-0">
+                <a href="host.html" class="font-semibold underline-offset-2 hover:underline">initech-files</a>
+                <p class="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[13px] text-muted-foreground"><span class="inline-flex items-center gap-1 rounded-xs bg-muted px-1.5 text-[13px] text-foreground"><span class="flex size-3 items-center justify-center rounded-[3px] bg-violet-deep text-[9px] font-semibold">I</span>initech</span><span>Debian 12 · amd64 · <span class="text-foreground">First scan running</span></span></p>
+              </div>
+            </div>
+            <div class="hidden sm:block"><span class="text-[13px] text-muted-foreground">no data</span></div>
+            <div class="text-right tabular-nums"><span class="text-muted-foreground">…</span></div>
+            <div class="text-right tabular-nums"><span class="text-muted-foreground">…</span></div>
+            <div class="hidden text-right text-[13px] text-muted-foreground sm:block">enrolled 2m ago</div>
+          </div>
+      </div>
       </div>
 
-    <div class="flex flex-wrap items-center gap-3">
-      <div class="relative w-full sm:w-64">
-        <svg class="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <input placeholder="Find a host" aria-label="Find a host" class="h-9 w-full rounded-md border border-input bg-transparent pl-8 pr-3 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-      </div>
-      <label class="flex items-center gap-2 text-sm text-muted-foreground"><input type="checkbox" class="accent-primary"> Show revoked</label>
-    </div>
-
-    <!-- acme -->
-    <section class="grid gap-3">
-      <h2 class="text-sm font-medium">acme <span class="font-normal text-muted-foreground">· 4 hosts</span></h2>
-      <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        <a href="host.html" class="group grid gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-zinc-700/80">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2"><span class="size-2 shrink-0 rounded-full bg-sev-critical" title="stale"></span><span class="truncate font-medium group-hover:underline">acme-db-01</span></div>
-              <p class="mt-0.5 truncate text-xs text-muted-foreground">Ubuntu 22.04 · amd64</p>
-            </div>
-            <span class="shrink-0 text-xs text-muted-foreground">scanned 3d ago</span>
-          </div>
-          <p class="flex items-baseline gap-4 tabular-nums">
-            <span><span class="font-mono text-2xl font-semibold text-sev-critical">4</span> <span class="text-xs text-muted-foreground">critical</span></span>
-            <span><span class="font-mono text-2xl font-semibold">17</span> <span class="text-xs text-muted-foreground">high</span></span>
-          </p>
-          <p class="text-xs text-sev-high">No heartbeat for 3 days · reboot required</p>
-        </a>
-        <a href="host.html" class="group grid gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-zinc-700/80">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2"><span class="size-2 shrink-0 rounded-full bg-sev-medium" title="attention"></span><span class="truncate font-medium group-hover:underline">acme-web-01</span></div>
-              <p class="mt-0.5 truncate text-xs text-muted-foreground">Ubuntu 24.04 · amd64</p>
-            </div>
-            <span class="shrink-0 text-xs text-muted-foreground">scanned 5h ago</span>
-          </div>
-          <p class="flex items-baseline gap-4 tabular-nums">
-            <span><span class="font-mono text-2xl font-semibold text-sev-critical">2</span> <span class="text-xs text-muted-foreground">critical</span></span>
-            <span><span class="font-mono text-2xl font-semibold">9</span> <span class="text-xs text-muted-foreground">high</span></span>
-          </p>
-          <p class="text-xs text-sev-high">Reboot required</p>
-        </a>
-        <a href="host.html" class="group grid gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-zinc-700/80">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2"><span class="size-2 shrink-0 rounded-full bg-sev-medium" title="attention"></span><span class="truncate font-medium group-hover:underline">acme-web-02</span></div>
-              <p class="mt-0.5 truncate text-xs text-muted-foreground">Ubuntu 24.04 · amd64</p>
-            </div>
-            <span class="shrink-0 text-xs text-sev-critical">scan failed</span>
-          </div>
-          <p class="flex items-baseline gap-4 tabular-nums">
-            <span><span class="font-mono text-2xl font-semibold text-muted-foreground">0</span> <span class="text-xs text-muted-foreground">critical</span></span>
-            <span><span class="font-mono text-2xl font-semibold">3</span> <span class="text-xs text-muted-foreground">high</span></span>
-          </p>
-          <p class="text-xs text-sev-high">Last scan failed</p>
-        </a>
-        <a href="host.html" class="group grid gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-zinc-700/80">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2"><span class="size-2 shrink-0 rounded-full bg-ok" title="healthy"></span><span class="truncate font-medium group-hover:underline">acme-worker-01</span></div>
-              <p class="mt-0.5 truncate text-xs text-muted-foreground">Debian 12 · arm64</p>
-            </div>
-            <span class="shrink-0 text-xs text-muted-foreground">scanned 2h ago</span>
-          </div>
-          <p class="text-sm text-ok">No open critical or high findings</p>
-        </a>
-      </div>
-    </section>
-
-    <!-- globex -->
-    <section class="grid gap-3">
-      <h2 class="text-sm font-medium">globex <span class="font-normal text-muted-foreground">· 3 hosts</span></h2>
-      <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        <a href="host.html" class="group grid gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-zinc-700/80">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2"><span class="size-2 shrink-0 rounded-full bg-sev-medium" title="attention"></span><span class="truncate font-medium group-hover:underline">gx-app-prod</span></div>
-              <p class="mt-0.5 truncate text-xs text-muted-foreground">AlmaLinux 9.4 · amd64</p>
-            </div>
-            <span class="shrink-0 text-xs text-muted-foreground">scanned 7h ago</span>
-          </div>
-          <p class="flex items-baseline gap-4 tabular-nums">
-            <span><span class="font-mono text-2xl font-semibold text-sev-critical">1</span> <span class="text-xs text-muted-foreground">critical</span></span>
-            <span><span class="font-mono text-2xl font-semibold">6</span> <span class="text-xs text-muted-foreground">high</span></span>
-          </p>
-        </a>
-        <a href="host.html" class="group grid gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-zinc-700/80">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2"><span class="size-2 shrink-0 rounded-full bg-sev-medium" title="attention"></span><span class="truncate font-medium group-hover:underline">gx-app-staging</span></div>
-              <p class="mt-0.5 truncate text-xs text-muted-foreground">Rocky Linux 8.10 · amd64</p>
-            </div>
-            <span class="shrink-0 text-xs text-muted-foreground">scanned 7h ago</span>
-          </div>
-          <p class="flex items-baseline gap-4 tabular-nums">
-            <span><span class="font-mono text-2xl font-semibold text-muted-foreground">0</span> <span class="text-xs text-muted-foreground">critical</span></span>
-            <span><span class="font-mono text-2xl font-semibold">4</span> <span class="text-xs text-muted-foreground">high</span></span>
-          </p>
-        </a>
-        <a href="host.html" class="group grid gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-zinc-700/80">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2"><span class="size-2 shrink-0 rounded-full bg-ok" title="healthy"></span><span class="truncate font-medium group-hover:underline">gx-mail</span></div>
-              <p class="mt-0.5 truncate text-xs text-muted-foreground">CentOS Stream 9 · amd64</p>
-            </div>
-            <span class="shrink-0 text-xs text-muted-foreground">scanned 1h ago</span>
-          </div>
-          <p class="text-sm text-ok">No open critical or high findings</p>
-        </a>
-      </div>
-    </section>
-
-    <!-- initech -->
-    <section class="grid gap-3">
-      <h2 class="text-sm font-medium">initech <span class="font-normal text-muted-foreground">· 2 hosts</span></h2>
-      <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        <a href="host.html" class="group grid gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-zinc-700/80">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2"><span class="size-2 shrink-0 rounded-full bg-ok" title="healthy"></span><span class="truncate font-medium group-hover:underline">initech-erp</span></div>
-              <p class="mt-0.5 truncate text-xs text-muted-foreground">Ubuntu 22.04 · amd64</p>
-            </div>
-            <span class="shrink-0 text-xs text-muted-foreground">scanned 4h ago</span>
-          </div>
-          <p class="text-sm text-ok">No open critical or high findings</p>
-        </a>
-        <a href="host.html" class="group grid gap-3 rounded-lg border border-dashed bg-card p-4 transition-colors hover:border-zinc-700/80">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2"><span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-ok opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-ok"></span></span><span class="truncate font-medium group-hover:underline">initech-files</span></div>
-              <p class="mt-0.5 truncate text-xs text-muted-foreground">Debian 12 · amd64</p>
-            </div>
-            <span class="shrink-0 text-xs text-muted-foreground">connected 2m ago</span>
-          </div>
-          <p class="text-sm text-muted-foreground">First scan running…</p>
-        </a>
-      </div>
-    </section>
-    </div>
     </main>
   </div>
+
 </body>
 </html>
