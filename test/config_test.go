@@ -36,18 +36,15 @@ func TestLoad(t *testing.T) {
 	if err != nil || len(warn) != 1 || !strings.Contains(warn[0], "plain http") {
 		t.Fatalf("http: warn=%q err=%v", warn, err)
 	}
-	// Standalone: no central at all.
-	f, _, err = config.Load(writeConfig(t, "hostname_override: web1\n", 0o600))
-	if err != nil || !f.Config.Standalone() {
-		t.Fatalf("standalone: f=%+v err=%v", f, err)
-	}
 	for _, bad := range []string{
-		"client_id: a\n", // standalone with leftover central fields
+		"hostname_override: web1\n", // central_url is required
+		"client_id: a\n",
 		"token: t\n",
 		"central_url: ftp://central.example.com\nclient_id: a\n",
 		"central_url: central.example.com\nclient_id: a\n",
 		"central_url: https://central.example.com\n",
 		validYAML + "exec: rm -rf /\n",
+		validYAML + "serve_addr: \"\"\n", // removed field
 	} {
 		if _, _, err := config.Load(writeConfig(t, bad, 0o600)); err == nil {
 			t.Fatalf("accepted %q", bad)
@@ -96,32 +93,12 @@ func TestLoadExtraSkipDirs(t *testing.T) {
 		`extra_skip_dirs: ["/a,/b"]`:                       true,
 		`extra_skip_dirs: ["--config=/x"]`:                 true,
 	} {
-		f, _, err := config.Load(writeConfig(t, "central_url: \"\"\n"+extras+"\n", 0o600))
+		f, _, err := config.Load(writeConfig(t, validYAML+extras+"\n", 0o600))
 		if (err != nil) != wantErr {
 			t.Errorf("%q: err = %v, want error %v", extras, err, wantErr)
 		}
 		if err == nil && extras == `extra_skip_dirs: ["/data/*/tmp", "/srv/uploads"]` && len(f.Config.ExtraSkipDirs) != 2 {
 			t.Errorf("parsed %v", f.Config.ExtraSkipDirs)
-		}
-	}
-}
-
-func TestServeAddress(t *testing.T) {
-	if got := (config.Config{}).ServeAddress(); got != config.DefaultServeAddr {
-		t.Errorf("empty: got %q", got)
-	}
-	if got := (config.Config{ServeAddr: "100.64.0.1:8090"}).ServeAddress(); got != "100.64.0.1:8090" {
-		t.Errorf("set: got %q", got)
-	}
-	for addr, wantErr := range map[string]bool{
-		`"8090"`:            true,
-		`"host"`:            true,
-		`":8090"`:           false,
-		`"100.64.0.1:8090"`: false,
-	} {
-		_, _, err := config.Load(writeConfig(t, "serve_addr: "+addr+"\n", 0o600))
-		if (err != nil) != wantErr {
-			t.Errorf("%s: err = %v, want error %v", addr, err, wantErr)
 		}
 	}
 }
@@ -134,7 +111,7 @@ func TestAppDirs(t *testing.T) {
 		`app_dirs: ["app"]`:              "error",
 		`app_dirs: ["-x"]`:               "error",
 	} {
-		f, _, err := config.Load(writeConfig(t, "central_url: \"\"\n"+yml+"\n", 0o600))
+		f, _, err := config.Load(writeConfig(t, validYAML+yml+"\n", 0o600))
 		got := "error"
 		if err == nil {
 			got = fmt.Sprint(f.Config.ScanAppDirs())

@@ -1,16 +1,13 @@
 # netra-vuln-agent
 
-Runs Trivy on a Linux VM, keeps a slim report of HIGH/CRITICAL package vulnerabilities, and optionally sends it to netra-vuln central.
+Runs Trivy on a Linux VM and sends a slim report of HIGH/CRITICAL package vulnerabilities to netra-vuln central.
 
 ```
-             standalone                         with central
-  ┌──────────────────────────────┐   ┌──────────────────────────────┐
-  │ VM                           │   │ VM                           │
-  │ timer -> vuln-agent scan     │   │ timer -> vuln-agent scan ────┼──HTTPS──> central API -> MySQL
-  │   -> /var/lib/vuln-agent/    │   │   -> /var/lib/vuln-agent/    │            (push only)
-  │      reports/ + latest.html  │   │      reports/ + latest.html  │
-  │ vuln-agent serve (127.0.0.1) │   │                              │
-  └──────────────────────────────┘   └──────────────────────────────┘
+  ┌──────────────────────────────┐
+  │ VM                           │
+  │ timer -> vuln-agent scan ────┼──HTTPS──> central API -> MySQL
+  │                              │            (push only)
+  └──────────────────────────────┘
 ```
 
 ## Install
@@ -26,7 +23,7 @@ rm -f "vuln-agent-linux-$a" SHA256SUMS
 ```
 Run the same block to update. For a specific version set `u=https://github.com/idnatiya/netra-vuln-agent/releases/download/vX.Y.Z`. The checksum catches a broken download, not a compromised release.
 
-`vuln-agent install` copies the binary to `/opt/vuln-agent/bin/vuln-agent` (linked as `/usr/bin/vuln-agent`), downloads the pinned Trivy release (checksum verified), writes a standalone `/etc/vuln-agent/config.yaml` if none exists, enables the daily scan and 15-minute heartbeat systemd timers, and starts the report page on `127.0.0.1:8090` (`vuln-agent-serve.service`). It is safe to rerun; an existing config is never touched. See `config.example.yaml` for all config fields.
+`vuln-agent install` copies the binary to `/opt/vuln-agent/bin/vuln-agent` (linked as `/usr/bin/vuln-agent`), downloads the pinned Trivy release (checksum verified), writes a `/etc/vuln-agent/config.yaml` template if none exists, and enables the daily scan and 15-minute heartbeat systemd timers. It is safe to rerun; an existing config is never touched. See `config.example.yaml` for all config fields.
 
 From a checkout, install or update over SSH (builds both binaries, picks the VM's arch, runs `install`; sudo may ask for a password):
 ```sh
@@ -34,29 +31,20 @@ make deploy HOSTS="user@vm1 user@vm2"
 ```
 A host installed earlier with the old npm package needs `sudo npm rm -g netra-vuln-agent` once, so its npm shim no longer shadows `/usr/bin/vuln-agent`.
 
+Updating from a version with the report page: `install` removes `vuln-agent-serve.service` and `/var/lib/vuln-agent/reports/`, but `serve_addr` must be removed from the config first, or `scan` and `heartbeat` fail to load it:
+```sh
+ssh user@vm "sudo sed -i '/^serve_addr:/d' /etc/vuln-agent/config.yaml"
+```
+A host without `central_url` (the old standalone mode) needs to be set up for central as below.
+
 Uninstall:
 ```sh
-sudo systemctl disable --now vuln-agent-scan.timer vuln-agent-heartbeat.timer vuln-agent-serve.service
+sudo systemctl disable --now vuln-agent-scan.timer vuln-agent-heartbeat.timer
 sudo rm -f /etc/systemd/system/vuln-agent-* /usr/bin/vuln-agent && sudo systemctl daemon-reload
 sudo rm -rf /opt/vuln-agent /etc/vuln-agent /var/lib/vuln-agent
 ```
 
-## Standalone
-
-Leave `central_url`, `client_id`, and `token` empty.
-
-```sh
-sudo vuln-agent check
-sudo vuln-agent scan
-sudo vuln-agent report            # newest report as JSON
-sudo vuln-agent report -html > report.html
-```
-The report page runs as `vuln-agent-serve.service`. From a laptop: `ssh -L 8090:127.0.0.1:8090 <vm>`, then open http://localhost:8090.
-`/var/lib/vuln-agent/reports/latest.html` is refreshed after every scan. The 30 newest reports are kept.
-
-The page has no authentication. Keep it on loopback; setting `serve_addr` in the config to another address (e.g. a Tailscale IP, `100.64.0.1:8090`) lets anyone who can reach it read the host's vulnerabilities. After changing it, run `sudo systemctl restart vuln-agent-serve`. To turn the page off: `sudo systemctl disable --now vuln-agent-serve` (install only enables it on the first install, so this sticks across updates).
-
-## With central
+## Connect to central
 
 Set `central_url` and `client_id` (from `central client create <name>`), then:
 
@@ -65,7 +53,7 @@ sudo VULN_AGENT_ENROLL_TOKEN=<client enroll token> vuln-agent enroll
 sudo vuln-agent check
 sudo vuln-agent scan
 ```
-Reports are kept locally as in standalone mode and also sent to central. Failed sends are spooled and retried on the next scan or `vuln-agent flush`. To revoke a host, run `central host revoke <hostname>` on central.
+Failed sends are spooled and retried on the next scan or `vuln-agent flush`. To revoke a host, run `central host revoke <hostname>` on central.
 
 ## What gets scanned
 
@@ -80,7 +68,7 @@ app_dirs: ["/var/www", "/srv", "/opt", "/home/deploy/apps"]
 
 ## Excluding folders
 
-Trivy skips `/proc`, `/sys`, `/dev`, `/run`, `/tmp`, snap/docker/containerd state, `/mnt`, `/media`, caches, `/usr/share/doc`, and `/opt/vuln-agent` by default. To skip more on one host, list them in `/etc/vuln-agent/config.yaml`; they are added to the defaults (or to central's list), in both modes:
+Trivy skips `/proc`, `/sys`, `/dev`, `/run`, `/tmp`, snap/docker/containerd state, `/mnt`, `/media`, caches, `/usr/share/doc`, and `/opt/vuln-agent` by default. To skip more on one host, list them in `/etc/vuln-agent/config.yaml`; they are added to the defaults (or to central's list):
 ```yaml
 extra_skip_dirs: ["/data/backup", "/home/*/projects"]
 ```

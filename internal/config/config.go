@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
-	"net"
 	"net/url"
 	"os"
 	"slices"
@@ -37,8 +36,6 @@ type Config struct {
 	CAFile           string `yaml:"ca_file"`
 	// ExtraSkipDirs are added to the skip_dirs in effect (default or from central).
 	ExtraSkipDirs []string `yaml:"extra_skip_dirs"`
-	// ServeAddr is the report page address; empty = DefaultServeAddr.
-	ServeAddr string `yaml:"serve_addr"`
 	// AppDirs are scanned for app dependencies (Composer, npm, ...), plus the
 	// pm2 app dirs. Unset = DefaultAppDirs; [] = OS packages only.
 	AppDirs *[]string `yaml:"app_dirs"`
@@ -57,27 +54,7 @@ func (c Config) ScanAppDirs() []string {
 	return *c.AppDirs
 }
 
-// DefaultServeAddr keeps the unauthenticated report page on loopback.
-const DefaultServeAddr = "127.0.0.1:8090"
-
-// ServeAddress is the address `vuln-agent serve` listens on without -addr.
-func (c Config) ServeAddress() string {
-	if c.ServeAddr != "" {
-		return c.ServeAddr
-	}
-	return DefaultServeAddr
-}
-
-// Standalone reports whether the agent runs without central (no central_url):
-// scans are kept only locally.
-func (c Config) Standalone() bool { return c.CentralURL == "" }
-
 func (c Config) Validate() error {
-	if c.ServeAddr != "" {
-		if _, _, err := net.SplitHostPort(c.ServeAddr); err != nil {
-			return fmt.Errorf("serve_addr: %w", err)
-		}
-	}
 	if c.AppDirs != nil {
 		if len(*c.AppDirs) > maxAppDirs {
 			return fmt.Errorf("too many app_dirs (%d > %d)", len(*c.AppDirs), maxAppDirs)
@@ -95,11 +72,8 @@ func (c Config) Validate() error {
 			return fmt.Errorf("extra_skip_dirs: %w", err)
 		}
 	}
-	if c.Standalone() {
-		if c.ClientID != "" || c.Token != "" {
-			return errors.New("central_url is empty (standalone) but client_id or token is set")
-		}
-		return nil
+	if c.CentralURL == "" {
+		return errors.New("central_url is empty")
 	}
 	u, err := url.Parse(c.CentralURL)
 	if err != nil || (u.Scheme != "https" && u.Scheme != "http") || u.Host == "" {

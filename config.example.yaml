@@ -1,22 +1,17 @@
 # /etc/vuln-agent/config.yaml  (chmod 600, owner root)
 #
-# Two modes:
-#   - Standalone: leave central_url, client_id, and token empty (or omit them).
-#     Reports are kept in /var/lib/vuln-agent/reports/ (latest.html there, or
-#     `vuln-agent serve` / `vuln-agent report`).
-#   - With central: fill in central_url and client_id, then
-#       VULN_AGENT_ENROLL_TOKEN=<client enroll token> vuln-agent enroll
-#     Reports are also kept locally.
-# Then run `vuln-agent check`.
+# Fill in central_url and client_id, then
+#   VULN_AGENT_ENROLL_TOKEN=<client enroll token> vuln-agent enroll
+#   vuln-agent check
 #
 # Note: `vuln-agent enroll` rewrites this file; comments will be lost.
 
 # Central URL. Use https; plain http is allowed only over an encrypted
 # network such as Tailscale (e.g. http://central.tailnet-name.ts.net:8080)
-# and the agent logs a warning on every run. Empty = standalone.
+# and the agent logs a warning on every run. Required.
 central_url: https://vuln.example.com
 
-# Client name, as created with `central client create <name>`. Empty when standalone.
+# Client name, as created with `central client create <name>`. Required.
 client_id: client_a
 
 # Host token. Leave empty; `vuln-agent enroll` fills it in.
@@ -30,7 +25,7 @@ ca_file: ""
 
 # Optional. Folders Trivy should skip, ADDED to the skip list in effect (the
 # defaults such as /proc, /sys, /tmp, caches, or the skip_dirs set on central).
-# Absolute paths, no commas; "*" globs allowed. Works in both modes.
+# Absolute paths, no commas; "*" globs allowed.
 extra_skip_dirs: []
 #extra_skip_dirs: ["/data/backup", "/srv/uploads", "/home/*/projects"]
 
@@ -39,10 +34,3 @@ extra_skip_dirs: []
 # are added automatically. Unset = ["/var/www", "/srv", "/opt"];
 # [] = OS packages only (pm2 apps skipped too). Absolute paths.
 #app_dirs: ["/var/www", "/srv", "/opt", "/home/deploy/apps"]
-
-# Optional. Address of the report page (vuln-agent-serve.service, enabled by
-# install). Empty = 127.0.0.1:8090; from a laptop: ssh -L 8090:127.0.0.1:8090 <host>.
-# The page has NO authentication: any other address (e.g. a Tailscale IP such
-# as 100.64.0.1:8090) lets anyone who can reach it read this host's
-# vulnerabilities. After a change: sudo systemctl restart vuln-agent-serve
-serve_addr: ""

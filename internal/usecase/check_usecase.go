@@ -8,7 +8,6 @@ import (
 )
 
 // Check validates agent readiness. The local config is already validated on load.
-// Central and Creds are nil in standalone mode (only Trivy is checked).
 type Check struct {
 	Scanner Scanner
 	Central Central
@@ -24,11 +23,6 @@ func (c *Check) Run(ctx context.Context) error {
 	} else {
 		c.Log.Info("check trivy: ok", "version", v)
 	}
-	if c.Central == nil {
-		c.Log.Info("check central: skipped (standalone)")
-		return errors.Join(errs...)
-	}
-
 	if c.Creds.HostToken() == "" {
 		errs = append(errs, errors.New("token: empty, run `vuln-agent enroll`"))
 	} else {

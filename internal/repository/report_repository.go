@@ -19,7 +19,7 @@ const (
 	suffix = ".json.gz"
 )
 
-// ReportRepository keeps gzip JSON reports in a directory; used for both the send spool and the local history.
+// ReportRepository keeps gzip JSON reports in a directory; used for the send spool.
 type ReportRepository struct {
 	Path string
 	Max  int // number of files kept; older ones are deleted

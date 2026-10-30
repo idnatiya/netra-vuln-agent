@@ -113,7 +113,7 @@ func (f *fakeCreds) SaveHostToken(t string) error { f.token = t; return nil }
 func newScan(sc *fakeScanner, c *fakeCentral, sp *fakeSpool, cache *fakeCache) *usecase.Scan {
 	now := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
 	return &usecase.Scan{
-		Scanner: sc, Host: fakeHost{}, Central: c, Spool: sp, History: newFakeSpool(), Cache: cache,
+		Scanner: sc, Host: fakeHost{}, Central: c, Spool: sp, Cache: cache,
 		Flush: &usecase.Flush{Spool: sp, Central: c, Log: discard},
 		Now:   func() time.Time { now = now.Add(time.Second); return now },
 		Log:   discard,
@@ -138,38 +138,6 @@ func TestScanSuccess(t *testing.T) {
 	}
 	if c.sent[0].TrivyVersion != "0.99.0" || c.sent[0].Host.Hostname != "vm1" || c.sent[0].Duration <= 0 {
 		t.Fatalf("metadata missing: %+v", c.sent[0])
-	}
-}
-
-func TestScanKeepsHistory(t *testing.T) {
-	c := &fakeCentral{cfg: entity.DefaultScanConfig(), sendErrs: []error{errors.New("down")}}
-	s := newScan(&fakeScanner{}, c, newFakeSpool(), &fakeCache{})
-	_ = s.Run(context.Background())
-	if h := s.History.(*fakeSpool); len(h.ids) != 1 {
-		t.Fatalf("history = %v, want 1 report even when send fails", h.ids)
-	}
-}
-
-func TestScanStandalone(t *testing.T) {
-	cached := entity.DefaultScanConfig()
-	cached.Severities = []string{"CRITICAL"}
-	sc := &fakeScanner{findings: []entity.Finding{{VulnerabilityID: "CVE-1"}}}
-	s := newScan(sc, nil, nil, &fakeCache{cfg: &cached})
-	s.Central, s.Spool, s.Flush = nil, nil, nil
-	if err := s.Run(context.Background()); err != nil {
-		t.Fatal(err)
-	}
-	h := s.History.(*fakeSpool)
-	if len(h.ids) != 1 || len(h.reports[h.ids[0]].Findings) != 1 {
-		t.Fatalf("history = %+v", h.reports)
-	}
-	if !slices.Equal(sc.gotCfg.Severities, []string{"CRITICAL"}) {
-		t.Fatalf("cached config not used: %+v", sc.gotCfg)
-	}
-
-	sc.err = errors.New("boom")
-	if err := s.Run(context.Background()); err == nil || len(h.ids) != 2 || h.reports[h.ids[1]].Status != entity.StatusError {
-		t.Fatalf("err=%v history=%+v", err, h.reports)
 	}
 }
 
@@ -247,11 +215,10 @@ func TestScanExtraSkipDirs(t *testing.T) {
 
 	tests := []struct {
 		name   string
-		c      *fakeCentral // nil = standalone
+		c      *fakeCentral
 		extras []string
 		want   []string
 	}{
-		{"standalone adds to default", nil, []string{"/data"}, append(entity.DefaultScanConfig().SkipDirs, "/data")},
 		{"central adds and skips duplicates", &fakeCentral{cfg: central}, []string{"/data", "/x"}, []string{"/x", "/data"}},
 		{"over the limit drops extras", &fakeCentral{cfg: central}, tooMany, []string{"/x"}},
 	}
@@ -260,9 +227,6 @@ func TestScanExtraSkipDirs(t *testing.T) {
 			sc := &fakeScanner{}
 			cache := &fakeCache{}
 			s := newScan(sc, tt.c, newFakeSpool(), cache)
-			if tt.c == nil {
-				s.Central, s.Spool, s.Flush = nil, nil, nil
-			}
 			s.ExtraSkipDirs = tt.extras
 			if err := s.Run(context.Background()); err != nil {
 				t.Fatal(err)
@@ -270,7 +234,7 @@ func TestScanExtraSkipDirs(t *testing.T) {
 			if !slices.Equal(sc.gotCfg.SkipDirs, tt.want) {
 				t.Fatalf("skip dirs = %v, want %v", sc.gotCfg.SkipDirs, tt.want)
 			}
-			if tt.c != nil && !slices.Equal(cache.cfg.SkipDirs, central.SkipDirs) {
+			if !slices.Equal(cache.cfg.SkipDirs, central.SkipDirs) {
 				t.Fatalf("cache = %v, want central config without extras", cache.cfg.SkipDirs)
 			}
 		})

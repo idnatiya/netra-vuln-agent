@@ -18,11 +18,9 @@ const (
 	StateDir    = "/var/lib/vuln-agent"
 	TrivyBin    = "/opt/vuln-agent/bin/trivy"
 	spoolMax    = 5
-	historyMax  = 30
 )
 
-// App is the agent wired for one loaded config. Central, Spool, and Flush are
-// nil when standalone.
+// App is the agent wired for one loaded config.
 type App struct {
 	Host    *hostinfo.Linux
 	Scanner *trivy.Runner
@@ -30,11 +28,6 @@ type App struct {
 	Central *central.Client
 	Spool   *repository.ReportRepository
 	Flush   *usecase.Flush
-}
-
-// History is the local report history (both modes).
-func History() *repository.ReportRepository {
-	return &repository.ReportRepository{Path: filepath.Join(StateDir, "reports"), Max: historyMax}
 }
 
 func NewApp(f *File, version string, log *slog.Logger) (*App, error) {
@@ -51,14 +44,10 @@ func NewApp(f *File, version string, log *slog.Logger) (*App, error) {
 		app.Scanner.AppDirs = slices.Concat(dirs, pm2)
 	}
 	app.Scan = &usecase.Scan{
-		Scanner: app.Scanner, Host: app.Host, History: History(),
+		Scanner: app.Scanner, Host: app.Host,
 		Cache: &repository.ScanConfigRepository{Path: filepath.Join(StateDir, "scan-config.json")},
 		Now:   time.Now, Log: log, ExtraSkipDirs: cfg.ExtraSkipDirs,
 	}
-	if cfg.Standalone() {
-		return app, nil
-	}
-
 	httpClient, err := central.NewHTTPClient(cfg.CAFile)
 	if err != nil {
 		return nil, err

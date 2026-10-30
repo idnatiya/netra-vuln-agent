@@ -15,14 +15,12 @@ import (
 // (default 30m + 10m = 40m).
 const scanGrace = 10 * time.Minute
 
-// Scan runs one scan cycle. Central, Spool and Flush are nil in standalone mode:
-// the report is then only kept in History.
+// Scan runs one scan cycle.
 type Scan struct {
 	Scanner Scanner
 	Host    HostInspector
 	Central Central
 	Spool   Spool
-	History Spool // local report history (both modes)
 	Cache   ScanConfigCache
 	// ExtraSkipDirs come from the local config and are added to the scan config in effect.
 	ExtraSkipDirs []string
@@ -32,9 +30,6 @@ type Scan struct {
 }
 
 func (s *Scan) Run(ctx context.Context) error {
-	if s.Central == nil {
-		return s.runStandalone(ctx)
-	}
 	if n, err := s.Flush.Run(ctx); err != nil {
 		s.Log.Warn("flush spool before scan failed", "sent", n, "err", err)
 	} else if n > 0 {
@@ -42,7 +37,6 @@ func (s *Scan) Run(ctx context.Context) error {
 	}
 
 	r, scanErr := s.scan(ctx, s.withExtraSkipDirs(s.scanConfig(ctx)))
-	s.saveHistory(r)
 
 	if err := s.Central.SendReport(ctx, r); err != nil {
 		if errors.Is(err, ErrRejected) {
@@ -57,24 +51,6 @@ func (s *Scan) Run(ctx context.Context) error {
 		return fmt.Errorf("scan failed (reported to central): %w", scanErr)
 	}
 	return nil
-}
-
-func (s *Scan) runStandalone(ctx context.Context) error {
-	r, scanErr := s.scan(ctx, s.withExtraSkipDirs(s.localScanConfig()))
-	if err := s.History.Save(r); err != nil {
-		return errors.Join(scanErr, fmt.Errorf("save report: %w", err))
-	}
-	if scanErr != nil {
-		return fmt.Errorf("scan failed: %w", scanErr)
-	}
-	return nil
-}
-
-// saveHistory keeps a local copy; failure must not block sending to central.
-func (s *Scan) saveHistory(r entity.Report) {
-	if err := s.History.Save(r); err != nil {
-		s.Log.Warn("save local report history", "err", err)
-	}
 }
 
 // scan runs Trivy and builds the report; on failure the report has status error.

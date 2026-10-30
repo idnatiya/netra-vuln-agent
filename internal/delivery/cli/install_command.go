@@ -24,11 +24,9 @@ const (
 	pathLink     = "/usr/bin/vuln-agent" // not /usr/local/bin: sudo's secure_path on RHEL 7/8 lacks it
 	trivyBaseURL = "https://github.com/aquasecurity/trivy/releases/download"
 	unitDir      = "/etc/systemd/system"
-	serveUnit    = "vuln-agent-serve.service"
 )
 
-const defaultConfigYAML = `# Standalone by default (empty central_url). For central mode, fill in
-# central_url and client_id, then run ` + "`vuln-agent enroll`" + `.
+const defaultConfigYAML = `# Fill in central_url and client_id, then run ` + "`vuln-agent enroll`" + `.
 central_url: ""
 client_id: ""
 token: ""
@@ -39,9 +37,6 @@ extra_skip_dirs: []
 # Folders scanned for app dependencies (Composer, node_modules), plus pm2 apps.
 # Unset = ["/var/www", "/srv", "/opt"]; [] = OS packages only.
 #app_dirs: ["/var/www", "/srv", "/opt"]
-# Report page address (no auth). Empty = 127.0.0.1:8090, reach it with
-# ssh -L 8090:127.0.0.1:8090 <host>. After a change: systemctl restart vuln-agent-serve
-serve_addr: ""
 `
 
 const unitLimits = `CPUQuota=100%
@@ -90,21 +85,6 @@ OnUnitActiveSec=15min
 [Install]
 WantedBy=timers.target
 `,
-	// Enabled on first install only, so an operator's `systemctl disable` sticks.
-	// serve has no auth; it binds serve_addr (default loopback).
-	serveUnit: `[Unit]
-Description=vuln-agent read-only report page
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-ExecStart=/usr/bin/vuln-agent serve
-Restart=on-failure
-RestartSec=10
-` + unitLimits + `
-[Install]
-WantedBy=multi-user.target
-`,
 }
 
 // install puts the running binary, the pinned Trivy, a default config, and the
@@ -121,7 +101,6 @@ func install(ctx context.Context, log *slog.Logger, trivyVersion string) error {
 		{filepath.Dir(config.DefaultPath), 0o700},
 		{config.StateDir, 0o700},
 		{filepath.Join(config.StateDir, "spool"), 0o700},
-		{filepath.Join(config.StateDir, "reports"), 0o700},
 		{filepath.Join(config.StateDir, "cache"), 0o700},
 	} {
 		if err := os.MkdirAll(d.path, d.mode); err != nil {
@@ -172,11 +151,12 @@ func install(ctx context.Context, log *slog.Logger, trivyVersion string) error {
 		if err != nil {
 			return err
 		}
-		log.Info("wrote standalone config", "config", config.DefaultPath)
+		log.Info("wrote config template", "config", config.DefaultPath)
 	}
 
-	_, err = os.Stat(filepath.Join(unitDir, serveUnit))
-	firstServe := errors.Is(err, fs.ErrNotExist)
+	if err := removeReportPage(ctx); err != nil {
+		return err
+	}
 	for name, body := range units {
 		if err := os.WriteFile(filepath.Join(unitDir, name), []byte(body), 0o644); err != nil {
 			return err
@@ -185,10 +165,6 @@ func install(ctx context.Context, log *slog.Logger, trivyVersion string) error {
 	cmds := [][]string{
 		{"daemon-reload"},
 		{"enable", "--now", "vuln-agent-scan.timer", "vuln-agent-heartbeat.timer"},
-		{"try-restart", serveUnit}, // picks up a new binary if it is running
-	}
-	if firstServe {
-		cmds = append(cmds, []string{"enable", "--now", serveUnit})
 	}
 	for _, args := range cmds {
 		if out, err := exec.CommandContext(ctx, "systemctl", args...).CombinedOutput(); err != nil {
@@ -196,8 +172,24 @@ func install(ctx context.Context, log *slog.Logger, trivyVersion string) error {
 		}
 	}
 
-	log.Info("installed; report page on serve_addr (default 127.0.0.1:8090: ssh -L 8090:127.0.0.1:8090 <host>, then http://localhost:8090); for central mode set central_url and client_id in the config, then run `vuln-agent enroll`; finally run `vuln-agent check`")
+	log.Info("installed; set central_url and client_id in the config, run `vuln-agent enroll`, then `vuln-agent check`")
 	return nil
+}
+
+// removeReportPage removes the report page service and local report history
+// left by older versions.
+// ponytail: migration only, delete once every VM runs this version.
+func removeReportPage(ctx context.Context) error {
+	unit := filepath.Join(unitDir, "vuln-agent-serve.service")
+	if _, err := os.Stat(unit); err == nil {
+		if out, err := exec.CommandContext(ctx, "systemctl", "disable", "--now", "vuln-agent-serve.service").CombinedOutput(); err != nil {
+			return fmt.Errorf("systemctl disable --now vuln-agent-serve.service: %w: %s", err, out)
+		}
+		if err := os.Remove(unit); err != nil {
+			return err
+		}
+	}
+	return os.RemoveAll(filepath.Join(config.StateDir, "reports"))
 }
 
 // installSelf copies the running binary to agentBin unless it already runs from there.
