@@ -1,0 +1,65 @@
+/* Dark-only palette after antigravity-oauth-proxy/web/src/style.css, stored as
+   oklch channels so Tailwind opacity modifiers work (bg-sev-critical/10). */
+:root {
+  --radius: 0.75rem;
+  --background: 0.155 0.004 270;          /* #0b0c0e */
+  --foreground: 0.967 0.002 286;          /* #f4f4f6 */
+  --card: 0.185 0.005 270;                /* #121316 */
+  --card-foreground: 0.967 0.002 286;
+  --popover: 0.185 0.005 270;
+  --popover-foreground: 0.967 0.002 286;
+  --sidebar: 0.17 0.006 270;              /* #0e0f12 */
+  --sidebar-footer: 0.16 0.005 270;       /* #090a0c-ish */
+  --primary: 0.546 0.215 262.9;           /* blue-600 */
+  --primary-foreground: 0.985 0 0;
+  --secondary: 0.274 0.006 286;           /* zinc-800 */
+  --secondary-foreground: 0.985 0 0;
+  --muted: 0.24 0.006 286;
+  --muted-foreground: 0.705 0.015 286;    /* zinc-400 */
+  --accent: 0.274 0.006 286;
+  --accent-foreground: 0.985 0 0;
+  --destructive: 0.637 0.237 25.3;        /* red-500 */
+  --border: 0.25 0.006 286;               /* zinc-800/80 on the canvas */
+  --input: 0.274 0.006 286;
+  --ring: 0.623 0.214 259.8;              /* blue-500 */
+  --sev-critical: 0.7 0.19 25;
+  --sev-high: 0.76 0.15 52;
+  --sev-medium: 0.83 0.14 88;
+  --sev-low: 0.72 0.06 250;
+  --ok: 0.74 0.13 155;
+  --terminal: 0.165 0.006 270;            /* #0d0e11 */
+  color-scheme: dark;
+}
+
+* { border-color: oklch(var(--border)); }
+
+html { font-size: 16.5px; }
+
+body {
+  background: oklch(var(--background));
+  color: oklch(var(--foreground));
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-feature-settings: "tnum" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code, kbd, samp, pre { font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+/* Ambient canvas glow */
+.ambient-glow {
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(59, 130, 246, 0.08) 0%, transparent 80%),
+    radial-gradient(circle at 100% 0%, rgba(139, 92, 246, 0.04) 0%, transparent 40%);
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.22); }
+
+[hidden] { display: none !important; }
+dialog::backdrop { background: rgb(0 0 0 / 0.7); backdrop-filter: blur(2px); }
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details[open] .chevron { transform: rotate(90deg); }

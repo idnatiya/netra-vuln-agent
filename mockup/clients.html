@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clients · netra-vuln</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="theme.css">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="tw-config.js"></script>
+  <script src="app.js"></script>
+</head>
+<body class="flex h-screen overflow-hidden">
+  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden"></div>
+  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full select-none flex-col border-r bg-sidebar transition-transform duration-200 md:static md:translate-x-0">
+    <div class="flex h-16 items-center justify-between border-b px-5">
+      <a href="index.html" class="flex items-center gap-3">
+        <span class="flex size-9 items-center justify-center rounded-lg border border-blue-500/30 bg-gradient-to-br from-blue-500/20 to-indigo-500/10 text-blue-400 shadow-[0_0_15px_-3px_rgba(59,130,246,0.3)]">
+          <svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        </span>
+        <span>
+          <span class="flex items-center gap-1.5 text-sm font-semibold tracking-tight text-white">netra-vuln <span class="inline-flex items-center rounded border border-blue-500/30 bg-blue-500/15 px-1.5 py-0.5 font-mono text-[10px] font-medium text-blue-400">CENTRAL</span></span>
+          <span class="mt-0.5 flex items-center gap-1.5 font-mono text-xs text-zinc-500"><span class="inline-block size-1.5 rounded-full bg-emerald-400"></span>Vulnerability monitor</span>
+        </span>
+      </a>
+      <button data-sidebar-toggle aria-label="Close menu" class="inline-flex size-8 items-center justify-center rounded-md text-zinc-400 hover:text-white md:hidden">
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        <a href="index.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
+          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></span><span class="truncate">Hosts</span>
+        </a>
+        <a href="findings.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
+          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><span class="truncate">Search CVEs</span>
+        </a>
+        <a href="clients.html" class="group relative flex items-center gap-3 rounded-lg border border-primary/25 bg-primary/15 px-3.5 py-2.5 text-sm font-semibold text-blue-300 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+          <span class="absolute bottom-1.5 left-0 top-1.5 w-1 rounded-r bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span>
+          <span class="text-blue-400"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="truncate">Clients</span>
+        </a>
+        <a href="add-agent.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
+          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></span><span class="truncate">Add agent</span>
+        </a>
+    </nav>
+    <div class="space-y-2.5 border-t bg-sidebar-footer p-3">
+      <a href="index.html" class="group flex items-center justify-between rounded-lg border border-zinc-800/60 bg-zinc-900/60 p-2.5 text-xs transition-colors hover:border-zinc-700/80">
+        <span class="flex items-center gap-2">
+          <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span></span>
+          <span class="font-medium text-zinc-400 group-hover:text-zinc-200">Agents</span>
+        </span>
+        <span class="font-mono font-semibold text-zinc-300 group-hover:text-white">8/9 reporting</span>
+      </a>
+      <div class="flex items-center justify-between px-2.5 py-1 text-xs text-zinc-500">
+        <span class="flex items-center gap-1.5 truncate"><svg class="size-3.5 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></svg>admin</span>
+        <span class="font-mono text-[11px] uppercase text-zinc-600">v0.2.0</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="relative flex min-w-0 flex-1 flex-col overflow-hidden">
+    <header class="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-3 border-b bg-[#0e0f12]/80 px-4 backdrop-blur-md sm:px-6 md:px-8">
+      <div class="flex min-w-0 items-center gap-2 sm:gap-3">
+        <button data-sidebar-toggle aria-label="Open menu" class="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-zinc-400 hover:bg-zinc-800 hover:text-white md:hidden">
+          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+        <div class="flex min-w-0 items-center truncate text-sm font-medium text-zinc-500">
+          <span class="hidden sm:inline">Central</span>
+          <svg class="mx-1.5 hidden size-4 shrink-0 text-zinc-600 sm:inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          <span class="truncate text-sm font-semibold text-zinc-100 sm:text-base">Clients</span>
+        </div>
+      </div>
+      <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+        <label class="hidden items-center gap-2 rounded-lg border border-zinc-800/80 bg-zinc-900/90 px-3 py-1.5 font-mono text-xs text-zinc-300 shadow-sm sm:inline-flex">
+          <span class="font-sans text-zinc-500">Client:</span>
+          <select aria-label="Client" class="bg-transparent font-mono text-xs text-zinc-200 focus:outline-none">
+            <option>all</option><option>acme</option><option>globex</option><option>initech</option>
+          </select>
+        </label>
+        <span class="hidden h-4 w-px bg-zinc-800 sm:block"></span>
+        <a href="login.html" class="inline-flex h-9 items-center gap-2 rounded-md border border-red-500/20 bg-red-500/10 px-3.5 text-xs font-medium text-red-400 hover:bg-red-500/20">
+          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          <span class="hidden md:inline">Sign out</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="ambient-glow flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
+    <div class="w-full pb-12 grid gap-4">
+    <div class="flex flex-wrap items-end gap-3">
+      <div>
+        <h1 class="text-xl font-semibold">Clients</h1>
+        <p class="mt-1 text-sm text-muted-foreground">Each client has its own hosts and scan settings.</p>
+      </div>
+      <button data-dialog="create" class="ml-auto inline-flex h-9 items-center gap-1.5 rounded-md border bg-background px-3 text-sm font-medium shadow-sm hover:bg-accent">
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        Create client
+      </button>
+    </div>
+
+    <div class="overflow-x-auto rounded-lg border bg-card">
+      <table class="w-full min-w-[640px] text-sm">
+        <thead class="border-b bg-muted/50 text-left text-xs text-muted-foreground">
+          <tr>
+            <th class="px-4 py-2.5 font-medium">Client</th>
+            <th class="px-4 py-2.5 font-medium">Hosts</th>
+            <th class="px-4 py-2.5 font-medium">Open critical</th>
+            <th class="px-4 py-2.5 font-medium">Scan config</th>
+            <th class="px-4 py-2.5"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          <tr>
+            <td class="px-4 py-3 font-medium">acme</td>
+            <td class="px-4 py-3 tabular-nums">4</td>
+            <td class="px-4 py-3 tabular-nums font-semibold text-sev-critical">6</td>
+            <td class="px-4 py-3"><span class="rounded bg-muted px-1.5 py-0.5 text-xs">custom skip_dirs</span></td>
+            <td class="px-4 py-3 text-right">
+              <a href="add-agent.html" class="mr-3 text-xs text-muted-foreground hover:text-foreground">Add agent</a>
+              <button data-dialog="config" class="text-xs text-muted-foreground hover:text-foreground">Scan config</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="px-4 py-3 font-medium">globex</td>
+            <td class="px-4 py-3 tabular-nums">3</td>
+            <td class="px-4 py-3 tabular-nums font-semibold text-sev-critical">1</td>
+            <td class="px-4 py-3 text-muted-foreground">defaults</td>
+            <td class="px-4 py-3 text-right">
+              <a href="add-agent.html" class="mr-3 text-xs text-muted-foreground hover:text-foreground">Add agent</a>
+              <button data-dialog="config" class="text-xs text-muted-foreground hover:text-foreground">Scan config</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="px-4 py-3 font-medium">initech</td>
+            <td class="px-4 py-3 tabular-nums">2</td>
+            <td class="px-4 py-3 tabular-nums text-muted-foreground">0</td>
+            <td class="px-4 py-3 text-muted-foreground">defaults</td>
+            <td class="px-4 py-3 text-right">
+              <a href="add-agent.html" class="mr-3 text-xs text-muted-foreground hover:text-foreground">Add agent</a>
+              <button data-dialog="config" class="text-xs text-muted-foreground hover:text-foreground">Scan config</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+    </main>
+  </div>
+
+  <dialog id="create" class="w-[calc(100%-2rem)] max-w-md rounded-lg border bg-background p-6 text-foreground shadow-lg">
+    <div data-step>
+      <h2 class="text-lg font-semibold">Create client</h2>
+      <p class="mt-1 text-sm text-muted-foreground">Lowercase letters, digits, and dashes.</p>
+      <label class="mt-4 grid gap-1.5 text-sm font-medium">Name
+        <input value="umbrella" class="h-9 rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+      </label>
+      <div class="mt-6 flex justify-end gap-2">
+        <button data-close class="inline-flex h-9 items-center rounded-md border bg-background px-4 text-sm font-medium shadow-sm hover:bg-accent">Cancel</button>
+        <button data-reveal="created" class="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90">Create</button>
+      </div>
+    </div>
+    <div id="created" hidden>
+      <h2 class="text-lg font-semibold">Client umbrella created</h2>
+      <p class="mt-1 text-sm text-muted-foreground">Next, install the agent on its VMs.</p>
+      <div class="mt-6 flex justify-end gap-2">
+        <button data-close class="inline-flex h-9 items-center rounded-md border bg-background px-4 text-sm font-medium shadow-sm hover:bg-accent">Close</button>
+        <a href="add-agent.html" class="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90">Add agent</a>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="config" class="w-[calc(100%-2rem)] max-w-lg rounded-lg border bg-background p-6 text-foreground shadow-lg">
+    <h2 class="text-lg font-semibold">Scan config · acme</h2>
+    <p class="mt-1 text-sm text-muted-foreground">Overrides for every host of this client. Only <code class="font-mono text-xs">severity</code>, <code class="font-mono text-xs">ignore_unfixed</code>, <code class="font-mono text-xs">skip_dirs</code>, and <code class="font-mono text-xs">timeout</code> are allowed; <code class="font-mono text-xs">skip_dirs</code> replaces the default list.</p>
+    <textarea rows="9" class="mt-4 w-full rounded-md border border-input bg-muted/40 px-3 py-2 font-mono text-xs shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">{
+  "severity": ["HIGH", "CRITICAL"],
+  "ignore_unfixed": true,
+  "skip_dirs": ["/proc", "/sys", "/dev", "/run", "/tmp", "/data/backup"],
+  "timeout": "30m"
+}</textarea>
+    <div class="mt-6 flex flex-wrap justify-end gap-2">
+      <button data-close class="mr-auto inline-flex h-9 items-center rounded-md px-3 text-sm font-medium text-destructive hover:bg-accent">Reset to defaults</button>
+      <button data-close class="inline-flex h-9 items-center rounded-md border bg-background px-4 text-sm font-medium shadow-sm hover:bg-accent">Cancel</button>
+      <button data-close class="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90">Save</button>
+    </div>
+  </dialog>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>acme-web-01 · netra-vuln</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="theme.css">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="tw-config.js"></script>
+  <script src="app.js"></script>
+</head>
+<body class="flex h-screen overflow-hidden">
+  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden"></div>
+  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full select-none flex-col border-r bg-sidebar transition-transform duration-200 md:static md:translate-x-0">
+    <div class="flex h-16 items-center justify-between border-b px-5">
+      <a href="index.html" class="flex items-center gap-3">
+        <span class="flex size-9 items-center justify-center rounded-lg border border-blue-500/30 bg-gradient-to-br from-blue-500/20 to-indigo-500/10 text-blue-400 shadow-[0_0_15px_-3px_rgba(59,130,246,0.3)]">
+          <svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        </span>
+        <span>
+          <span class="flex items-center gap-1.5 text-sm font-semibold tracking-tight text-white">netra-vuln <span class="inline-flex items-center rounded border border-blue-500/30 bg-blue-500/15 px-1.5 py-0.5 font-mono text-[10px] font-medium text-blue-400">CENTRAL</span></span>
+          <span class="mt-0.5 flex items-center gap-1.5 font-mono text-xs text-zinc-500"><span class="inline-block size-1.5 rounded-full bg-emerald-400"></span>Vulnerability monitor</span>
+        </span>
+      </a>
+      <button data-sidebar-toggle aria-label="Close menu" class="inline-flex size-8 items-center justify-center rounded-md text-zinc-400 hover:text-white md:hidden">
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        <a href="index.html" class="group relative flex items-center gap-3 rounded-lg border border-primary/25 bg-primary/15 px-3.5 py-2.5 text-sm font-semibold text-blue-300 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+          <span class="absolute bottom-1.5 left-0 top-1.5 w-1 rounded-r bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span>
+          <span class="text-blue-400"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></span><span class="truncate">Hosts</span>
+        </a>
+        <a href="findings.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
+          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><span class="truncate">Search CVEs</span>
+        </a>
+        <a href="clients.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
+          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="truncate">Clients</span>
+        </a>
+        <a href="add-agent.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
+          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></span><span class="truncate">Add agent</span>
+        </a>
+    </nav>
+    <div class="space-y-2.5 border-t bg-sidebar-footer p-3">
+      <a href="index.html" class="group flex items-center justify-between rounded-lg border border-zinc-800/60 bg-zinc-900/60 p-2.5 text-xs transition-colors hover:border-zinc-700/80">
+        <span class="flex items-center gap-2">
+          <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span></span>
+          <span class="font-medium text-zinc-400 group-hover:text-zinc-200">Agents</span>
+        </span>
+        <span class="font-mono font-semibold text-zinc-300 group-hover:text-white">8/9 reporting</span>
+      </a>
+      <div class="flex items-center justify-between px-2.5 py-1 text-xs text-zinc-500">
+        <span class="flex items-center gap-1.5 truncate"><svg class="size-3.5 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></svg>admin</span>
+        <span class="font-mono text-[11px] uppercase text-zinc-600">v0.2.0</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="relative flex min-w-0 flex-1 flex-col overflow-hidden">
+    <header class="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-3 border-b bg-[#0e0f12]/80 px-4 backdrop-blur-md sm:px-6 md:px-8">
+      <div class="flex min-w-0 items-center gap-2 sm:gap-3">
+        <button data-sidebar-toggle aria-label="Open menu" class="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-zinc-400 hover:bg-zinc-800 hover:text-white md:hidden">
+          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+        <div class="flex min-w-0 items-center truncate text-sm font-medium text-zinc-500">
+          <span class="hidden sm:inline">Central</span>
+          <svg class="mx-1.5 hidden size-4 shrink-0 text-zinc-600 sm:inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          <a href="index.html" class="hidden hover:text-zinc-300 sm:inline">Hosts</a><svg class="mx-1.5 hidden size-4 shrink-0 text-zinc-600 sm:inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg><span class="truncate text-sm font-semibold text-zinc-100 sm:text-base">acme-web-01</span>
+        </div>
+      </div>
+      <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+        <label class="hidden items-center gap-2 rounded-lg border border-zinc-800/80 bg-zinc-900/90 px-3 py-1.5 font-mono text-xs text-zinc-300 shadow-sm sm:inline-flex">
+          <span class="font-sans text-zinc-500">Client:</span>
+          <select aria-label="Client" class="bg-transparent font-mono text-xs text-zinc-200 focus:outline-none">
+            <option>all</option><option>acme</option><option>globex</option><option>initech</option>
+          </select>
+        </label>
+        <span class="hidden h-4 w-px bg-zinc-800 sm:block"></span>
+        <a href="login.html" class="inline-flex h-9 items-center gap-2 rounded-md border border-red-500/20 bg-red-500/10 px-3.5 text-xs font-medium text-red-400 hover:bg-red-500/20">
+          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          <span class="hidden md:inline">Sign out</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="ambient-glow flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
+    <div class="w-full pb-12 grid grid-cols-1 gap-6">
+    <a href="index.html" class="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> Hosts
+    </a>
+
+    <header class="flex flex-wrap items-start gap-4">
+      <div class="min-w-0 flex-1">
+        <h1 class="text-xl font-semibold">acme-web-01</h1>
+        <p class="mt-1 text-sm text-muted-foreground">acme · Ubuntu 24.04 · amd64 · kernel 6.8.0-45-generic</p>
+        <p class="mt-1 text-xs text-muted-foreground">Scanned 5h ago · heartbeat 4m ago · agent v0.2.0 · trivy 0.72.0</p>
+        <p class="mt-1 text-xs text-sev-high">Reboot required</p>
+      </div>
+      <button data-dialog="revoke" class="inline-flex h-8 items-center rounded-md border bg-background px-3 text-sm font-medium text-destructive shadow-sm hover:bg-accent">Revoke</button>
+    </header>
+
+    <div class="grid gap-4 rounded-lg border bg-card p-4 sm:grid-cols-[auto_auto_1fr] sm:items-center sm:gap-8">
+      <p class="tabular-nums"><span class="font-mono text-3xl font-semibold text-sev-critical">2</span><span class="ml-1 text-sm text-muted-foreground">open critical</span></p>
+      <p class="tabular-nums"><span class="font-mono text-3xl font-semibold">9</span><span class="ml-1 text-sm text-muted-foreground">open high</span></p>
+      <div class="grid gap-2 text-sm">
+        <p>Last scan: <span class="font-medium text-ok">5 findings resolved</span>, <span class="font-medium text-sev-high">2 new</span>.</p>
+        <p class="text-xs text-muted-foreground">After fixing something, re-scan on the host:</p>
+        <div class="flex items-start gap-2 rounded-md bg-muted px-3 py-2">
+          <code class="min-w-0 flex-1 break-all font-mono text-xs leading-5">sudo vuln-agent scan</code>
+          <button data-copy="" class="-my-1 inline-flex size-7 shrink-0 items-center justify-center rounded-md hover:bg-background"></button>
+        </div>
+      </div>
+    </div>
+
+    <section class="grid grid-cols-1 gap-3" data-tabs>
+      <div class="flex flex-wrap items-center gap-3">
+        <h2 class="text-sm font-medium">What to fix</h2>
+        <div class="ml-auto flex rounded-md border p-0.5 text-sm" role="tablist">
+          <button data-tab="open" role="tab" class="rounded px-3 py-1 text-muted-foreground aria-selected:bg-muted aria-selected:text-foreground">Open</button>
+          <button data-tab="accepted" role="tab" class="rounded px-3 py-1 text-muted-foreground aria-selected:bg-muted aria-selected:text-foreground">Accepted</button>
+          <button data-tab="fp" role="tab" class="rounded px-3 py-1 text-muted-foreground aria-selected:bg-muted aria-selected:text-foreground">False positive</button>
+        </div>
+      </div>
+
+      <div data-panel="open" class="grid grid-cols-1 gap-3">
+        <!-- running kernel -->
+        <details class="rounded-lg border bg-card" open>
+          <summary class="flex cursor-pointer items-center gap-3 p-4">
+            <svg class="chevron size-4 shrink-0 text-muted-foreground transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <div class="min-w-0 flex-1">
+              <p class="font-medium">Linux kernel <span class="ml-1 rounded bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">running</span></p>
+              <p class="truncate text-xs text-muted-foreground">6.8.0-45.45 · linux-image-6.8.0-45-generic, linux-modules-6.8.0-45-generic +2</p>
+            </div>
+            <span class="inline-flex items-center rounded bg-sev-critical/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-critical ring-1 ring-inset ring-sev-critical/30">1 CRITICAL</span>
+            <span class="hidden rounded bg-sev-high/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-high ring-1 ring-inset ring-sev-high/30 sm:inline-flex">4 HIGH</span>
+          </summary>
+          <div class="grid grid-cols-1 gap-3 border-t p-4">
+            <p class="text-sm">This is the kernel the host is running. Upgrade it, then reboot so the new kernel is loaded.</p>
+            <div class="flex items-start gap-2 rounded-md bg-muted px-3 py-2">
+              <code class="min-w-0 flex-1 break-all font-mono text-xs leading-5">sudo apt-get update && sudo apt-get install --only-upgrade linux-image-generic && sudo reboot</code>
+              <button data-copy="" class="-my-1 inline-flex size-7 shrink-0 items-center justify-center rounded-md hover:bg-background"></button>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button data-dialog="triage" class="inline-flex h-8 items-center rounded-md border bg-background px-3 text-sm font-medium shadow-sm hover:bg-accent">Mark component…</button>
+              <span class="text-xs text-muted-foreground">Applies one verdict to all 5 findings.</span>
+            </div>
+            <div class="overflow-x-auto rounded-md border">
+              <table class="w-full min-w-[560px] text-sm">
+                <thead class="bg-muted/50 text-left text-xs text-muted-foreground">
+                  <tr><th class="px-3 py-2 font-medium">CVE</th><th class="px-3 py-2 font-medium">Severity</th><th class="px-3 py-2 font-medium">Package</th><th class="px-3 py-2 font-medium">Fixed in</th><th class="px-3 py-2"></th></tr>
+                </thead>
+                <tbody class="divide-y">
+                  <tr><td class="px-3 py-2 font-mono text-xs"><a href="#" class="underline-offset-2 hover:underline">CVE-2026-21344</a></td><td class="px-3 py-2"><span class="inline-flex rounded bg-sev-critical/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-critical ring-1 ring-inset ring-sev-critical/30">CRITICAL</span></td><td class="px-3 py-2">linux-image-6.8.0-45-generic</td><td class="px-3 py-2 font-mono text-xs">6.8.0-49.49</td><td class="px-3 py-2 text-right"><button data-dialog="triage" class="text-xs text-muted-foreground hover:text-foreground">Triage</button></td></tr>
+                  <tr><td class="px-3 py-2 font-mono text-xs"><a href="#" class="underline-offset-2 hover:underline">CVE-2026-19870</a></td><td class="px-3 py-2"><span class="inline-flex rounded bg-sev-high/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-high ring-1 ring-inset ring-sev-high/30">HIGH</span></td><td class="px-3 py-2">linux-modules-6.8.0-45-generic</td><td class="px-3 py-2 font-mono text-xs">6.8.0-49.49</td><td class="px-3 py-2 text-right"><button data-dialog="triage" class="text-xs text-muted-foreground hover:text-foreground">Triage</button></td></tr>
+                  <tr><td class="px-3 py-2 font-mono text-xs"><a href="#" class="underline-offset-2 hover:underline">CVE-2026-18112</a></td><td class="px-3 py-2"><span class="inline-flex rounded bg-sev-high/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-high ring-1 ring-inset ring-sev-high/30">HIGH</span></td><td class="px-3 py-2">linux-image-6.8.0-45-generic</td><td class="px-3 py-2 font-mono text-xs">6.8.0-49.49</td><td class="px-3 py-2 text-right"><button data-dialog="triage" class="text-xs text-muted-foreground hover:text-foreground">Triage</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <!-- app folder -->
+        <details class="rounded-lg border bg-card">
+          <summary class="flex cursor-pointer items-center gap-3 p-4">
+            <svg class="chevron size-4 shrink-0 text-muted-foreground transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <div class="min-w-0 flex-1">
+              <p class="font-medium">shop <span class="ml-1 rounded bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">PHP app</span></p>
+              <p class="truncate text-xs text-muted-foreground">/var/www/shop · guzzlehttp/guzzle, symfony/http-kernel</p>
+            </div>
+            <span class="inline-flex items-center rounded bg-sev-critical/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-critical ring-1 ring-inset ring-sev-critical/30">1 CRITICAL</span>
+            <span class="hidden rounded bg-sev-high/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-high ring-1 ring-inset ring-sev-high/30 sm:inline-flex">2 HIGH</span>
+          </summary>
+          <div class="grid grid-cols-1 gap-3 border-t p-4">
+            <p class="text-sm">Composer dependencies of this app. Update them, run the tests, and deploy.</p>
+            <div class="flex items-start gap-2 rounded-md bg-muted px-3 py-2">
+              <code class="min-w-0 flex-1 break-all font-mono text-xs leading-5">cd /var/www/shop && composer update guzzlehttp/guzzle symfony/http-kernel --with-dependencies</code>
+              <button data-copy="" class="-my-1 inline-flex size-7 shrink-0 items-center justify-center rounded-md hover:bg-background"></button>
+            </div>
+          </div>
+        </details>
+
+        <!-- standby kernel -->
+        <details class="rounded-lg border bg-card">
+          <summary class="flex cursor-pointer items-center gap-3 p-4">
+            <svg class="chevron size-4 shrink-0 text-muted-foreground transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <div class="min-w-0 flex-1">
+              <p class="font-medium">Linux kernel <span class="ml-1 rounded bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">not running</span></p>
+              <p class="truncate text-xs text-muted-foreground">6.8.0-31.31 · old fallback kernel</p>
+            </div>
+            <span class="inline-flex items-center rounded bg-sev-high/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-high ring-1 ring-inset ring-sev-high/30">2 HIGH</span>
+          </summary>
+          <div class="grid grid-cols-1 gap-3 border-t p-4">
+            <p class="text-sm">An older kernel kept as a fallback. It is not running; remove it.</p>
+            <div class="flex items-start gap-2 rounded-md bg-muted px-3 py-2">
+              <code class="min-w-0 flex-1 break-all font-mono text-xs leading-5">sudo apt-get purge linux-image-6.8.0-31-generic linux-modules-6.8.0-31-generic</code>
+              <button data-copy="" class="-my-1 inline-flex size-7 shrink-0 items-center justify-center rounded-md hover:bg-background"></button>
+            </div>
+          </div>
+        </details>
+
+        <!-- binary -->
+        <details class="rounded-lg border bg-card">
+          <summary class="flex cursor-pointer items-center gap-3 p-4">
+            <svg class="chevron size-4 shrink-0 text-muted-foreground transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            <div class="min-w-0 flex-1">
+              <p class="font-medium">dockerd <span class="ml-1 rounded bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">Go binary</span></p>
+              <p class="truncate text-xs text-muted-foreground">/usr/bin/dockerd · stdlib, golang.org/x/net</p>
+            </div>
+            <span class="inline-flex items-center rounded bg-sev-high/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-high ring-1 ring-inset ring-sev-high/30">1 HIGH</span>
+          </summary>
+          <div class="grid grid-cols-1 gap-3 border-t p-4">
+            <p class="text-sm">A compiled binary. Find which package installed it and upgrade that package.</p>
+            <div class="flex items-start gap-2 rounded-md bg-muted px-3 py-2">
+              <code class="min-w-0 flex-1 break-all font-mono text-xs leading-5">dpkg -S /usr/bin/dockerd</code>
+              <button data-copy="" class="-my-1 inline-flex size-7 shrink-0 items-center justify-center rounded-md hover:bg-background"></button>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div data-panel="accepted" class="grid grid-cols-1 gap-3">
+        <div class="rounded-lg border bg-card p-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <p class="font-medium">openssh-server</p>
+            <span class="rounded bg-muted px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">accepted</span>
+            <span class="ml-auto inline-flex rounded bg-sev-high/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-high ring-1 ring-inset ring-sev-high/30">HIGH</span>
+          </div>
+          <p class="mt-2 text-sm text-muted-foreground">“SSH only reachable over Tailscale; upgrade in the March maintenance window.”</p>
+        </div>
+      </div>
+      <div data-panel="fp" class="text-sm text-muted-foreground">Nothing here.</div>
+    </section>
+    </div>
+    </main>
+  </div>
+
+  <dialog id="revoke" class="w-[calc(100%-2rem)] max-w-md rounded-lg border bg-background p-6 text-foreground shadow-lg">
+    <h2 class="text-lg font-semibold">Revoke acme/acme-web-01?</h2>
+    <p class="mt-2 text-sm text-muted-foreground">The host token stops working immediately, so the agent can no longer send reports or heartbeats. Finding history is kept. To bring the host back, run the install command again.</p>
+    <div class="mt-6 flex justify-end gap-2">
+      <button data-close class="inline-flex h-9 items-center rounded-md border bg-background px-4 text-sm font-medium shadow-sm hover:bg-accent">Cancel</button>
+      <button data-close class="inline-flex h-9 items-center rounded-md bg-destructive px-4 text-sm font-medium text-white shadow-sm hover:bg-destructive/90">Revoke host</button>
+    </div>
+  </dialog>
+
+  <dialog id="triage" class="w-[calc(100%-2rem)] max-w-md rounded-lg border bg-background p-6 text-foreground shadow-lg">
+    <h2 class="text-lg font-semibold">Triage</h2>
+    <p class="mt-1 text-sm text-muted-foreground">The verdict survives re-scans. A note is required.</p>
+    <div class="mt-4 grid gap-3">
+      <label class="grid gap-1.5 text-sm font-medium">Status
+        <select class="h-9 rounded-md border border-input bg-background px-2 text-sm font-normal shadow-sm">
+          <option>Open</option><option>Accepted</option><option>False positive</option>
+        </select>
+      </label>
+      <label class="grid gap-1.5 text-sm font-medium">Note
+        <textarea rows="3" placeholder="Why is this accepted or a false positive?" class="rounded-md border border-input bg-transparent px-3 py-2 text-sm font-normal shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"></textarea>
+      </label>
+    </div>
+    <div class="mt-6 flex justify-end gap-2">
+      <button data-close class="inline-flex h-9 items-center rounded-md border bg-background px-4 text-sm font-medium shadow-sm hover:bg-accent">Cancel</button>
+      <button data-close class="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90">Save</button>
+    </div>
+  </dialog>
+</body>
+</html>

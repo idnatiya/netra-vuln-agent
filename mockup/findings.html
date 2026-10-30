@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search CVEs · netra-vuln</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="theme.css">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="tw-config.js"></script>
+  <script src="app.js"></script>
+</head>
+<body class="flex h-screen overflow-hidden">
+  <div data-sidebar-backdrop hidden class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden"></div>
+  <aside data-sidebar class="fixed inset-y-0 left-0 z-50 flex w-64 shrink-0 -translate-x-full select-none flex-col border-r bg-sidebar transition-transform duration-200 md:static md:translate-x-0">
+    <div class="flex h-16 items-center justify-between border-b px-5">
+      <a href="index.html" class="flex items-center gap-3">
+        <span class="flex size-9 items-center justify-center rounded-lg border border-blue-500/30 bg-gradient-to-br from-blue-500/20 to-indigo-500/10 text-blue-400 shadow-[0_0_15px_-3px_rgba(59,130,246,0.3)]">
+          <svg class="size-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+        </span>
+        <span>
+          <span class="flex items-center gap-1.5 text-sm font-semibold tracking-tight text-white">netra-vuln <span class="inline-flex items-center rounded border border-blue-500/30 bg-blue-500/15 px-1.5 py-0.5 font-mono text-[10px] font-medium text-blue-400">CENTRAL</span></span>
+          <span class="mt-0.5 flex items-center gap-1.5 font-mono text-xs text-zinc-500"><span class="inline-block size-1.5 rounded-full bg-emerald-400"></span>Vulnerability monitor</span>
+        </span>
+      </a>
+      <button data-sidebar-toggle aria-label="Close menu" class="inline-flex size-8 items-center justify-center rounded-md text-zinc-400 hover:text-white md:hidden">
+        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        <a href="index.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
+          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></span><span class="truncate">Hosts</span>
+        </a>
+        <a href="findings.html" class="group relative flex items-center gap-3 rounded-lg border border-primary/25 bg-primary/15 px-3.5 py-2.5 text-sm font-semibold text-blue-300 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]">
+          <span class="absolute bottom-1.5 left-0 top-1.5 w-1 rounded-r bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span>
+          <span class="text-blue-400"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><span class="truncate">Search CVEs</span>
+        </a>
+        <a href="clients.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
+          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class="truncate">Clients</span>
+        </a>
+        <a href="add-agent.html" class="group relative flex items-center gap-3 rounded-lg border border-transparent px-3.5 py-2.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800/40 hover:text-zinc-100">
+          <span class="text-zinc-500 group-hover:text-zinc-300"><svg class="size-[18px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></span><span class="truncate">Add agent</span>
+        </a>
+    </nav>
+    <div class="space-y-2.5 border-t bg-sidebar-footer p-3">
+      <a href="index.html" class="group flex items-center justify-between rounded-lg border border-zinc-800/60 bg-zinc-900/60 p-2.5 text-xs transition-colors hover:border-zinc-700/80">
+        <span class="flex items-center gap-2">
+          <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span></span>
+          <span class="font-medium text-zinc-400 group-hover:text-zinc-200">Agents</span>
+        </span>
+        <span class="font-mono font-semibold text-zinc-300 group-hover:text-white">8/9 reporting</span>
+      </a>
+      <div class="flex items-center justify-between px-2.5 py-1 text-xs text-zinc-500">
+        <span class="flex items-center gap-1.5 truncate"><svg class="size-3.5 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></svg>admin</span>
+        <span class="font-mono text-[11px] uppercase text-zinc-600">v0.2.0</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="relative flex min-w-0 flex-1 flex-col overflow-hidden">
+    <header class="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-3 border-b bg-[#0e0f12]/80 px-4 backdrop-blur-md sm:px-6 md:px-8">
+      <div class="flex min-w-0 items-center gap-2 sm:gap-3">
+        <button data-sidebar-toggle aria-label="Open menu" class="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-zinc-400 hover:bg-zinc-800 hover:text-white md:hidden">
+          <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+        <div class="flex min-w-0 items-center truncate text-sm font-medium text-zinc-500">
+          <span class="hidden sm:inline">Central</span>
+          <svg class="mx-1.5 hidden size-4 shrink-0 text-zinc-600 sm:inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          <span class="truncate text-sm font-semibold text-zinc-100 sm:text-base">Search CVEs</span>
+        </div>
+      </div>
+      <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+        <label class="hidden items-center gap-2 rounded-lg border border-zinc-800/80 bg-zinc-900/90 px-3 py-1.5 font-mono text-xs text-zinc-300 shadow-sm sm:inline-flex">
+          <span class="font-sans text-zinc-500">Client:</span>
+          <select aria-label="Client" class="bg-transparent font-mono text-xs text-zinc-200 focus:outline-none">
+            <option>all</option><option>acme</option><option>globex</option><option>initech</option>
+          </select>
+        </label>
+        <span class="hidden h-4 w-px bg-zinc-800 sm:block"></span>
+        <a href="login.html" class="inline-flex h-9 items-center gap-2 rounded-md border border-red-500/20 bg-red-500/10 px-3.5 text-xs font-medium text-red-400 hover:bg-red-500/20">
+          <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          <span class="hidden md:inline">Sign out</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="ambient-glow flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
+    <div class="w-full pb-12 grid gap-4">
+    <div>
+      <h1 class="text-xl font-semibold">Search CVEs</h1>
+      <p class="mt-1 text-sm text-muted-foreground">Unresolved findings across every host.</p>
+    </div>
+
+    <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-[1fr_repeat(4,auto)]">
+      <div class="relative">
+        <svg class="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input placeholder="CVE or package" aria-label="CVE or package" class="h-9 w-full rounded-md border border-input bg-transparent pl-8 pr-3 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+      </div>
+      <select aria-label="Client" class="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-sm"><option>All clients</option><option>acme</option><option>globex</option><option>initech</option></select>
+      <select aria-label="Host" class="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-sm"><option>All hosts</option><option>acme-web-01</option><option>acme-db-01</option></select>
+      <select aria-label="Severity" class="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-sm"><option>Critical + high</option><option>Critical</option><option>High</option></select>
+      <select aria-label="Status" class="h-9 rounded-md border border-input bg-background px-2 text-sm shadow-sm"><option>Open</option><option>Accepted</option><option>False positive</option></select>
+    </div>
+
+    <div class="overflow-x-auto rounded-lg border bg-card">
+      <table class="w-full min-w-[820px] text-sm">
+        <thead class="border-b bg-muted/50 text-left text-xs text-muted-foreground">
+          <tr>
+            <th class="px-3 py-2.5 font-medium">CVE</th>
+            <th class="px-3 py-2.5 font-medium">Severity</th>
+            <th class="px-3 py-2.5 font-medium">Package</th>
+            <th class="px-3 py-2.5 font-medium">Installed → fixed</th>
+            <th class="px-3 py-2.5 font-medium">Host</th>
+            <th class="px-3 py-2.5 font-medium">First seen</th>
+            <th class="px-3 py-2.5"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          <tr class="hover:bg-muted/30">
+            <td class="px-3 py-2.5"><p class="font-mono text-xs">CVE-2026-21344</p><p class="max-w-[16rem] truncate text-xs text-muted-foreground">kernel: use-after-free in netfilter</p></td>
+            <td class="px-3 py-2.5"><span class="inline-flex rounded bg-sev-critical/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-critical ring-1 ring-inset ring-sev-critical/30">CRITICAL</span></td>
+            <td class="px-3 py-2.5">linux-image-6.8.0-45-generic</td>
+            <td class="px-3 py-2.5 font-mono text-xs">6.8.0-45.45 → 6.8.0-49.49</td>
+            <td class="px-3 py-2.5"><a href="host.html" class="hover:underline">acme-web-01</a><p class="text-xs text-muted-foreground">acme</p></td>
+            <td class="px-3 py-2.5 text-muted-foreground">12 days ago</td>
+            <td class="px-3 py-2.5 text-right"><button data-dialog="triage" class="text-xs text-muted-foreground hover:text-foreground">Triage</button></td>
+          </tr>
+          <tr class="hover:bg-muted/30">
+            <td class="px-3 py-2.5"><p class="font-mono text-xs">CVE-2026-0412</p><p class="max-w-[16rem] truncate text-xs text-muted-foreground">guzzle: header injection in redirects</p></td>
+            <td class="px-3 py-2.5"><span class="inline-flex rounded bg-sev-critical/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-critical ring-1 ring-inset ring-sev-critical/30">CRITICAL</span></td>
+            <td class="px-3 py-2.5">guzzlehttp/guzzle</td>
+            <td class="px-3 py-2.5 font-mono text-xs">7.8.1 → 7.9.3</td>
+            <td class="px-3 py-2.5"><a href="host.html" class="hover:underline">acme-web-01</a><p class="text-xs text-muted-foreground">acme</p></td>
+            <td class="px-3 py-2.5 text-muted-foreground">2 days ago</td>
+            <td class="px-3 py-2.5 text-right"><button data-dialog="triage" class="text-xs text-muted-foreground hover:text-foreground">Triage</button></td>
+          </tr>
+          <tr class="hover:bg-muted/30">
+            <td class="px-3 py-2.5"><p class="font-mono text-xs">CVE-2026-1187</p><p class="max-w-[16rem] truncate text-xs text-muted-foreground">openssl: crash in X.509 name check</p></td>
+            <td class="px-3 py-2.5"><span class="inline-flex rounded bg-sev-high/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-high ring-1 ring-inset ring-sev-high/30">HIGH</span></td>
+            <td class="px-3 py-2.5">openssl-libs</td>
+            <td class="px-3 py-2.5 font-mono text-xs">1:3.0.7-27.el9 → 1:3.0.7-29.el9</td>
+            <td class="px-3 py-2.5"><a href="host.html" class="hover:underline">gx-app-prod</a><p class="text-xs text-muted-foreground">globex</p></td>
+            <td class="px-3 py-2.5 text-muted-foreground">1 month ago</td>
+            <td class="px-3 py-2.5 text-right"><button data-dialog="triage" class="text-xs text-muted-foreground hover:text-foreground">Triage</button></td>
+          </tr>
+          <tr class="hover:bg-muted/30">
+            <td class="px-3 py-2.5"><p class="font-mono text-xs">CVE-2025-48734</p><p class="max-w-[16rem] truncate text-xs text-muted-foreground">postgresql: SQL injection via quoting</p></td>
+            <td class="px-3 py-2.5"><span class="inline-flex rounded bg-sev-high/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-high ring-1 ring-inset ring-sev-high/30">HIGH</span></td>
+            <td class="px-3 py-2.5">postgresql-16</td>
+            <td class="px-3 py-2.5 font-mono text-xs">16.4-0ubuntu0.24.04 → 16.9-0ubuntu0.24.04</td>
+            <td class="px-3 py-2.5"><a href="host.html" class="hover:underline">acme-db-01</a><p class="text-xs text-muted-foreground">acme</p></td>
+            <td class="px-3 py-2.5 text-muted-foreground">3 months ago</td>
+            <td class="px-3 py-2.5 text-right"><button data-dialog="triage" class="text-xs text-muted-foreground hover:text-foreground">Triage</button></td>
+          </tr>
+          <tr class="hover:bg-muted/30">
+            <td class="px-3 py-2.5"><p class="font-mono text-xs">GHSA-9wx4-h78v-vm56</p><p class="max-w-[16rem] truncate text-xs text-muted-foreground">x/net: excessive memory in HTTP/2</p></td>
+            <td class="px-3 py-2.5"><span class="inline-flex rounded bg-sev-high/10 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide text-sev-high ring-1 ring-inset ring-sev-high/30">HIGH</span></td>
+            <td class="px-3 py-2.5">golang.org/x/net</td>
+            <td class="px-3 py-2.5 font-mono text-xs">v0.23.0 → v0.38.0</td>
+            <td class="px-3 py-2.5"><a href="host.html" class="hover:underline">acme-web-01</a><p class="text-xs text-muted-foreground">acme</p></td>
+            <td class="px-3 py-2.5 text-muted-foreground">3 weeks ago</td>
+            <td class="px-3 py-2.5 text-right"><button data-dialog="triage" class="text-xs text-muted-foreground hover:text-foreground">Triage</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex items-center justify-between text-sm text-muted-foreground">
+      <p>1–5 of 214</p>
+      <div class="flex gap-2">
+        <button disabled class="inline-flex h-8 items-center rounded-md border bg-background px-3 font-medium opacity-50">Previous</button>
+        <button class="inline-flex h-8 items-center rounded-md border bg-background px-3 font-medium text-foreground shadow-sm hover:bg-accent">Next</button>
+      </div>
+    </div>
+    </div>
+    </main>
+  </div>
+
+  <dialog id="triage" class="w-[calc(100%-2rem)] max-w-md rounded-lg border bg-background p-6 text-foreground shadow-lg">
+    <h2 class="text-lg font-semibold">Triage</h2>
+    <p class="mt-1 text-sm text-muted-foreground">The verdict survives re-scans. A note is required.</p>
+    <div class="mt-4 grid gap-3">
+      <label class="grid gap-1.5 text-sm font-medium">Status
+        <select class="h-9 rounded-md border border-input bg-background px-2 text-sm font-normal shadow-sm"><option>Open</option><option>Accepted</option><option>False positive</option></select>
+      </label>
+      <label class="grid gap-1.5 text-sm font-medium">Note
+        <textarea rows="3" placeholder="Why is this accepted or a false positive?" class="rounded-md border border-input bg-transparent px-3 py-2 text-sm font-normal shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"></textarea>
+      </label>
+    </div>
+    <div class="mt-6 flex justify-end gap-2">
+      <button data-close class="inline-flex h-9 items-center rounded-md border bg-background px-4 text-sm font-medium shadow-sm hover:bg-accent">Cancel</button>
+      <button data-close class="inline-flex h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90">Save</button>
+    </div>
+  </dialog>
+</body>
+</html>
