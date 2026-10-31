@@ -19,7 +19,7 @@ If a design decision is ambiguous, ask first.
 - Language: **Go** (latest stable; build toolchain pinned by `toolchain` in `go.mod`, bump it for Go security releases; keep the `go` line low so central can build); stdlib `net/http` for the central client
 - Static binary (`CGO_ENABLED=0`), targets `linux/amd64` and `linux/arm64`
 - Scanner: **Trivy binary** invoked via `os/exec` (DO NOT import Trivy as a library). Trivy version is pinned by `TRIVY_VERSION` in the `Makefile` (ldflag `main.trivyVersion`).
-- Install: `vuln-agent install` (no Ansible, no .deb/.rpm, no CI release pipeline)
+- Install: `vuln-agent install` (no Ansible, no .deb/.rpm, no CI release pipeline); central's `GET /install.sh` (its Add agent page) downloads the pinned release, checks `SHA256SUMS`, and runs `install -central-url -client-id`
 - Distribution: GitHub Release assets `vuln-agent-linux-{amd64,arm64}` + `SHA256SUMS` (`make release`, manual via `gh`); the README's curl block downloads, checks, and runs `install`.
 - License: GPL-3.0-only (`LICENSE`, copyright idnatiya); keep new dependencies GPL-3.0-compatible.
 - Release: commit, tag `vX.Y.Z` and push the tag, `make release` (GitHub Release; refuses without a tag on HEAD and a clean tree).
@@ -81,7 +81,7 @@ app_dirs: [...]                         # optional; app folders to scan, unset =
 - `vuln-agent enroll [--force]`: read `central_url` + `client_id` from config, read the enroll token from env `VULN_AGENT_ENROLL_TOKEN` or stdin (NEVER via CLI args, so it does not leak in `ps`), call `POST /api/v1/enroll`, and write `host_token` into `config.yaml` atomically (mode 600). Refuse if a token is already set, unless `--force`.
 - `vuln-agent version`
 - `vuln-agent check`: validate config and the Trivy binary, plus token and connectivity to central in central mode
-- `vuln-agent install` (root, operator-run, idempotent): see Install below
+- `vuln-agent install [-central-url URL -client-id ID]` (root, operator-run, idempotent): see Install below
 
 ## `scan` flow
 1. Send spooled reports first, then fetch scan config from `GET /api/v1/config` (read-only). On failure, use the last locally cached config, or the default if none exists.
@@ -120,7 +120,7 @@ app_dirs: [...]                         # optional; app folders to scan, unset =
   - `vuln-agent-heartbeat.service` + `.timer` (every 15 minutes)
   - Migration: disables and removes the old `vuln-agent-serve.service` and deletes `/var/lib/vuln-agent/reports/` (drop once every VM is updated)
   - Resource limits: `CPUQuota=100%`, `MemoryMax=1G`, `Nice=19`, `IOSchedulingClass=idle`
-- Enroll stays a separate manual step (`vuln-agent enroll`)
+- With `-central-url` + `-client-id` (both or neither): fill them into a new config (`config.Template`); then, if `$VULN_AGENT_ENROLL_TOKEN` is set and the config has no token, enroll and `systemctl start --no-block vuln-agent-scan.service`. An enrolled host is left as is. Without the flags, enroll stays a separate manual step (`vuln-agent enroll`)
 
 ## Logging
 Log to stdout/stderr (into journald), structured format (`log/slog`). NEVER print the token in logs.

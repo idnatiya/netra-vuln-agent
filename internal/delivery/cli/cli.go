@@ -33,6 +33,7 @@ commands:
   enroll     enroll this host (token from $VULN_AGENT_ENROLL_TOKEN or stdin) [-force]
   check      validate config, Trivy binary, and central connectivity
   install    install this binary, the pinned Trivy, a default config, and systemd timers (root)
+             [-central-url URL -client-id ID]: fill a new config and enroll with $VULN_AGENT_ENROLL_TOKEN
   version    print version
 `
 
@@ -51,6 +52,8 @@ func Run(args []string, stdin io.Reader, version, trivyVersion string) int {
 	fs := flag.NewFlagSet(cmd, flag.ContinueOnError)
 	configPath := fs.String("config", config.DefaultPath, "config file")
 	force := fs.Bool("force", false, "enroll: overwrite existing host token")
+	centralURL := fs.String("central-url", "", "install: central_url for a new config (with -client-id)")
+	clientID := fs.String("client-id", "", "install: client_id for a new config (with -central-url)")
 	if err := fs.Parse(args[1:]); err != nil {
 		return 2
 	}
@@ -62,7 +65,7 @@ func Run(args []string, stdin io.Reader, version, trivyVersion string) int {
 	var err error
 	switch cmd {
 	case "install":
-		err = install(ctx, log, trivyVersion)
+		err = install(ctx, log, version, trivyVersion, *centralURL, *clientID)
 	default:
 		err = dispatch(ctx, log, cmd, *configPath, version, *force, stdin)
 	}

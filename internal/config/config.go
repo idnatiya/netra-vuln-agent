@@ -16,6 +16,32 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Template is the config.yaml that `install` writes when none exists.
+// centralURL and clientID may be empty (filled in by hand later).
+func Template(centralURL, clientID string) string {
+	return `# Fill in central_url and client_id, then run ` + "`vuln-agent enroll`" + `.
+central_url: ` + yamlString(centralURL) + `
+client_id: ` + yamlString(clientID) + `
+token: ""
+hostname_override: ""
+ca_file: ""
+# Folders to exclude, added to the default skip list, e.g. ["/data/backup"].
+extra_skip_dirs: []
+# Folders scanned for app dependencies (Composer, node_modules), plus pm2 apps.
+# Unset = ["/var/www", "/srv", "/opt"]; [] = OS packages only.
+#app_dirs: ["/var/www", "/srv", "/opt"]
+`
+}
+
+// yamlString quotes s as a YAML scalar.
+func yamlString(s string) string {
+	if s == "" {
+		return `""`
+	}
+	b, _ := yaml.Marshal(s) // a string always marshals
+	return strings.TrimSuffix(string(b), "\n")
+}
+
 // Secret hides its value from fmt and slog. YAML still writes the real value.
 type Secret string
 

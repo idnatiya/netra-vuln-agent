@@ -12,7 +12,14 @@ Runs Trivy on a Linux VM and sends a slim report of HIGH/CRITICAL package vulner
 
 ## Install
 
-On the VM, download the binary for its arch from the latest GitHub Release, check it, and install:
+The quickest way is central's **Add agent** page: pick the client, generate an enroll token, and run the command it shows on the VM:
+```sh
+export VULN_AGENT_ENROLL_TOKEN=<token>
+curl -fsSL https://<central>/install.sh | sudo --preserve-env=VULN_AGENT_ENROLL_TOKEN sh -s -- <client>
+```
+The script downloads the release central pins, checks it against `SHA256SUMS`, and runs `install -central-url <central> -client-id <client>`, which writes those into a new config, enrolls with the token from the environment (never a CLI argument), and starts the first scan. Rerunning it on an enrolled host only updates the binary.
+
+Manually: on the VM, download the binary for its arch from the latest GitHub Release, check it, and install:
 ```sh
 a=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
 u=https://github.com/idnatiya/netra-vuln-agent/releases/latest/download

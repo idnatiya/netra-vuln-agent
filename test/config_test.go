@@ -121,3 +121,19 @@ func TestAppDirs(t *testing.T) {
 		}
 	}
 }
+
+func TestTemplate(t *testing.T) {
+	// The installer fills in central and client; odd characters stay one YAML scalar.
+	f, _, err := config.Load(writeConfig(t, config.Template("https://central.example.com", "acme: #1"), 0o600))
+	if err != nil || f.Config.CentralURL != "https://central.example.com" || f.Config.ClientID != "acme: #1" || f.HostToken() != "" {
+		t.Fatalf("filled template: f=%+v err=%v", f, err)
+	}
+	// Without values it is the plain template, which needs editing before use.
+	empty := config.Template("", "")
+	if !strings.Contains(empty, "central_url: \"\"\nclient_id: \"\"\n") {
+		t.Fatalf("empty template:\n%s", empty)
+	}
+	if _, _, err := config.Load(writeConfig(t, empty, 0o600)); err == nil {
+		t.Fatal("empty template must not validate")
+	}
+}
