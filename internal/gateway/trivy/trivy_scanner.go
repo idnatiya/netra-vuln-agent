@@ -30,11 +30,28 @@ type Runner struct {
 	AppDirs []string
 }
 
+// Run kinds. Apps get two light runs that both skip installed dependency
+// trees: lockfiles via fs mode (composer.lock, package-lock.json, ...) and
+// binaries/jars via rootfs (fs mode does not read those).
+const (
+	RunOS       = "os"
+	RunLockfile = "lockfile"
+	RunBinary   = "binary"
+)
+
+var depDirs = []string{"**/node_modules", "**/vendor", "**/.git"}
+
 // Args builds the Trivy arguments for one run. cfg must already pass Validate.
-// pkgTypes is "os" (scan / for OS packages) or "library" (scan an app dir).
-func (r *Runner) Args(cfg entity.ScanConfig, target, pkgTypes, output string) []string {
+func (r *Runner) Args(cfg entity.ScanConfig, kind, target, output string) []string {
+	mode, pkgTypes, skip := "rootfs", "library", slices.Concat(cfg.SkipDirs, depDirs)
+	switch kind {
+	case RunOS:
+		pkgTypes, skip = "os", cfg.SkipDirs
+	case RunLockfile:
+		mode = "fs"
+	}
 	args := []string{
-		"rootfs", target,
+		mode, target,
 		"--scanners", "vuln",
 		"--pkg-types", pkgTypes,
 		"--list-all-pkgs=false",
@@ -43,33 +60,35 @@ func (r *Runner) Args(cfg entity.ScanConfig, target, pkgTypes, output string) []
 		"--timeout", cfg.Timeout.String(),
 		"--cache-dir", r.CacheDir,
 	}
-	if len(cfg.SkipDirs) > 0 {
-		args = append(args, "--skip-dirs", strings.Join(cfg.SkipDirs, ","))
+	if len(skip) > 0 {
+		args = append(args, "--skip-dirs", strings.Join(skip, ","))
 	}
 	return append(args, "--format", "json", "-q", "--output", output)
 }
 
-// Scan runs Trivy for OS packages on /, then for language packages in each
-// existing app dir, and merges the findings with paths relative to /.
+// Scan runs Trivy for OS packages on /, then the lockfile and binary runs in
+// each existing app dir, and merges the findings with paths relative to /.
 func (r *Runner) Scan(ctx context.Context, cfg entity.ScanConfig) ([]entity.Finding, error) {
-	findings, err := r.run(ctx, cfg, "/", "os")
+	findings, err := r.run(ctx, cfg, RunOS, "/")
 	if err != nil {
 		return nil, err
 	}
 	for _, dir := range AppTargets(r.AppDirs) {
-		fs, err := r.run(ctx, cfg, dir, "library")
-		if err != nil {
-			return nil, fmt.Errorf("%s: %w", dir, err)
-		}
 		// Trivy reports paths relative to the scanned dir.
 		prefix := strings.Trim(dir, "/") + "/"
-		for _, f := range fs {
-			if f.PkgPath != "" {
-				f.PkgPath = prefix + f.PkgPath
-			} else { // Target is the file path (composer-vendor, gobinary, ...)
-				f.Target = prefix + f.Target
+		for _, kind := range []string{RunLockfile, RunBinary} {
+			fs, err := r.run(ctx, cfg, kind, dir)
+			if err != nil {
+				return nil, fmt.Errorf("%s: %w", dir, err)
 			}
-			findings = append(findings, f)
+			for _, f := range fs {
+				if f.PkgPath != "" {
+					f.PkgPath = prefix + f.PkgPath
+				} else { // Target is the file path (lockfile, gobinary, jar, ...)
+					f.Target = prefix + f.Target
+				}
+				findings = append(findings, f)
+			}
 		}
 	}
 	return findings, nil
@@ -93,7 +112,7 @@ func AppTargets(dirs []string) []string {
 	})
 }
 
-func (r *Runner) run(ctx context.Context, cfg entity.ScanConfig, target, pkgTypes string) ([]entity.Finding, error) {
+func (r *Runner) run(ctx context.Context, cfg entity.ScanConfig, kind, target string) ([]entity.Finding, error) {
 	f, err := os.CreateTemp(r.TmpDir, "trivy-*.json")
 	if err != nil {
 		return nil, fmt.Errorf("create output file: %w", err)
@@ -103,7 +122,7 @@ func (r *Runner) run(ctx context.Context, cfg entity.ScanConfig, target, pkgType
 	defer os.Remove(out)
 
 	var stderr tail
-	cmd := lowPriority(ctx, r.Bin, r.Args(cfg, target, pkgTypes, out)...)
+	cmd := lowPriority(ctx, r.Bin, r.Args(cfg, kind, target, out)...)
 	cmd.Stderr = &stderr
 	cmd.WaitDelay = 10 * time.Second
 	if err := cmd.Run(); err != nil {

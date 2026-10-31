@@ -9,7 +9,7 @@ fail) echo "FATAL unable to initialize: boom" >&2; exit 1 ;;
 hang) exec sleep 30 ;;
 esac
 out=""
-[ -n "$FAKE_TRIVY_LOG" ] && echo "$2 $(echo "$@" | sed 's/.*--pkg-types \([a-z]*\).*/\1/')" >>"$FAKE_TRIVY_LOG"
+[ -n "$FAKE_TRIVY_LOG" ] && echo "$1 $2 $(echo "$@" | sed 's/.*--pkg-types \([a-z]*\).*/\1/')" >>"$FAKE_TRIVY_LOG"
 while [ $# -gt 0 ]; do
 	[ "$1" = "--output" ] && out="$2"
 	shift

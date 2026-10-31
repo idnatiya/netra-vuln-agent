@@ -97,7 +97,7 @@ func TestParseLarge(t *testing.T) {
 
 func TestArgs(t *testing.T) {
 	r := &trivy.Runner{CacheDir: "/var/lib/vuln-agent/cache"}
-	got := r.Args(entity.DefaultScanConfig(), "/", "os", "/out.json")
+	got := r.Args(entity.DefaultScanConfig(), trivy.RunOS, "/", "/out.json")
 	for _, want := range [][]string{
 		{"rootfs", "/"},
 		{"--pkg-types", "os"},
@@ -116,8 +116,18 @@ func TestArgs(t *testing.T) {
 	}
 	cfg := entity.DefaultScanConfig()
 	cfg.SkipDirs = nil
-	if slices.Contains(r.Args(cfg, "/", "os", "/o"), "--skip-dirs") {
+	if slices.Contains(r.Args(cfg, trivy.RunOS, "/", "/o"), "--skip-dirs") {
 		t.Fatal("--skip-dirs without value")
+	}
+	lock := r.Args(cfg, trivy.RunLockfile, "/var/www", "/o")
+	bin := r.Args(cfg, trivy.RunBinary, "/var/www", "/o")
+	if lock[0] != "fs" || bin[0] != "rootfs" {
+		t.Fatalf("app runs: lockfile must use fs, binary rootfs: %v / %v", lock, bin)
+	}
+	for _, a := range [][]string{lock, bin} {
+		if i := slices.Index(a, "--skip-dirs"); i < 0 || a[i+1] != "**/node_modules,**/vendor,**/.git" {
+			t.Fatalf("app run must skip dependency dirs: %v", a)
+		}
 	}
 }
 
@@ -137,11 +147,11 @@ func TestScanExec(t *testing.T) {
 	r.AppDirs = []string{app, filepath.Join(app, "nested"), "/does/not/exist"}
 	os.Mkdir(filepath.Join(app, "nested"), 0o755)
 	got, err := r.Scan(context.Background(), entity.DefaultScanConfig())
-	if err != nil || len(got) != 8 {
+	if err != nil || len(got) != 12 {
 		t.Fatalf("got %d, %v", len(got), err)
 	}
 	runs, _ := os.ReadFile(os.Getenv("FAKE_TRIVY_LOG"))
-	if want := "/ os\n" + app + " library\n"; string(runs) != want {
+	if want := "rootfs / os\nfs " + app + " library\nrootfs " + app + " library\n"; string(runs) != want {
 		t.Fatalf("runs = %q, want %q", runs, want)
 	}
 	prefix := strings.TrimPrefix(app, "/") + "/"

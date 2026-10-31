@@ -85,9 +85,9 @@ app_dirs: [...]                         # optional; app folders to scan, unset =
 
 ## `scan` flow
 1. Send spooled reports first, then fetch scan config from `GET /api/v1/config` (read-only). On failure, use the last locally cached config, or the default if none exists.
-2. Run Trivy with a `context` timeout (default 40 minutes) covering all runs, at low priority. One run for OS packages (`rootfs / --pkg-types os`), then one per existing app dir (`rootfs <dir> --pkg-types library`; app dirs = `app_dirs` (default `/var/www`, `/srv`, `/opt`) plus the `pm_cwd` of pm2 apps read from `/root/.pm2/dump.pm2` and `/home/*/.pm2/dump.pm2`, never by running pm2; missing, nested, and duplicate dirs dropped). App run paths are relative to the dir, so `Target`/`PkgPath` get the dir prefixed. Any failed run makes the scan an error. Default arguments:
+2. Run Trivy with a `context` timeout (default 40 minutes) covering all runs, at low priority. One run for OS packages (`rootfs / --pkg-types os`), then one per existing app dir (`fs <dir> --pkg-types library`: lockfiles only (`composer.lock`, `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`, ...), plus skip `**/node_modules,**/vendor,**/.git`, then `rootfs <dir> --pkg-types library` with the same skips for Go/Rust binaries and jars, which fs mode does not read; installed dependency trees are never walked; app dirs = `app_dirs` (default `/var/www`, `/srv`, `/opt`) plus the `pm_cwd` of pm2 apps read from `/root/.pm2/dump.pm2` and `/home/*/.pm2/dump.pm2`, never by running pm2; missing, nested, and duplicate dirs dropped). App run paths are relative to the dir, so `Target`/`PkgPath` get the dir prefixed. Any failed run makes the scan an error. Default arguments:
    ```
-   rootfs <target>
+   rootfs / | fs <app dir>
    --scanners vuln
    --pkg-types os|library
    --list-all-pkgs=false
