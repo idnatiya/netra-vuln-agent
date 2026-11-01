@@ -57,7 +57,7 @@ func (s *Scan) Run(ctx context.Context) error {
 func (s *Scan) scan(ctx context.Context, cfg entity.ScanConfig) (entity.Report, error) {
 	start := s.Now()
 	scanCtx, cancel := context.WithTimeout(ctx, cfg.Timeout+scanGrace)
-	findings, scanErr := s.Scanner.Scan(scanCtx, cfg)
+	findings, frameworks, scanErr := s.Scanner.Scan(scanCtx, cfg)
 	cancel()
 
 	version, err := s.Scanner.Version(ctx)
@@ -72,11 +72,12 @@ func (s *Scan) scan(ctx context.Context, cfg entity.ScanConfig) (entity.Report, 
 		Duration:     s.Now().Sub(start),
 		TrivyVersion: version,
 		Findings:     findings,
+		Software:     append(s.Host.Software(ctx), frameworks...),
 	}
 	if scanErr != nil {
 		r.Status = entity.StatusError
 		r.Error = entity.TruncateError(scanErr.Error())
-		r.Findings = nil
+		r.Findings, r.Software = nil, nil
 		s.Log.Error("trivy scan failed", "err", scanErr)
 	}
 	s.Log.Info("scan finished", "status", r.Status, "findings", len(r.Findings), "duration", r.Duration)

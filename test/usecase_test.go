@@ -20,19 +20,23 @@ var discard = slog.New(slog.NewTextHandler(io.Discard, nil))
 
 type fakeScanner struct {
 	findings []entity.Finding
+	software []entity.Software
 	err      error
 	gotCfg   entity.ScanConfig
 }
 
-func (f *fakeScanner) Scan(_ context.Context, cfg entity.ScanConfig) ([]entity.Finding, error) {
+func (f *fakeScanner) Scan(_ context.Context, cfg entity.ScanConfig) ([]entity.Finding, []entity.Software, error) {
 	f.gotCfg = cfg
-	return f.findings, f.err
+	return f.findings, f.software, f.err
 }
 func (f *fakeScanner) Version(context.Context) (string, error) { return "0.99.0", nil }
 
 type fakeHost struct{}
 
 func (fakeHost) Inspect(context.Context) entity.HostInfo { return entity.HostInfo{Hostname: "vm1"} }
+func (fakeHost) Software(context.Context) []entity.Software {
+	return []entity.Software{{Name: "php", Version: "8.1.2", Path: "/usr/bin/php"}}
+}
 
 type fakeCentral struct {
 	cfg        entity.ScanConfig
@@ -123,7 +127,8 @@ func newScan(sc *fakeScanner, c *fakeCentral, sp *fakeSpool, cache *fakeCache) *
 func TestScanSuccess(t *testing.T) {
 	remote := entity.DefaultScanConfig()
 	remote.Severities = []string{"CRITICAL"}
-	sc := &fakeScanner{findings: []entity.Finding{{VulnerabilityID: "CVE-1"}}}
+	sc := &fakeScanner{findings: []entity.Finding{{VulnerabilityID: "CVE-1"}},
+		software: []entity.Software{{Name: "laravel", Version: "10.0.0", Path: "/var/www/shop"}}}
 	c := &fakeCentral{cfg: remote}
 	cache := &fakeCache{}
 	err := newScan(sc, c, newFakeSpool(), cache).Run(context.Background())
@@ -135,6 +140,9 @@ func TestScanSuccess(t *testing.T) {
 	}
 	if !slices.Equal(sc.gotCfg.Severities, []string{"CRITICAL"}) || cache.saved != 1 {
 		t.Fatalf("remote config not used/cached: %+v saved=%d", sc.gotCfg, cache.saved)
+	}
+	if got := c.sent[0].Software; len(got) != 2 || got[0].Name != "php" || got[1].Name != "laravel" {
+		t.Fatalf("software = %+v", got)
 	}
 	if c.sent[0].TrivyVersion != "0.99.0" || c.sent[0].Host.Hostname != "vm1" || c.sent[0].Duration <= 0 {
 		t.Fatalf("metadata missing: %+v", c.sent[0])

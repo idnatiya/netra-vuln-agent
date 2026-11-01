@@ -24,6 +24,8 @@ type Linux struct {
 	HostnameOverride string
 	AgentVersion     string
 	Root             string // filesystem prefix, "" = "/"; for tests
+	// Exec runs a version command; nil = os/exec. For tests.
+	Exec func(ctx context.Context, bin string, args ...string) ([]byte, error)
 }
 
 func (l *Linux) Inspect(ctx context.Context) entity.HostInfo {

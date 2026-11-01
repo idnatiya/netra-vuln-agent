@@ -2,6 +2,7 @@ package test
 
 import (
 	"context"
+	"maps"
 	"os"
 	"path/filepath"
 	"slices"
@@ -83,5 +84,33 @@ func TestPM2Dirs(t *testing.T) {
 	}
 	if dirs, err := (&hostinfo.Linux{Root: t.TempDir()}).PM2Dirs(); dirs != nil || err != nil {
 		t.Fatalf("no pm2: %v, %v", dirs, err)
+	}
+}
+
+func TestSoftware(t *testing.T) {
+	root := t.TempDir()
+	for _, f := range []string{"usr/bin/php", "usr/sbin/nginx", "usr/sbin/mysqld", "usr/lib/postgresql/14/bin/postgres",
+		"usr/lib/postgresql/16/bin/postgres"} {
+		os.MkdirAll(filepath.Join(root, filepath.Dir(f)), 0o755)
+		os.WriteFile(filepath.Join(root, f), nil, 0o755)
+	}
+	os.MkdirAll(filepath.Join(root, "usr/lib/node_modules/pm2"), 0o755)
+	os.WriteFile(filepath.Join(root, "usr/lib/node_modules/pm2/package.json"), []byte(`{"name":"pm2","version":"5.3.1"}`), 0o644)
+	out := map[string]string{
+		"php":      "PHP 8.1.2-1ubuntu2.18 (cli) (built: Jun 14 2024)",
+		"nginx":    "nginx version: nginx/1.18.0 (Ubuntu)",
+		"mysqld":   "/usr/sbin/mysqld  Ver 10.6.18-MariaDB-0ubuntu0.22.04.1 for debian-linux-gnu",
+		"postgres": "postgres (PostgreSQL) 16.2 (Ubuntu 16.2-1.pgdg22.04+1)",
+	}
+	l := &hostinfo.Linux{Root: root, Exec: func(_ context.Context, bin string, _ ...string) ([]byte, error) {
+		return []byte(out[filepath.Base(bin)]), nil
+	}}
+	got := map[string]string{}
+	for _, s := range l.Software(context.Background()) {
+		got[s.Name] = s.Version
+	}
+	want := map[string]string{"php": "8.1.2", "nginx": "1.18.0", "mariadb": "10.6.18", "postgresql": "16.2", "pm2": "5.3.1"}
+	if !maps.Equal(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }

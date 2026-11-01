@@ -22,7 +22,7 @@ func TestParseNormal(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer f.Close()
-	got, err := trivy.Parse(f)
+	got, _, err := trivy.Parse(f)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -51,15 +51,15 @@ func TestParseEmpty(t *testing.T) {
 		`{"SchemaVersion":2,"Results":null}`,
 		`{"SchemaVersion":2,"Results":[{"Target":"x","Type":"debian"}]}`,
 	} {
-		got, err := trivy.Parse(strings.NewReader(in))
+		got, _, err := trivy.Parse(strings.NewReader(in))
 		if err != nil || got == nil || len(got) != 0 {
 			t.Fatalf("%s: got %v, %v", in, got, err)
 		}
 	}
-	if _, err := trivy.Parse(strings.NewReader("")); err == nil {
+	if _, _, err := trivy.Parse(strings.NewReader("")); err == nil {
 		t.Fatal("empty output accepted")
 	}
-	if _, err := trivy.Parse(strings.NewReader(`{"Results":[`)); err == nil {
+	if _, _, err := trivy.Parse(strings.NewReader(`{"Results":[`)); err == nil {
 		t.Fatal("truncated output accepted")
 	}
 }
@@ -86,7 +86,7 @@ func TestParseLarge(t *testing.T) {
 
 	f, _ = os.Open(path)
 	defer f.Close()
-	got, err := trivy.Parse(f)
+	got, _, err := trivy.Parse(f)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -146,7 +146,7 @@ func TestScanExec(t *testing.T) {
 	app := t.TempDir()
 	r.AppDirs = []string{app, filepath.Join(app, "nested"), "/does/not/exist"}
 	os.Mkdir(filepath.Join(app, "nested"), 0o755)
-	got, err := r.Scan(context.Background(), entity.DefaultScanConfig())
+	got, _, err := r.Scan(context.Background(), entity.DefaultScanConfig())
 	if err != nil || len(got) != 12 {
 		t.Fatalf("got %d, %v", len(got), err)
 	}
@@ -182,7 +182,7 @@ func TestAppTargets(t *testing.T) {
 }
 
 func TestScanExecFail(t *testing.T) {
-	_, err := fakeRunner(t, "fail").Scan(context.Background(), entity.DefaultScanConfig())
+	_, _, err := fakeRunner(t, "fail").Scan(context.Background(), entity.DefaultScanConfig())
 	if err == nil || !strings.Contains(err.Error(), "boom") {
 		t.Fatalf("err = %v", err)
 	}
@@ -192,8 +192,30 @@ func TestScanExecTimeout(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Millisecond)
 	defer cancel()
 	start := time.Now()
-	_, err := fakeRunner(t, "hang").Scan(ctx, entity.DefaultScanConfig())
+	_, _, err := fakeRunner(t, "hang").Scan(ctx, entity.DefaultScanConfig())
 	if err == nil || time.Since(start) > 5*time.Second {
 		t.Fatalf("err=%v after %s", err, time.Since(start))
+	}
+}
+
+func TestParseFrameworks(t *testing.T) {
+	in := `{"Results":[
+		{"Target":"shop/composer.lock","Type":"composer","Packages":[
+			{"Name":"laravel/framework","Version":"10.48.10"},{"Name":"monolog/monolog","Version":"3.5.0"}]},
+		{"Target":"package-lock.json","Type":"npm","Packages":[
+			{"Name":"nuxt","Version":"3.11.1"},{"Name":"vue","Version":"3.4.21"},{"Name":"vue","Version":"2.7.16"}]}]}`
+	_, got, err := trivy.Parse(strings.NewReader(in))
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []entity.Software{{Name: "laravel", Version: "10.48.10", Path: "shop"},
+		{Name: "nuxt", Version: "3.11.1", Path: "."}, {Name: "vue", Version: "3.4.21", Path: "."}}
+	if !slices.Equal(got, want) {
+		t.Fatalf("got %+v", got)
+	}
+	r := &trivy.Runner{CacheDir: "/c"}
+	if !slices.Contains(r.Args(entity.DefaultScanConfig(), trivy.RunLockfile, "/srv", "/o"), "--list-all-pkgs=true") ||
+		!slices.Contains(r.Args(entity.DefaultScanConfig(), trivy.RunOS, "/", "/o"), "--list-all-pkgs=false") {
+		t.Fatal("only lockfile runs list all packages")
 	}
 }

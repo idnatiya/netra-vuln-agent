@@ -24,6 +24,7 @@ type Report struct {
 	Duration     time.Duration
 	TrivyVersion string
 	Findings     []Finding
+	Software     []Software // for end-of-life checks; empty when the scan failed
 }
 
 // TruncateError cuts s to at most MaxErrorBytes without breaking UTF-8.

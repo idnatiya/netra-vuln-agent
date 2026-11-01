@@ -40,16 +40,25 @@ type Finding struct {
 	Title            string `json:"title"`
 }
 
+// Software is an installed product version for end-of-life checks: a runtime
+// or database (path = binary) or a framework from a lockfile (path = project folder).
+type Software struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
+	Path    string `json:"path"`
+}
+
 // Report is the body of POST /api/v1/report (Content-Encoding: gzip).
 type Report struct {
 	ClientID string `json:"client_id"`
 	Host
-	TrivyVersion        string    `json:"trivy_version"`
-	ScannedAt           time.Time `json:"scanned_at"`
-	ScanDurationSeconds float64   `json:"scan_duration_seconds"`
-	Status              string    `json:"status"` // "ok" | "error"
-	Error               string    `json:"error,omitempty"`
-	Findings            []Finding `json:"findings"`
+	TrivyVersion        string     `json:"trivy_version"`
+	ScannedAt           time.Time  `json:"scanned_at"`
+	ScanDurationSeconds float64    `json:"scan_duration_seconds"`
+	Status              string     `json:"status"` // "ok" | "error"
+	Error               string     `json:"error,omitempty"`
+	Findings            []Finding  `json:"findings"`
+	Software            []Software `json:"software,omitempty"` // since v0.3.0
 }
 
 // Heartbeat is the body of POST /api/v1/heartbeat.

@@ -54,7 +54,7 @@ func (r *Runner) Args(cfg entity.ScanConfig, kind, target, output string) []stri
 		mode, target,
 		"--scanners", "vuln",
 		"--pkg-types", pkgTypes,
-		"--list-all-pkgs=false",
+		fmt.Sprintf("--list-all-pkgs=%t", kind == RunLockfile), // framework versions for EOL checks
 		fmt.Sprintf("--ignore-unfixed=%t", cfg.IgnoreUnfixed),
 		"--severity", strings.Join(cfg.Severities, ","),
 		"--timeout", cfg.Timeout.String(),
@@ -68,18 +68,23 @@ func (r *Runner) Args(cfg entity.ScanConfig, kind, target, output string) []stri
 
 // Scan runs Trivy for OS packages on /, then the lockfile and binary runs in
 // each existing app dir, and merges the findings with paths relative to /.
-func (r *Runner) Scan(ctx context.Context, cfg entity.ScanConfig) ([]entity.Finding, error) {
-	findings, err := r.run(ctx, cfg, RunOS, "/")
+func (r *Runner) Scan(ctx context.Context, cfg entity.ScanConfig) ([]entity.Finding, []entity.Software, error) {
+	findings, _, err := r.run(ctx, cfg, RunOS, "/")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+	var software []entity.Software
 	for _, dir := range AppTargets(r.AppDirs) {
 		// Trivy reports paths relative to the scanned dir.
 		prefix := strings.Trim(dir, "/") + "/"
 		for _, kind := range []string{RunLockfile, RunBinary} {
-			fs, err := r.run(ctx, cfg, kind, dir)
+			fs, sw, err := r.run(ctx, cfg, kind, dir)
 			if err != nil {
-				return nil, fmt.Errorf("%s: %w", dir, err)
+				return nil, nil, fmt.Errorf("%s: %w", dir, err)
+			}
+			for _, s := range sw {
+				s.Path = filepath.Clean("/" + prefix + s.Path)
+				software = append(software, s)
 			}
 			for _, f := range fs {
 				if f.PkgPath != "" {
@@ -91,7 +96,7 @@ func (r *Runner) Scan(ctx context.Context, cfg entity.ScanConfig) ([]entity.Find
 			}
 		}
 	}
-	return findings, nil
+	return findings, software, nil
 }
 
 // AppTargets cleans the app dirs, drops missing ones, / itself, duplicates,
@@ -112,10 +117,10 @@ func AppTargets(dirs []string) []string {
 	})
 }
 
-func (r *Runner) run(ctx context.Context, cfg entity.ScanConfig, kind, target string) ([]entity.Finding, error) {
+func (r *Runner) run(ctx context.Context, cfg entity.ScanConfig, kind, target string) ([]entity.Finding, []entity.Software, error) {
 	f, err := os.CreateTemp(r.TmpDir, "trivy-*.json")
 	if err != nil {
-		return nil, fmt.Errorf("create output file: %w", err)
+		return nil, nil, fmt.Errorf("create output file: %w", err)
 	}
 	out := f.Name()
 	f.Close()
@@ -127,14 +132,14 @@ func (r *Runner) run(ctx context.Context, cfg entity.ScanConfig, kind, target st
 	cmd.WaitDelay = 10 * time.Second
 	if err := cmd.Run(); err != nil {
 		if ctx.Err() != nil {
-			return nil, fmt.Errorf("trivy killed: %w; stderr: %s", ctx.Err(), stderr.String())
+			return nil, nil, fmt.Errorf("trivy killed: %w; stderr: %s", ctx.Err(), stderr.String())
 		}
-		return nil, fmt.Errorf("trivy: %w; stderr: %s", err, stderr.String())
+		return nil, nil, fmt.Errorf("trivy: %w; stderr: %s", err, stderr.String())
 	}
 
 	f, err = os.Open(out)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	defer f.Close()
 	return Parse(f)
@@ -182,16 +187,32 @@ type report struct {
 			Severity         string
 			Title            string
 		}
+		Packages []struct { // only with --list-all-pkgs (lockfile runs)
+			Name    string
+			Version string
+		}
 	}
 }
 
-func Parse(r io.Reader) ([]entity.Finding, error) {
+// Parse returns the findings and the Frameworks found in the package lists;
+// a framework's Path is the folder of its lockfile, relative to the target.
+func Parse(r io.Reader) ([]entity.Finding, []entity.Software, error) {
 	var rep report
 	if err := json.NewDecoder(r).Decode(&rep); err != nil {
 		if errors.Is(err, io.EOF) {
-			return nil, errors.New("trivy output is empty")
+			return nil, nil, errors.New("trivy output is empty")
 		}
-		return nil, fmt.Errorf("decode trivy output: %w", err)
+		return nil, nil, fmt.Errorf("decode trivy output: %w", err)
+	}
+	var software []entity.Software
+	for _, res := range rep.Results {
+		for _, p := range res.Packages {
+			name, ok := entity.Frameworks[p.Name]
+			s := entity.Software{Name: name, Version: p.Version, Path: filepath.Dir(res.Target)}
+			if ok && !slices.ContainsFunc(software, func(o entity.Software) bool { return o.Name == s.Name && o.Path == s.Path }) {
+				software = append(software, s)
+			}
+		}
 	}
 	findings := []entity.Finding{}
 	for _, res := range rep.Results {
@@ -209,7 +230,7 @@ func Parse(r io.Reader) ([]entity.Finding, error) {
 			})
 		}
 	}
-	return findings, nil
+	return findings, software, nil
 }
 
 // tail keeps the last stderrTail bytes written to it.

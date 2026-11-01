@@ -14,13 +14,16 @@ import (
 var ErrRejected = errors.New("rejected by central")
 
 type Scanner interface {
-	Scan(ctx context.Context, cfg entity.ScanConfig) ([]entity.Finding, error)
+	// Scan returns the findings and the framework versions found in lockfiles.
+	Scan(ctx context.Context, cfg entity.ScanConfig) ([]entity.Finding, []entity.Software, error)
 	Version(ctx context.Context) (string, error)
 }
 
 // HostInspector is best-effort: fields that cannot be read are left empty.
 type HostInspector interface {
 	Inspect(ctx context.Context) entity.HostInfo
+	// Software lists installed runtimes and databases (php, nginx, ...).
+	Software(ctx context.Context) []entity.Software
 }
 
 type Central interface {

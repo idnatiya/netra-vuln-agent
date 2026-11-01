@@ -103,7 +103,9 @@ app_dirs: [...]                         # optional; app folders to scan, unset =
    `Target, Type, VulnerabilityID, PkgName, PkgPath, InstalledVersion, FixedVersion, Severity, Title`.
 4. Add host metadata:
    `hostname, os_family, os_name, os_version, arch, kernel_running, uptime_seconds, reboot_required (check /var/run/reboot-required or needs-restarting -r), unattended_upgrades_enabled (or dnf-automatic on RHEL), agent_version, trivy_version, scanned_at, scan_duration_seconds`.
-5. Send the report gzipped to `POST /api/v1/report`.
+5. Add `software` for central's end-of-life checks (`entity.Software`: name, version, path):
+   runtimes and databases from fixed local version commands (`php -v`, `node -v`, `nginx -v`, `apache2 -v`/`httpd -v`, `mysqld`/`mariadbd --version`, `redis-server --version`, `postgres --version`; 10 s timeout, skipped when absent; nothing comes from central), pm2 from its global `package.json` (never by running pm2), and frameworks (`entity.Frameworks`: Laravel, Symfony, Nuxt, Vue, Next, React, Angular) from the lockfile runs, which use `--list-all-pkgs=true` (path = project folder).
+6. Send the report gzipped to `POST /api/v1/report`.
 6. If sending fails, save it to the spool. Status codes: 400/413/422 = permanent reject (dropped); 401/403/409/429/5xx = spooled and retried.
 7. If Trivy fails, still send a report with status `error` and its error message (truncated to at most 4KB).
 

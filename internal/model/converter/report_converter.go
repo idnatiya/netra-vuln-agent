@@ -26,6 +26,10 @@ func ToWireReport(clientID string, r entity.Report) wire.Report {
 	for i, f := range r.Findings {
 		findings[i] = wire.Finding(f)
 	}
+	software := make([]wire.Software, len(r.Software))
+	for i, s := range r.Software {
+		software[i] = wire.Software(s)
+	}
 	return wire.Report{
 		ClientID:            clientID,
 		Host:                ToWireHost(r.Host),
@@ -35,5 +39,6 @@ func ToWireReport(clientID string, r entity.Report) wire.Report {
 		Status:              string(r.Status),
 		Error:               r.Error,
 		Findings:            findings,
+		Software:            software,
 	}
 }
